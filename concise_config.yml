@@ -1,0 +1,68 @@
+####menu
+menu:
+  Home: /
+  Archives: /archives
+  About: /about
+##菜单栏，如果你想把某个分类或者某个标签放在菜单栏上，可以通过以下方法实现。
+##首先在博客根目录的source文件下创建两个文件夹tags和categories,并在文件夹下分别创建文件index.md
+##tags的index.md文件的内容如下(记得去掉前面的##),categories的内容则将两个tags改成categories即可。
+##layout: tags
+##title: tags
+##---
+##最后在menu下进行配置即可，例如你要添加hexo分类，则在menu下添加hexo: /categories/hexo
+
+####widgets
+widgets:
+- search        ##搜索
+- category  ##分类
+- tagcloud  ##标签云
+- weibo     ##新浪微博秀，需要你自己去新浪微博秀获取代码，然后将weibo.ejs中的代码替换掉
+- links     ##友情链接，你可以进入links.ejs进行编辑
+
+duoshuo_enable: true    ##不想用，改为false即可
+duoshuo_shortname: chillax     
+tencent_sid: 44218032
+baidu_sid: 7192fa361f5cabb11d8a22de41c1ba8f
+excerpt_link: Read more ##文章摘要下方的阅读更多
+
+twitter:    ##twitter
+  username:
+  show_replies: false
+  tweet_count: 5
+
+#### Fancybox   ##图片效果
+fancybox: true
+
+google_analytics:   ##google分析
+
+#### RSS    ##RSS订阅
+rss: /atom.xml
+## RSS address.
+
+#### Image
+imglogo:
+  enable: true         ## 是否开启网站的logo，标题左边的logo。
+  src: imgs/logo.png   ## 图片放在`/concise/source/imgs`目录下,使用.svg和.png格式的图片.
+favicon: imgs/favicon.ico   ## 浏览器标签上显示的图片,放在`/concise/source/imgs`下.
+
+author_img_enable: true     ## 是否开启作者头像,左下角会旋转头像.
+author_img: imgs/author.jpg ## 作者头像的路径,以../comcise/source/文件夹为根路径,如果放在imgs文件夹下,格式如本人范例
+theme: landscape
+
+#### 作者信息，主要用于右下角的一些小图标链接的显示
+author:
+  google_plus:    ## eg:116338260303228776998 for https://plus.google.com/u/0/116338260303228776998
+  intro_line1: "Hi,I'm the designer of this theme." ##博客底部的第一句话
+  intro_line2: "I will share this theme on github after a few week!" ##底部底部的第二句话
+  weibo:      ## e.g. 1923610190 for http://weibo.com/1923610190
+  twitter:    ## e.g. yangjiansky for https://twitter.com/yangjiansky
+  github:     ## e.g. huangjunhui for https://github.com/huangjunhui 
+  facebook:   ## e.g. yangjian for https://favebook.com/yangjian
+  tsina:      ## e.g. 1923610190  Your weibo ID,It will be used in share button.
+  linkedin:   ## e.g. in/jeffweiner08 for https://www.linkedin.com/in/jeffweiner08
+  email: jhhuang1993@foxmail.com##填写你的email地址
+
+deploy:
+  type: git
+  repository: https://github.com/wszt89/wszt89.github.io.git
+  branch: master

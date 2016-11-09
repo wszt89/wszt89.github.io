@@ -1,0 +1,23 @@
+# 菜单
+menu:
+  home: /
+  archives: /archives
+  tags: /tags
+  categories: /categories
+  about: /about
+
+# 作者
+author: wsztrush
+# 标题
+title: wsztrush
+# 副标题
+subtitle: now or never!!!
+
+# 主题
+theme: hexo-theme-next
+
+# 发布到GIT
+deploy:
+  type: git
+  repository: https://github.com/wszt89/wszt89.github.io.git
+  branch: master
