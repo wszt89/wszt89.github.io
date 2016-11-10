@@ -16,6 +16,8 @@ subtitle: now or never!!!
 # 主题
 theme: hexo-theme-next
 
+language: zh-CN
+
 # 发布到GIT
 deploy:
   type: git
