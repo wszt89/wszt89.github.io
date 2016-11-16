@@ -9,17 +9,17 @@ categories: 编程
 
 ## 写在前面
 
-目前做的系统，数据的一致性和准确性非常非常依赖数据库的事务，当事务跪了，结局可能要多惨有多惨（经历过的都懂的）。
+现在开发的系统对准确性要求非常高，而数据的一致性和准确性几乎完全依赖数据库的事务，如果事务跪了，结局是要多惨有多惨（经历过的都懂的）。
 
-当然MySQL本身BUG不多，大部分的出错都是业务代码写残了。下面来看现实中遇到过的一些问题！
+当然MySQL本身也有一些BUG但并不多，大部分的出错都是业务代码写残了，下面来看遇到过的一些例子！
 
-## 遇到的问题
+## 常遇问题
 
 下面的场景都是Java操作__MySQL/InnoDB__、事务隔离级别为__RC__时遇到的：
 
 ### 不生效之一：代码问题
 
-通常都是用@Transactional来管理事务的开始和提交，而当对AOP的实现不是很熟悉时，可能导致事务不生效的代码如下：
+不生效模板代码如下：
 
 ```java
 public class Manager {
@@ -29,12 +29,17 @@ public class Manager {
 
     @Transactional
     public void func2() {
-
+        // 数据库操作
     }
 }
 ```
 
-使用<u>manager.func2</u>时，事务时生效的，而使用<u>manager.func1</u>时并没有生效！在Spring中通过代理来实现拦截：
+调用<u>manager.func2</u>事务是生效的，而调用<u>manager.func1</u>时不生效！开始分析原因：
+
+1. Spring对@Transactional修饰的方法进行AOP拦截处理；
+2. Spring中的AOP是通过代理实现的；
+
+那么，先来看个代理的例子（CGLIB）：
 
 ```java
 public Object intercept(Object targe, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
@@ -45,27 +50,27 @@ public Object intercept(Object targe, Method method, Object[] args, MethodProxy 
 }
 ```
 
-调用fun2时顺序为：
+因此，调用fun2时顺序为：
 
 ![image](http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/eda3409819f4c596a56b0062ffba8ca0/image.png)
 
-而调用func1的时候，调用顺序为：
+而调用func1时顺序为：
 
 ![image](http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/7dbec4b5c57b765b31b887da6164d72e/image.png)
 
-代理对象中发现并不需要代理<u>func1</u>方法，因此不会开启事务，到了target以后只会调用自己的<u>func2</u>，因此事务不会生效。
+代理对象中发现并不需要代理<u>func1</u>方法（因为它上面没有注解），因此不会开启事务，到了target以后自己调用自己的<u>func2</u>，虽然方法上有@Transactional，但是target并不管它（只有代理对象才管），因此事务并不生效。
 
-__解决办法__：在需要事务的方法入口方法上面都需要加注解。
+__解决办法__：在需要事务的入口方法上面都加注解（略暴力）。
 
 ### 不生效之二：配置问题
 
-和事务相关的配置有：
+和事务相关的配置常用的有以下三个：
 
 - __datasource__
 - __transactionManager__：需要datasource
 - __annotation-driven__：需要transactionManager
 
-当<u>transactionManager</u>或者<u>annotation-driven</u>设置的<u>datasource</u>与真正使用的不一致时，会出现事务不生效。
+当<u>transactionManager</u>或者<u>annotation-driven</u>设置的<u>datasource</u>与访问数据库所使用的不一致时，会出现事务不生效！下面来从Spring对事务的管理方式上找答案：
 
 在开启事务，会调用<u>TransactionSynchronizationManager.bindResource</u>将链接绑定到ThreadLocal上，其中key为datasource，value为ConnectionHolder：
 
@@ -85,7 +90,7 @@ public static void bindResource(Object key, Object value) throws IllegalStateExc
 }
 ```
 
-在执行sql之前会通过<u>TransactionSynchronizationManager.getResource</u>来获取链接：
+执行SQL前会通过<u>TransactionSynchronizationManager.getResource</u>来获取链接：
 
 ```java
 public static Object getResource(Object key) {
@@ -99,21 +104,27 @@ public static Object getResource(Object key) {
 }
 ```
 
-这样，当transactionManager配置的datasource与实际的datasource不一致时，开启事务和执行sql会分别创建两个链接，这样就导致：
+于是，当transactionManager配置的datasource与写数据的datasource不一样时，开启事务和执行SQL会分别用两个链接，这样就导致：
 
 - 执行数据库操作使用的链接A
 - 回滚事务用的链接B
 
-因此会出现回滚不掉，事务也就不生效了（一般只有在迁移数据库的时候会配两个数据源吧）。
+当然也就回滚不掉了，这种情况都是在切换数据源的时候遇到的，干这种活的时候小心点就行了！
 
 ### 在Commit成功之后没有数据
 
-常遇到是事务不生效，而遇到事务明明生效了，但是commit之后却没有数据，这时候就懵逼了！在提供服务时：
+常遇到是事务不生效，前端时间遇到事务明明生效，但COMMIT后却没有数据，这时候就直接懵逼了！
 
-- 用线程池来处理任务，也就是说同一个线程可能处理多个任务
-- 链接是绑定到线程上的
+现象是：
 
-这样就可能导致出一个线程用一个链接处理了两个任务，
+> A调用B服务，B写数据库成功并将数据库ID返回给A，但B对应的数据库中并没有数据。
+
+是不是感觉见鬼了。首先，我们来对B服务的执行过程描述一下：
+
+- 数据库链接是绑定到线程上的；
+- 用线程池来处理服务请求，也就是说同一个线程可能会依次处理多个请求；
+
+也就是说：__两次不同的请求可能会互相影响__，而恰巧在B中使用的手动事务，那么该线程执行的流程如下：
 
 ```java
 @Test
@@ -138,13 +149,11 @@ public void test() throws Exception {
 
 在手动事务没有完成（回滚或提交）时，对应的线程又调用了@Transactional拦截的方法：
 
-- 在方法开始前，认为已经在事务中了，所以不会开启新事务
-- 在方法完成后，认为事务还没有处理完，所以并不会完结它
+- 在方法开始前：认为已经在事务中了，所以不会开启新事务
+- 在方法完成后：认为事务还没有处理完，所以并不会完结它
 
-__简单来说__：谁开启了事务，谁负责把它结束掉。手动事务在用的时候一定要慎重，能不用就尽量别用了。
+简单来说：__谁开启了事务，谁负责把它结束掉__。手动事务在用的时候一定要慎重，能不用就别用了。
 
 ## 总结
 
-大部分的事务问题是因为用法不对，与其在遇到问题时大海捞针般地找问题，还不如平时多熟悉逻辑到时候DEBUG一遍就知道原因了。
-
-另外，查原因、解问题是最好的学习和积累的机会。
+事务是应用保证的最后一道防线，必须引起足够的重视，而且，感觉用的越简单越可靠越好！
