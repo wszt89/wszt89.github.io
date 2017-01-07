@@ -181,11 +181,11 @@ sidebar:
 
 # Blogrolls
 #links_title: Links
-links_layout: block
+#links_layout: block
 #links_layout: inline
-links:
-  Title1: http://example.com/
-  Title2: http://example.com/
+#links:
+  ## Title1: http://example.com/
+  ## Title2: http://example.com/
 
 # ---------------------------------------------------------------
 # Misc Theme Settings

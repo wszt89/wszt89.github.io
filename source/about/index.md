@@ -24,5 +24,6 @@ date: 2016-11-09 14:50:21
 则志不广
 
 -------
+永远理性地去观察和体验正在发生的这一切！
 
-在意气风发的年纪，在尴尬昏暗的处境，重新开博，收起抱怨与吐槽，潜行笃志，再次出发！
+![image](http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/wmp-docs/technical-documents/c8ef31c96cdcd28d28a8c9ab03d7a19a/image.png)
