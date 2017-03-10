@@ -1,0 +1,893 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="InnoDB,锁," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="写在前面使用数据库时，想要较高的吞吐、较低的延迟，但又想在高并发下可以一致地读写数据，因此需要高效的锁机制。
+InnoDB中的锁可以分为：
+
+latch：程序上的锁机制，用来锁定内部对象，没有死锁检测；
+lock：用来锁定数据库中的对象，比如表、页、行，有死锁检测机制；
+
+可以使用show engine innodb mutex来查看latch的情况（一般不怎么关心），下面我们来重点看lock。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="InnoDB的锁机制">
+<meta property="og:url" content="http://yoursite.com/2016/11/10/innodb-lock-1/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="写在前面使用数据库时，想要较高的吞吐、较低的延迟，但又想在高并发下可以一致地读写数据，因此需要高效的锁机制。
+InnoDB中的锁可以分为：
+
+latch：程序上的锁机制，用来锁定内部对象，没有死锁检测；
+lock：用来锁定数据库中的对象，比如表、页、行，有死锁检测机制；
+
+可以使用show engine innodb mutex来查看latch的情况（一般不怎么关心），下面我们来重点看lock。">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/e04d28cc04236a8df844ba2cb55e1672/image.png">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/ef7441a47ac1c49f5add86f2a905552c/image.png">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/ae0f37aa7431015b6183083100439712/image.png">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/3e2600f5b5b51962a70c297312eb01d3/image.png">
+<meta property="og:updated_time" content="2017-02-06T22:41:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="InnoDB的锁机制">
+<meta name="twitter:description" content="写在前面使用数据库时，想要较高的吞吐、较低的延迟，但又想在高并发下可以一致地读写数据，因此需要高效的锁机制。
+InnoDB中的锁可以分为：
+
+latch：程序上的锁机制，用来锁定内部对象，没有死锁检测；
+lock：用来锁定数据库中的对象，比如表、页、行，有死锁检测机制；
+
+可以使用show engine innodb mutex来查看latch的情况（一般不怎么关心），下面我们来重点看lock。">
+<meta name="twitter:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/e04d28cc04236a8df844ba2cb55e1672/image.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/10/innodb-lock-1/"/>
+
+
+  <title> InnoDB的锁机制 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                InnoDB的锁机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-10T11:48:42+08:00" content="2016-11-10">
+              2016-11-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/10/innodb-lock-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/10/innodb-lock-1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>使用数据库时，想要较高的吞吐、较低的延迟，但又想在高并发下可以一致地读写数据，因此需要高效的锁机制。</p>
+<p>InnoDB中的锁可以分为：</p>
+<ul>
+<li>latch：程序上的锁机制，用来锁定内部对象，没有死锁检测；</li>
+<li>lock：用来锁定数据库中的对象，比如表、页、行，有死锁检测机制；</li>
+</ul>
+<p>可以使用<code>show engine innodb mutex</code>来查看latch的情况（一般不怎么关心），下面我们来重点看lock。</p>
+<h2 id="锁机制"><a href="#锁机制" class="headerlink" title="锁机制"></a>锁机制</h2><h3 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h3><p>锁的目的是将一个资源占住，不让其他人操作。更准确地可以描述为：</p>
+<blockquote>
+<p>禁止其他人对某个资源执行某个操作。</p>
+</blockquote>
+<p>数据库操作无非是读、写，那么相应的锁类型为：</p>
+<ul>
+<li>共享锁（S）：允许事务读数据；</li>
+<li>排他锁（X）：允许事务修改数据；</li>
+</ul>
+<p>锁并非都互斥（有你没他），比如两个事务可以对同一条记录加S锁来读数据。共存即兼容：</p>
+<table>
+<thead>
+<tr>
+<th>兼容性</th>
+<th>X</th>
+<th>S</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X</td>
+<td>不兼容</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>S</td>
+<td>不兼容</td>
+<td>兼容</td>
+</tr>
+</tbody>
+</table>
+<p>此外还支持一种额外的锁方式（意向锁）：</p>
+<ul>
+<li>意向共享锁（IS）</li>
+<li>意向排他锁（IX）</li>
+</ul>
+<p>其含义是：</p>
+<blockquote>
+<p>在行上加普通锁之前，需要在更粗的粒度上加对应类型的意向锁，也就是意向锁反映了行锁的情况，能提升加锁效率。</p>
+</blockquote>
+<p>比如，事务A想对表加S锁，需要判断表中是否有行有X锁。以前需要逐行判断，而现在直接判断表上有没有IX锁即可。数据库中层次结构如下：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/e04d28cc04236a8df844ba2cb55e1672/image.png" alt="image"></p>
+<p>包含意向锁的兼容性为：</p>
+<table>
+<thead>
+<tr>
+<th>兼容性</th>
+<th>IS</th>
+<th>IX</th>
+<th>S</th>
+<th>X</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IS</td>
+<td>兼容</td>
+<td>兼容</td>
+<td>兼容</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>IX</td>
+<td>兼容</td>
+<td>兼容</td>
+<td>不兼容</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>S</td>
+<td>兼容</td>
+<td>不兼容</td>
+<td>兼容</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>X</td>
+<td>不兼容</td>
+<td>不兼容</td>
+<td>不兼容</td>
+<td>不兼容</td>
+</tr>
+</tbody>
+</table>
+<h3 id="加锁算法"><a href="#加锁算法" class="headerlink" title="加锁算法"></a>加锁算法</h3><p>不同算法的区别在于范围：</p>
+<ol>
+<li>Record Lock：锁定一行记录；</li>
+<li>Gap Lock：锁定一个范围，不包含记录；</li>
+<li>Next-Key Lock：锁定一个范围，包含记录；</li>
+</ol>
+<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><p>在两个及以上的事务在执行过程中，可能因为争夺资源而互相等待：</p>
+<ul>
+<li>T1拥有资源A，尝试获取资源B；</li>
+<li>T2拥有资源B，尝试获取资源A；</li>
+</ul>
+<p>如果不暴力终结某个事务，T1、T2会永远等下去，这就是死锁。数据库通过wait-for graph（等待图）来检测是否存在死锁，当发现有回路时，引擎会选择回滚undo量最小的事务。</p>
+<p>程序上为防止死锁一般会统一更新顺序。</p>
+<h2 id="加锁分析"><a href="#加锁分析" class="headerlink" title="加锁分析"></a>加锁分析</h2><p>下面对常见的几条SQL做加锁分析，建表如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`my_test`</span> (</div><div class="line">  <span class="string">`id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</div><div class="line">  <span class="string">`a`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">  <span class="string">`b`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">  <span class="string">`c`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">  <span class="string">`d`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</div><div class="line">  <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> <span class="string">`unique_a_b`</span>(<span class="string">`a`</span>,<span class="string">`b`</span>),</div><div class="line">  <span class="keyword">KEY</span> <span class="string">`idx_c`</span>(<span class="string">`c`</span>)</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>初始化数据如下：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/ef7441a47ac1c49f5add86f2a905552c/image.png" alt="image"></p>
+<p>在执行完成SQL后，可以从<strong>information_schema</strong>中的：</p>
+<ul>
+<li>INNODB_TRX</li>
+<li>INNODB_LOCKS</li>
+<li>INNODB_LOCK_WAITS</li>
+</ul>
+<p>来查看锁和事务的状态，此外也可以用<code>show engine innodb status</code>来看整体情况，需要增加锁监控：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> innodb_lock_monitor(x <span class="built_in">int</span>) <span class="keyword">engine</span>=<span class="keyword">innodb</span>;</div></pre></td></tr></table></figure>
+<p>才可以看到比较详细的锁信息。</p>
+<h3 id="RC-主键"><a href="#RC-主键" class="headerlink" title="RC+主键"></a>RC+主键</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> my_test <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">1</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p>加锁信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">2 lock struct(s), heap size 360, 1 row lock(s)</div><div class="line">MySQL thread id 2, OS thread handle 0x1648, query id 148 localhost 127.0.0.1 root cleaning up</div><div class="line">TABLE LOCK table `mysql`.`my_test` trx id 2863 lock mode IX</div><div class="line">RECORD LOCKS space id 38 page no 3 n bits 72 index `PRIMARY` of table `mysql`.`my_test` trx id 2863 lock_mode X locks rec but not gap</div><div class="line">Record lock, heap no 2 PHYSICAL RECORD: n_fields 7; compact format; info bits 0</div></pre></td></tr></table></figure>
+<p>加锁逻辑为：</p>
+<ol>
+<li>表上加IX锁；</li>
+<li>行上加X锁；</li>
+</ol>
+<h3 id="RC-唯一约束"><a href="#RC-唯一约束" class="headerlink" title="RC+唯一约束"></a>RC+唯一约束</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> my_test <span class="keyword">where</span> a = <span class="number">1</span> <span class="keyword">and</span> b = <span class="number">1</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p>加锁信息如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">3 lock struct(s), heap size 360, 2 row lock(s)</div><div class="line">MySQL thread id 2, OS thread handle 0x1648, query id 152 localhost 127.0.0.1 root cleaning up</div><div class="line">TABLE LOCK table `mysql`.`my_test` trx id 2864 lock mode IX</div><div class="line">RECORD LOCKS space id 38 page no 4 n bits 72 index `unique_a_b` of table `mysql`.`my_test` trx id 2864 lock_mode X locks rec but not gap</div><div class="line">Record lock, heap no 2 PHYSICAL RECORD: n_fields 3; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 1: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 2: len 8; hex 8000000000000001; asc         ;;</div><div class="line"></div><div class="line">RECORD LOCKS space id 38 page no 3 n bits 72 index `PRIMARY` of table `mysql`.`my_test` trx id 2864 lock_mode X locks rec but not gap</div><div class="line">Record lock, heap no 2 PHYSICAL RECORD: n_fields 7; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 1: len 6; hex 000000000b23; asc      #;;</div><div class="line"> 2: len 7; hex 9c000001500110; asc     P  ;;</div><div class="line"> 3: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 4: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 5: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 6: len 8; hex 8000000000000001; asc         ;;</div></pre></td></tr></table></figure>
+<p>加锁逻辑为：</p>
+<ol>
+<li>表上加IX锁；</li>
+<li>唯一约束上加X锁；</li>
+<li>行上加X锁；</li>
+</ol>
+<h3 id="RC-普通索引"><a href="#RC-普通索引" class="headerlink" title="RC+普通索引"></a>RC+普通索引</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> my_test <span class="keyword">where</span> c = <span class="number">3</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p>加锁信息如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">3 lock struct(s), heap size 360, 5 row lock(s)</div><div class="line">MySQL thread id 2, OS thread handle 0x1648, query id 166 localhost 127.0.0.1 root cleaning up</div><div class="line">TABLE LOCK table `mysql`.`my_test` trx id 2872 lock mode IX</div><div class="line">RECORD LOCKS space id 38 page no 5 n bits 72 index `idx_c` of table `mysql`.`my_test` trx id 2872 lock_mode X</div><div class="line">Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0</div><div class="line"> 0: len 8; hex 73757072656d756d; asc supremum;;</div><div class="line"></div><div class="line">Record lock, heap no 4 PHYSICAL RECORD: n_fields 2; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 1: len 8; hex 8000000000000003; asc         ;;</div><div class="line"></div><div class="line">Record lock, heap no 5 PHYSICAL RECORD: n_fields 2; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 1: len 8; hex 8000000000000004; asc         ;;</div><div class="line"></div><div class="line">RECORD LOCKS space id 38 page no 3 n bits 72 index `PRIMARY` of table `mysql`.`my_test` trx id 2872 lock_mode X locks rec but not gap</div><div class="line">Record lock, heap no 4 PHYSICAL RECORD: n_fields 7; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 1: len 6; hex 000000000b23; asc      #;;</div><div class="line"> 2: len 7; hex 9c000001500130; asc     P 0;;</div><div class="line"> 3: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 4: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 5: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 6: len 8; hex 8000000000000003; asc         ;;</div><div class="line"></div><div class="line">Record lock, heap no 5 PHYSICAL RECORD: n_fields 7; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000004; asc         ;;</div><div class="line"> 1: len 6; hex 000000000b37; asc      7;;</div><div class="line"> 2: len 7; hex ac0000015e0110; asc     ^  ;;</div><div class="line"> 3: len 8; hex 8000000000000004; asc         ;;</div><div class="line"> 4: len 8; hex 8000000000000004; asc         ;;</div><div class="line"> 5: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 6: len 8; hex 8000000000000004; asc         ;;</div></pre></td></tr></table></figure>
+<p>加锁逻辑为：</p>
+<ol>
+<li>表上加IX锁；</li>
+<li>索引上加X锁（2）；</li>
+<li>行上加X锁（2）；</li>
+</ol>
+<h3 id="RC-无索引"><a href="#RC-无索引" class="headerlink" title="RC+无索引"></a>RC+无索引</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> my_test <span class="keyword">where</span> d = <span class="number">1</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p>加锁信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">2 lock struct(s), heap size 360, 5 row lock(s)</div><div class="line">MySQL thread id 2, OS thread handle 0x1648, query id 172 localhost 127.0.0.1 root cleaning up</div><div class="line">TABLE LOCK table `mysql`.`my_test` trx id 2874 lock mode IX</div><div class="line">RECORD LOCKS space id 38 page no 3 n bits 72 index `PRIMARY` of table `mysql`.`my_test` trx id 2874 lock_mode X</div><div class="line">Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0</div><div class="line"> 0: len 8; hex 73757072656d756d; asc supremum;;</div><div class="line"></div><div class="line">Record lock, heap no 2 PHYSICAL RECORD: n_fields 7; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 1: len 6; hex 000000000b23; asc      #;;</div><div class="line"> 2: len 7; hex 9c000001500110; asc     P  ;;</div><div class="line"> 3: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 4: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 5: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 6: len 8; hex 8000000000000001; asc         ;;</div><div class="line"></div><div class="line">Record lock, heap no 3 PHYSICAL RECORD: n_fields 7; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 1: len 6; hex 000000000b23; asc      #;;</div><div class="line"> 2: len 7; hex 9c000001500120; asc     P  ;;</div><div class="line"> 3: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 4: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 5: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 6: len 8; hex 8000000000000002; asc         ;;</div><div class="line"></div><div class="line">Record lock, heap no 4 PHYSICAL RECORD: n_fields 7; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 1: len 6; hex 000000000b23; asc      #;;</div><div class="line"> 2: len 7; hex 9c000001500130; asc     P 0;;</div><div class="line"> 3: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 4: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 5: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 6: len 8; hex 8000000000000003; asc         ;;</div><div class="line"></div><div class="line">Record lock, heap no 5 PHYSICAL RECORD: n_fields 7; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000004; asc         ;;</div><div class="line"> 1: len 6; hex 000000000b37; asc      7;;</div><div class="line"> 2: len 7; hex ac0000015e0110; asc     ^  ;;</div><div class="line"> 3: len 8; hex 8000000000000004; asc         ;;</div><div class="line"> 4: len 8; hex 8000000000000004; asc         ;;</div><div class="line"> 5: len 8; hex 8000000000000003; asc         ;;</div><div class="line"> 6: len 8; hex 8000000000000004; asc         ;;</div></pre></td></tr></table></figure>
+<p>加锁逻辑：</p>
+<ol>
+<li>表上加X锁；</li>
+<li>行上加X锁（4）；</li>
+</ol>
+<h3 id="RR"><a href="#RR" class="headerlink" title="RR"></a>RR</h3><p>在事务1中执行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> my_test <span class="keyword">where</span> c = <span class="number">3</span>;</div></pre></td></tr></table></figure>
+<p>在事务2中执行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_test <span class="keyword">values</span>(<span class="number">6</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">3</span>, <span class="number">6</span>);</div></pre></td></tr></table></figure>
+<p>查看事务2的锁信息如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">mysql tables in use 1, locked 1</div><div class="line">LOCK WAIT 2 lock struct(s), heap size 360, 1 row lock(s), undo log entries 1</div><div class="line">MySQL thread id 3, OS thread handle 0x2378, query id 198 localhost 127.0.0.1 root update</div><div class="line">insert into my_test values(6, 6, 6, 3, 6)</div><div class="line">------- TRX HAS BEEN WAITING 20 SEC FOR THIS LOCK TO BE GRANTED:</div><div class="line">RECORD LOCKS space id 38 page no 5 n bits 72 index `idx_c` of table `mysql`.`my_test` trx id 2897 lock_mode X insert intention waiting</div><div class="line">Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0</div><div class="line"> 0: len 8; hex 73757072656d756d; asc supremum;;</div></pre></td></tr></table></figure>
+<p>查看锁等待信息<code>select * from information_schema.innodb_locks</code>如下：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/ae0f37aa7431015b6183083100439712/image.png" alt="image"></p>
+<p>而对于<strong>lock_data</strong>：</p>
+<blockquote>
+<p>If a gap lock is taken for key values or ranges above the largest value in the index, LOCK_DATA reports “supremum pseudo-record”.</p>
+</blockquote>
+<p>根据上面的<strong>Next-Key</strong>算法分析，锁定的不只是单个记录，而是一个范围：[3, 4)。</p>
+<h2 id="死锁分析"><a href="#死锁分析" class="headerlink" title="死锁分析"></a>死锁分析</h2><p>首先模拟常见的死锁，事务1：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">begin</span>;</div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> my_test <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">1</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p>事务2：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">begin</span>;</div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> my_test <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">2</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p>事务1：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> my_test <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">2</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p>此时处于锁等待，接着事务2：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> my_test <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">1</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p>此时事务2会报死锁，然后将事务回滚，查看死锁信息如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">------------------------</div><div class="line">LATEST DETECTED DEADLOCK</div><div class="line">------------------------</div><div class="line">2016-11-22 21:45:37 2378</div><div class="line">*** (1) TRANSACTION:</div><div class="line">TRANSACTION 2899, ACTIVE 48 sec starting index read</div><div class="line">mysql tables in use 1, locked 1</div><div class="line">LOCK WAIT 3 lock struct(s), heap size 360, 2 row lock(s)</div><div class="line">MySQL thread id 2, OS thread handle 0x1648, query id 217 localhost 127.0.0.1 root statistics</div><div class="line">select * from my_test where id = 2 for update</div><div class="line">*** (1) WAITING FOR THIS LOCK TO BE GRANTED:</div><div class="line">RECORD LOCKS space id 38 page no 3 n bits 80 index `PRIMARY` of table `mysql`.`my_test` trx id 2899 lock_mode X locks rec but not gap waiting</div><div class="line">Record lock, heap no 3 PHYSICAL RECORD: n_fields 7; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 1: len 6; hex 000000000b23; asc      #;;</div><div class="line"> 2: len 7; hex 9c000001500120; asc     P  ;;</div><div class="line"> 3: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 4: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 5: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 6: len 8; hex 8000000000000002; asc         ;;</div><div class="line">*** (2) TRANSACTION:</div><div class="line">TRANSACTION 2900, ACTIVE 28 sec starting index read, thread declared inside InnoDB 5000</div><div class="line">mysql tables in use 1, locked 1</div><div class="line">3 lock struct(s), heap size 360, 2 row lock(s)</div><div class="line">MySQL thread id 3, OS thread handle 0x2378, query id 218 localhost 127.0.0.1 root statistics</div><div class="line">select * from my_test where id = 1 for update</div><div class="line">*** (2) HOLDS THE LOCK(S):</div><div class="line">RECORD LOCKS space id 38 page no 3 n bits 80 index `PRIMARY` of table `mysql`.`my_test` trx id 2900 lock_mode X locks rec but not gap</div><div class="line">Record lock, heap no 3 PHYSICAL RECORD: n_fields 7; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 1: len 6; hex 000000000b23; asc      #;;</div><div class="line"> 2: len 7; hex 9c000001500120; asc     P  ;;</div><div class="line"> 3: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 4: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 5: len 8; hex 8000000000000002; asc         ;;</div><div class="line"> 6: len 8; hex 8000000000000002; asc         ;;</div><div class="line"></div><div class="line">*** (2) WAITING FOR THIS LOCK TO BE GRANTED:</div><div class="line">RECORD LOCKS space id 38 page no 3 n bits 80 index `PRIMARY` of table `mysql`.`my_test` trx id 2900 lock_mode X locks rec but not gap waiting</div><div class="line">Record lock, heap no 2 PHYSICAL RECORD: n_fields 7; compact format; info bits 0</div><div class="line"> 0: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 1: len 6; hex 000000000b23; asc      #;;</div><div class="line"> 2: len 7; hex 9c000001500110; asc     P  ;;</div><div class="line"> 3: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 4: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 5: len 8; hex 8000000000000001; asc         ;;</div><div class="line"> 6: len 8; hex 8000000000000001; asc         ;;</div><div class="line"></div><div class="line">*** WE ROLL BACK TRANSACTION (2)</div></pre></td></tr></table></figure>
+<p>从死锁信息上能看到事务分别拥有哪些锁、在申请哪些锁的时候互相等待了。</p>
+<h3 id="INSERT-Unique-Key"><a href="#INSERT-Unique-Key" class="headerlink" title="INSERT + Unique Key"></a>INSERT + Unique Key</h3><p>还是沿用上面的表，开启事务1：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">begin</span>;</div><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_test <span class="keyword">values</span> (<span class="number">7</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">0</span>);</div></pre></td></tr></table></figure>
+<p>开启事务2：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">begin</span>;</div><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_test <span class="keyword">values</span> (<span class="number">8</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">0</span>);</div></pre></td></tr></table></figure>
+<p>此时会锁等待，再开启事务3：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">begin</span>;</div><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_test <span class="keyword">values</span> (<span class="number">9</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">0</span>);</div></pre></td></tr></table></figure>
+<p>此时的锁情况为：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/3e2600f5b5b51962a70c297312eb01d3/image.png" alt="image"></p>
+<p>原因：</p>
+<blockquote>
+<p>事务1在插入是需要加X锁，而事务2、事务3在插入前需要做唯一性检查，所以需要加S锁，因为与X锁不兼容所以事务2、3处于等待状态。</p>
+</blockquote>
+<p>接着事务1进行rollback话，事务2会插入成功，事务3会报死锁：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">2016-11-22 22:36:36 1ea4</div><div class="line">*** (1) TRANSACTION:</div><div class="line">TRANSACTION 2904, ACTIVE 300 sec inserting</div><div class="line">mysql tables in use 1, locked 1</div><div class="line">LOCK WAIT 4 lock struct(s), heap size 1184, 2 row lock(s), undo log entries 1</div><div class="line">MySQL thread id 3, OS thread handle 0x2378, query id 238 localhost 127.0.0.1 root update</div><div class="line">insert into my_test values (8, 7, 7, 0, 0)</div><div class="line">*** (1) WAITING FOR THIS LOCK TO BE GRANTED:</div><div class="line">RECORD LOCKS space id 38 page no 4 n bits 72 index `unique_a_b` of table `mysql`.`my_test` trx id 2904 lock_mode X insert intention waiting</div><div class="line">Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0</div><div class="line"> 0: len 8; hex 73757072656d756d; asc supremum;;</div><div class="line"></div><div class="line">*** (2) TRANSACTION:</div><div class="line">TRANSACTION 2905, ACTIVE 290 sec inserting, thread declared inside InnoDB 1</div><div class="line">mysql tables in use 1, locked 1</div><div class="line">4 lock struct(s), heap size 1184, 2 row lock(s), undo log entries 1</div><div class="line">MySQL thread id 6, OS thread handle 0x1ea4, query id 239 localhost 127.0.0.1 root update</div><div class="line">insert into my_test values (9, 7, 7, 0, 0)</div><div class="line">*** (2) HOLDS THE LOCK(S):</div><div class="line">RECORD LOCKS space id 38 page no 4 n bits 72 index `unique_a_b` of table `mysql`.`my_test` trx id 2905 lock mode S</div><div class="line">Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0</div><div class="line"> 0: len 8; hex 73757072656d756d; asc supremum;;</div><div class="line"></div><div class="line">*** (2) WAITING FOR THIS LOCK TO BE GRANTED:</div><div class="line">RECORD LOCKS space id 38 page no 4 n bits 72 index `unique_a_b` of table `mysql`.`my_test` trx id 2905 lock_mode X insert intention waiting</div><div class="line">Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0</div><div class="line"> 0: len 8; hex 73757072656d756d; asc supremum;;</div><div class="line"></div><div class="line">*** WE ROLL BACK TRANSACTION (2)</div></pre></td></tr></table></figure>
+<p>原因：</p>
+<blockquote>
+<p>在事务1回滚后，事务2、3都获得了S锁，接着要执行INSERT要去获取X锁，事务2申请X锁时发现与事务3的S锁不兼容，事务3也是同样的情况，于是出现死锁。</p>
+</blockquote>
+<p>特殊的唯一约束：<strong>主键</strong>也有相同的问题。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对InnoDB了解的还是很少，最近把锁相关的突击了一下，抽时间把底层的实现也了解一下，其他部分再慢慢补上。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/InnoDB/" rel="tag">#InnoDB</a>
+          
+            <a href="/tags/锁/" rel="tag">#锁</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/09/transaction-1/" rel="next" title="事务问题（一）">
+                <i class="fa fa-chevron-left"></i> 事务问题（一）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/23/simplex-method-1/" rel="prev" title="单纯形法">
+                单纯形法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/11/10/innodb-lock-1/"
+     data-title="InnoDB的锁机制"
+     data-content=""
+     data-url="http://yoursite.com/2016/11/10/innodb-lock-1/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/10/innodb-lock-1/"
+           data-title="InnoDB的锁机制" data-url="http://yoursite.com/2016/11/10/innodb-lock-1/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁机制"><span class="nav-number">2.</span> <span class="nav-text">锁机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础概念"><span class="nav-number">2.1.</span> <span class="nav-text">基础概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加锁算法"><span class="nav-number">2.2.</span> <span class="nav-text">加锁算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#死锁"><span class="nav-number">2.3.</span> <span class="nav-text">死锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加锁分析"><span class="nav-number">3.</span> <span class="nav-text">加锁分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RC-主键"><span class="nav-number">3.1.</span> <span class="nav-text">RC+主键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RC-唯一约束"><span class="nav-number">3.2.</span> <span class="nav-text">RC+唯一约束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RC-普通索引"><span class="nav-number">3.3.</span> <span class="nav-text">RC+普通索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RC-无索引"><span class="nav-number">3.4.</span> <span class="nav-text">RC+无索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RR"><span class="nav-number">3.5.</span> <span class="nav-text">RR</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#死锁分析"><span class="nav-number">4.</span> <span class="nav-text">死锁分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#INSERT-Unique-Key"><span class="nav-number">4.1.</span> <span class="nav-text">INSERT + Unique Key</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"wsztRush"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

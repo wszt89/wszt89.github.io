@@ -1,0 +1,740 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="事务,问题," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="写在前面现在开发的系统对准确性要求非常高，而数据的一致性和准确性几乎完全依赖数据库的事务，如果事务跪了，结局是要多惨有多惨（经历过的都懂的）。
+当然MySQL本身也有一些BUG但并不多，大部分的出错都是业务代码写残了，下面来看遇到过的一些例子！
+常遇问题下面的场景都是Java操作MySQL/InnoDB、事务隔离级别为RC时遇到的：
+不生效之一：代码问题不生效模板代码如下：
+12345678910">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事务问题（一）">
+<meta property="og:url" content="http://yoursite.com/2016/11/09/transaction-1/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="写在前面现在开发的系统对准确性要求非常高，而数据的一致性和准确性几乎完全依赖数据库的事务，如果事务跪了，结局是要多惨有多惨（经历过的都懂的）。
+当然MySQL本身也有一些BUG但并不多，大部分的出错都是业务代码写残了，下面来看遇到过的一些例子！
+常遇问题下面的场景都是Java操作MySQL/InnoDB、事务隔离级别为RC时遇到的：
+不生效之一：代码问题不生效模板代码如下：
+12345678910">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/eda3409819f4c596a56b0062ffba8ca0/image.png">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/7dbec4b5c57b765b31b887da6164d72e/image.png">
+<meta property="og:updated_time" content="2017-02-06T22:41:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="事务问题（一）">
+<meta name="twitter:description" content="写在前面现在开发的系统对准确性要求非常高，而数据的一致性和准确性几乎完全依赖数据库的事务，如果事务跪了，结局是要多惨有多惨（经历过的都懂的）。
+当然MySQL本身也有一些BUG但并不多，大部分的出错都是业务代码写残了，下面来看遇到过的一些例子！
+常遇问题下面的场景都是Java操作MySQL/InnoDB、事务隔离级别为RC时遇到的：
+不生效之一：代码问题不生效模板代码如下：
+12345678910">
+<meta name="twitter:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/eda3409819f4c596a56b0062ffba8ca0/image.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/09/transaction-1/"/>
+
+
+  <title> 事务问题（一） | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                事务问题（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-09T21:19:52+08:00" content="2016-11-09">
+              2016-11-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/09/transaction-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/09/transaction-1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>现在开发的系统对准确性要求非常高，而数据的一致性和准确性几乎完全依赖数据库的事务，如果事务跪了，结局是要多惨有多惨（经历过的都懂的）。</p>
+<p>当然MySQL本身也有一些BUG但并不多，大部分的出错都是业务代码写残了，下面来看遇到过的一些例子！</p>
+<h2 id="常遇问题"><a href="#常遇问题" class="headerlink" title="常遇问题"></a>常遇问题</h2><p>下面的场景都是Java操作<strong>MySQL/InnoDB</strong>、事务隔离级别为<strong>RC</strong>时遇到的：</p>
+<h3 id="不生效之一：代码问题"><a href="#不生效之一：代码问题" class="headerlink" title="不生效之一：代码问题"></a>不生效之一：代码问题</h3><p>不生效模板代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Manager</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">func1</span><span class="params">()</span> </span>&#123;</div><div class="line">        func2();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Transactional</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">func2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 数据库操作</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用<u>manager.func2</u>事务是生效的，而调用<u>manager.func1</u>时不生效！开始分析原因：</p>
+<ol>
+<li>Spring对@Transactional修饰的方法进行AOP拦截处理；</li>
+<li>Spring中的AOP是通过代理实现的；</li>
+</ol>
+<p>那么，先来看个代理的例子（CGLIB）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object targe, Method method, Object[] args, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">    System.out.println(<span class="string">"BEFORE"</span>);</div><div class="line">    Object result = methodProxy.invokeSuper(targe, args);</div><div class="line">    System.out.println(<span class="string">"AFTER"</span>);</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>因此，调用fun2时顺序为：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/eda3409819f4c596a56b0062ffba8ca0/image.png" alt="image"></p>
+<p>而调用func1时顺序为：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/7dbec4b5c57b765b31b887da6164d72e/image.png" alt="image"></p>
+<p>代理对象中发现并不需要代理<u>func1</u>方法（因为它上面没有注解），因此不会开启事务，到了target以后自己调用自己的<u>func2</u>，虽然方法上有@Transactional，但是target并不管它（只有代理对象才管），因此事务并不生效。</p>
+<p><strong>解决办法</strong>：在需要事务的入口方法上面都加注解（略暴力）。</p>
+<h3 id="不生效之二：配置问题"><a href="#不生效之二：配置问题" class="headerlink" title="不生效之二：配置问题"></a>不生效之二：配置问题</h3><p>和事务相关的配置常用的有以下三个：</p>
+<ul>
+<li><strong>datasource</strong></li>
+<li><strong>transactionManager</strong>：需要datasource</li>
+<li><strong>annotation-driven</strong>：需要transactionManager</li>
+</ul>
+<p>当<u>transactionManager</u>或者<u>annotation-driven</u>设置的<u>datasource</u>与访问数据库所使用的不一致时，会出现事务不生效！下面来从Spring对事务的管理方式上找答案：</p>
+<p>在开启事务，会调用<u>TransactionSynchronizationManager.bindResource</u>将链接绑定到ThreadLocal上，其中key为datasource，value为ConnectionHolder：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bindResource</span><span class="params">(Object key, Object value)</span> <span class="keyword">throws</span> IllegalStateException </span>&#123;</div><div class="line">    <span class="comment">// 根据datasource生成真正的key</span></div><div class="line">    Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);</div><div class="line">    Assert.notNull(value, <span class="string">"Value must not be null"</span>);</div><div class="line">    Map&lt;Object, Object&gt; map = resources.get();</div><div class="line">    <span class="comment">// 初始化map</span></div><div class="line">    <span class="keyword">if</span> (map == <span class="keyword">null</span>) &#123;</div><div class="line">	    map = <span class="keyword">new</span> HashMap&lt;Object, Object&gt;();</div><div class="line">        resources.set(map);</div><div class="line">    &#125;</div><div class="line">    Object oldValue = map.put(actualKey, value);</div><div class="line">    <span class="comment">// ....</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行SQL前会通过<u>TransactionSynchronizationManager.getResource</u>来获取链接：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getResource</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">    Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);</div><div class="line">    Object value = doGetResource(actualKey);</div><div class="line">    <span class="keyword">if</span> (value != <span class="keyword">null</span> &amp;&amp; logger.isTraceEnabled()) &#123;</div><div class="line">        logger.trace(<span class="string">"Retrieved value ["</span> + value + <span class="string">"] for key ["</span> + actualKey + <span class="string">"] bound to thread ["</span> +</div><div class="line">            Thread.currentThread().getName() + <span class="string">"]"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> value;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>于是，当transactionManager配置的datasource与写数据的datasource不一样时，开启事务和执行SQL会分别用两个链接，这样就导致：</p>
+<ul>
+<li>执行数据库操作使用的链接A</li>
+<li>回滚事务用的链接B</li>
+</ul>
+<p>当然也就回滚不掉了，这种情况都是在切换数据源的时候遇到的，干这种活的时候小心点就行了！</p>
+<h3 id="在Commit成功之后没有数据"><a href="#在Commit成功之后没有数据" class="headerlink" title="在Commit成功之后没有数据"></a>在Commit成功之后没有数据</h3><p>常遇到是事务不生效，前端时间遇到事务明明生效，但COMMIT后却没有数据，这时候就直接懵逼了！</p>
+<p>现象是：</p>
+<blockquote>
+<p>A调用B服务，B写数据库成功并将数据库ID返回给A，但B对应的数据库中并没有数据。</p>
+</blockquote>
+<p>是不是感觉见鬼了。首先，我们来对B服务的执行过程描述一下：</p>
+<ul>
+<li>数据库链接是绑定到线程上的；</li>
+<li>用线程池来处理服务请求，也就是说同一个线程可能会依次处理多个请求；</li>
+</ul>
+<p>也就是说：<strong>两次不同的请求可能会互相影响</strong>，而恰巧在B中使用的手动事务，那么该线程执行的流程如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">/********** 第一次HSF调用 **********/</span></div><div class="line"></div><div class="line">    <span class="comment">// 开启事务</span></div><div class="line">    DefaultTransactionDefinition def = <span class="keyword">new</span> DefaultTransactionDefinition();</div><div class="line">    def.setIsolationLevel(DefaultTransactionDefinition.ISOLATION_READ_COMMITTED);</div><div class="line">    def.setPropagationBehavior(DefaultTransactionDefinition.PROPAGATION_REQUIRED);</div><div class="line">    TransactionStatus status = transactionManager.getTransaction(def);</div><div class="line"></div><div class="line">    <span class="comment">// 由于各种原因没有终结</span></div><div class="line"></div><div class="line">    <span class="comment">/********** 第二次HSF调用 **********/</span></div><div class="line"></div><div class="line">    <span class="comment">// 调用被@Transactional拦截的方法。</span></div><div class="line"></div><div class="line">    <span class="comment">// 返回成功，但是数据没有落库。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在手动事务没有完成（回滚或提交）时，对应的线程又调用了@Transactional拦截的方法：</p>
+<ul>
+<li>在方法开始前：认为已经在事务中了，所以不会开启新事务</li>
+<li>在方法完成后：认为事务还没有处理完，所以并不会完结它</li>
+</ul>
+<p>简单来说：<strong>谁开启了事务，谁负责把它结束掉</strong>。手动事务在用的时候一定要慎重，能不用就别用了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>事务是应用保证的最后一道防线，必须引起足够的重视，而且，感觉用的越简单越可靠越好！</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/事务/" rel="tag">#事务</a>
+          
+            <a href="/tags/问题/" rel="tag">#问题</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/10/innodb-lock-1/" rel="prev" title="InnoDB的锁机制">
+                InnoDB的锁机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/11/09/transaction-1/"
+     data-title="事务问题（一）"
+     data-content=""
+     data-url="http://yoursite.com/2016/11/09/transaction-1/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/09/transaction-1/"
+           data-title="事务问题（一）" data-url="http://yoursite.com/2016/11/09/transaction-1/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常遇问题"><span class="nav-number">2.</span> <span class="nav-text">常遇问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#不生效之一：代码问题"><span class="nav-number">2.1.</span> <span class="nav-text">不生效之一：代码问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不生效之二：配置问题"><span class="nav-number">2.2.</span> <span class="nav-text">不生效之二：配置问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在Commit成功之后没有数据"><span class="nav-number">2.3.</span> <span class="nav-text">在Commit成功之后没有数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"wsztRush"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

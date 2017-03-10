@@ -1,0 +1,846 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="算法,最优化,数学," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="问题描述某公司生产玻璃产品，包括各种窗和玻璃门，该公司有三个工厂，分别负责：
+
+铝框架和硬件（每天4小时）
+木质框架（每天12小时）
+玻璃和组装（每天18小时）
+
+高层决定将生产能力转移到有较大销售潜力的两种新产品：
+
+产品一每批需要工厂一1小时、工厂三3小时，每件利润3；
+产品二每批需要工厂二2小时、工厂三2小时，每件利润5；
+
+高层现在很头疼，怎样安排生产才能使得利润最大？假设产品一生产$x_">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单纯形法">
+<meta property="og:url" content="http://yoursite.com/2016/11/23/simplex-method-1/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="问题描述某公司生产玻璃产品，包括各种窗和玻璃门，该公司有三个工厂，分别负责：
+
+铝框架和硬件（每天4小时）
+木质框架（每天12小时）
+玻璃和组装（每天18小时）
+
+高层决定将生产能力转移到有较大销售潜力的两种新产品：
+
+产品一每批需要工厂一1小时、工厂三3小时，每件利润3；
+产品二每批需要工厂二2小时、工厂三2小时，每件利润5；
+
+高层现在很头疼，怎样安排生产才能使得利润最大？假设产品一生产$x_">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/726a537f7b895d561a446892412652ab/tmp.JPG">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/8d1cd4adee33f29df4afc297095fd8f5/tmp.JPG">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/44ed9d08089fd9c555d416c8b4573334/tmp.JPG">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/d963348ca84ac37ebcffe668ac8d90fe/image.png">
+<meta property="og:updated_time" content="2017-02-06T22:41:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单纯形法">
+<meta name="twitter:description" content="问题描述某公司生产玻璃产品，包括各种窗和玻璃门，该公司有三个工厂，分别负责：
+
+铝框架和硬件（每天4小时）
+木质框架（每天12小时）
+玻璃和组装（每天18小时）
+
+高层决定将生产能力转移到有较大销售潜力的两种新产品：
+
+产品一每批需要工厂一1小时、工厂三3小时，每件利润3；
+产品二每批需要工厂二2小时、工厂三2小时，每件利润5；
+
+高层现在很头疼，怎样安排生产才能使得利润最大？假设产品一生产$x_">
+<meta name="twitter:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/726a537f7b895d561a446892412652ab/tmp.JPG">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/23/simplex-method-1/"/>
+
+
+  <title> 单纯形法 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                单纯形法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-23T20:53:00+08:00" content="2016-11-23">
+              2016-11-23
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/23/simplex-method-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/23/simplex-method-1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>某公司生产玻璃产品，包括各种窗和玻璃门，该公司有三个工厂，分别负责：</p>
+<ol>
+<li>铝框架和硬件（每天4小时）</li>
+<li>木质框架（每天12小时）</li>
+<li>玻璃和组装（每天18小时）</li>
+</ol>
+<p>高层决定将生产能力转移到有较大销售潜力的两种新产品：</p>
+<ol>
+<li>产品一每批需要工厂一1小时、工厂三3小时，每件利润3；</li>
+<li>产品二每批需要工厂二2小时、工厂三2小时，每件利润5；</li>
+</ol>
+<p>高层现在很头疼，怎样安排生产才能使得利润最大？假设产品一生产$x_1$、产品二生产$x_2$，得到数学模型如下：</p>
+<p>$$<br>\begin{aligned}<br>max\ Z &amp;= 3x_1 + 5x_2 &amp; \\<br>s.t.\ &amp;x_1 &amp; \leqslant  &amp; 4 \\<br> &amp; 2x_2 &amp; \leqslant &amp; 12 \\<br> &amp; 3x_1 + 2x_2 &amp; \leqslant &amp; 18 \\<br> &amp; x_1 \geqslant 0, x_2 \geqslant  0 \\<br>\end{aligned}<br>$$</p>
+<p>单纯形法就是要解决这种在有限制的情况下最优解！</p>
+<h2 id="统一模型及解法"><a href="#统一模型及解法" class="headerlink" title="统一模型及解法"></a>统一模型及解法</h2><p>图形总是更直观一些，将限制条件所代表的区域（可行域）画到图上：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/726a537f7b895d561a446892412652ab/tmp.JPG" alt="tmp"></p>
+<p>而目标函数如下，并且可以上下移动，上移时收益会增大：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/8d1cd4adee33f29df4afc297095fd8f5/tmp.JPG" alt="tmp"></p>
+<p>发现在(2,6)的时候会取到最大值36：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/44ed9d08089fd9c555d416c8b4573334/tmp.JPG" alt="tmp"></p>
+<p>从图形上可以看到一些性质：</p>
+<ol>
+<li>约束条件围成了一个凸多边形；</li>
+<li>最优解一定会出现在某个顶点上；</li>
+</ol>
+<p>对二维、简单的问题用图形来找答案是没有问题的，但是更高维度就不现实了，需要找到统一的形式和代数解法！</p>
+<h3 id="标准形式"><a href="#标准形式" class="headerlink" title="标准形式"></a>标准形式</h3><p>在数学上常用的套路是：</p>
+<ol>
+<li>找到标准问题的各种解法；</li>
+<li>将其他形式的问题通过各种方法转换成标准问题；</li>
+</ol>
+<p>这类最优化问题的标准形式用向量描述如下：</p>
+<p>$$<br>\begin{aligned}<br>max\ Z&amp; = CX \<br>s.t. &amp; AX = b \<br>&amp; X \geqslant 0<br>\end{aligned}<br>$$</p>
+<p>其中：$C=\begin{bmatrix} c_1, …, c<em>n\end{bmatrix}$，$A=\begin{bmatrix} a</em>{11} &amp; … &amp; a<em>{1n}\ … &amp;  &amp; … \ a</em>{m1} &amp; … &amp; a_{mn}\end{bmatrix}$，$b=\begin{bmatrix} b_1 \ … \ b_m\end{bmatrix}$，$X=\begin{bmatrix}x_1 \ …\ x_n\end{bmatrix}$，特点为：</p>
+<ol>
+<li>目标函数：最大化</li>
+<li>约束条件：等式</li>
+<li>决策变量：非负</li>
+</ol>
+<p>当存在$c_i &gt; 0$且对应的$x_i$，那尝试将$x_i$变大目标函数就会增大，单纯形法的求解过程就是不断地寻找最合适的$x_i$，在约束条件允许的条件下增大它：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/d963348ca84ac37ebcffe668ac8d90fe/image.png" alt="image"></p>
+<h3 id="初始可行解"><a href="#初始可行解" class="headerlink" title="初始可行解"></a>初始可行解</h3><p>对原矩形分解得到（其中$B$可逆）：</p>
+<p>$$<br>A=\begin{bmatrix}B,N\end{bmatrix}<br>$$</p>
+<p>相应的$X$可以分解为：</p>
+<p>$$<br>X=\begin{bmatrix}X_B \ X_N\end{bmatrix}<br>$$</p>
+<p>其中$X_B$为<strong>基变量</strong>、$X_N$为<strong>非基变量</strong>，由约束得到：</p>
+<p>$$<br>\begin{bmatrix}B,N\end{bmatrix} \begin{bmatrix}X_B \ X_N\end{bmatrix} = b \Rightarrow<br>BX_B + NX_N=b \Rightarrow<br>X_B = B^{-1}b-B^{-1}NX_N<br>$$</p>
+<p>令$X_N=0$即得到了一个初始可行解。说起来容易做起来难，可逆总感觉是个比较麻烦的事情，有没有一些简单的办法？</p>
+<h4 id="大M法"><a href="#大M法" class="headerlink" title="大M法"></a>大M法</h4><p>在原有的矩阵中找可逆子阵毕竟还是困难的，那么另辟蹊径：</p>
+<blockquote>
+<p>大M的思路不是去寻找，而是去构造。</p>
+</blockquote>
+<p>设$M$是一个无穷大的数，对于：</p>
+<p>$$<br>\begin{aligned}<br>max\ z =\ &amp;  x_1 + x_2 \<br>&amp; x_1 + 2x_2= 10<br>\end{aligned}<br>$$</p>
+<p>处理之后得到：</p>
+<p>$$<br>\begin{aligned}<br>max\ z =\ &amp;  x_1 + x_2 - Mx_3 \<br>&amp; x_1 + 2x_2 + x_3= 10<br>\end{aligned}<br>$$</p>
+<p>由于$x_3$在目标函数的中的系数巨大无比，那么在有最优解时必然有$x_3=0$，而初始可行解显然可以为$\begin{bmatrix}x_3\end{bmatrix}$。</p>
+<h4 id="两阶段法"><a href="#两阶段法" class="headerlink" title="两阶段法"></a>两阶段法</h4><p>大M法虽好，但是计算机终究是不动无穷大的M为何物，为了求得可行解，可构造新问题（第一阶段）：</p>
+<p>$$<br>\begin{aligned}<br>max\ z =\ &amp; -x_3 \<br>&amp; x_1 + 2x_2 + x_3= 10<br>\end{aligned}<br>$$</p>
+<p>得到的结果不是0则说明原问题无解，否则以第一阶段的结果$\begin{bmatrix}10,0,0\end{bmatrix}$为初始可行解求原问题最优解（第二阶段）。</p>
+<h3 id="最优性校验"><a href="#最优性校验" class="headerlink" title="最优性校验"></a>最优性校验</h3><p>对于一个基本可行解$X=\begin{bmatrix}X_B \ X_N \end{bmatrix}$对应的目标值为：</p>
+<p>$$<br>\begin{aligned}<br>Z &amp; = CX \<br> &amp; = \begin{bmatrix}C_B,C_N \end{bmatrix}\begin{bmatrix}X_B \ X_N \end{bmatrix} \<br> &amp; = C_BX_B + C_NX_N \<br> &amp; = C_B(B^{-1}b-B^{-1}NX_N)+C_NX_N \<br> &amp; = C_BB^{-1}b+(C_N-C_BB^{-1}N)X_N \<br> &amp; =  C_BB^{-1}b + \sigma_NX_N<br>\end{aligned}<br>$$</p>
+<p>如果存在$\sigma_i &gt; 0$，那么我们只需要增大相应的$x_i$即可得到更大的Z，也就是说：</p>
+<blockquote>
+<p>当前解为最优解等价于$\sigma_N \leqslant 0 $。</p>
+</blockquote>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>当有多个$\sigma_i &gt; 0$时，选择最大的一个来增加对应的$x_i$，有点像：</p>
+<blockquote>
+<p>向最大的梯度增加。</p>
+</blockquote>
+<p>最大的梯度并不一定意味着最大的增长量。每次优化都会涉及到两个动作：</p>
+<ol>
+<li>$x_i$从0变大的过程，称为<strong>入基</strong></li>
+<li>由于约束条件的存在，在$x_i$变大的时候必然有个$x_j$会减小到0，称为<strong>出基</strong></li>
+</ol>
+<p>再来看：</p>
+<p>$$<br>X_B = B^{-1}b-B^{-1}NX_N \Rightarrow X_B = B^{-1}b-B^{-1}P_ix_i<br>$$</p>
+<p>其中$P_i$为$x_i$对应的系数向量，于是，$X_B$中首先变成0的为：</p>
+<p>$$<br>min\left { \frac{(B^{-1}b)_k}{(B^{-1}P_i)_k},  (B^{-1}P_i)_k &gt; 0\right }<br>$$</p>
+<p>同时可以得到：</p>
+<blockquote>
+<p>不存在$(B^{-1}P_i)_k &gt; 0$时，无最优解。</p>
+</blockquote>
+<h2 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h2><p>在单纯形法的计算过程中，最大的工作量在于需要不停地求解$B^{-1}$，那么：</p>
+<blockquote>
+<p>是否可以简化$B^{-1}$的计算？</p>
+</blockquote>
+<p>假如当前的逆矩阵为$B^{-1}$，基为$B=\begin{pmatrix}P_1, P_2, …, P_l, …P_m \end{pmatrix}$，新基为$B_1=\begin{pmatrix}P_1, P_2, …, P_k, …P_m \end{pmatrix}$，对比：</p>
+<p>$$<br>\begin{aligned}<br>B^{-1}B &amp; = \begin{pmatrix} B^{-1}P_1,B^{-1}P_2,…,B^{-1}P_l,…,B^{-1}P_m\end{pmatrix} \<br> &amp; = \begin{pmatrix} e_1,e_2,…,e_l,…,e_m\end{pmatrix} \<br> &amp; = I \<br>B^{-1}B_1 &amp; = \begin{pmatrix} B^{-1}P_1,B^{-1}P_2,…,B^{-1}P_k,…,B^{-1}P_m\end{pmatrix} \<br> &amp; =\begin{pmatrix} e_1,e_2,…,B^{-1}P_k,…,e_m\end{pmatrix} \<br>\end{aligned}<br>$$</p>
+<p>假设不同的列的值为：</p>
+<p>$$<br>B^{-1}P<em>k = \begin{bmatrix} a</em>{1k} \ a<em>{2k} \ … \ a</em>{lk} \ … \ a_{mk} \end{bmatrix}<br>$$</p>
+<p>于是有：</p>
+<p>$$<br>E_{lk}= (B^{-1}B<em>1)^{-1} = \begin{bmatrix}<br>1 &amp; 0 &amp; &amp; -\frac{a</em>{1k}}{a<em>{lk}} &amp;  &amp; 0 \<br>0 &amp; 1 &amp; &amp; -\frac{a</em>{2k}}{a<em>{lk}} &amp;  &amp;  0 \<br> &amp; &amp; \ddots &amp; \vdots &amp; &amp; \<br> &amp;  &amp;  &amp; \frac{1}{a</em>{lk}} &amp;  &amp;  \<br> &amp; &amp; &amp; \vdots &amp; \ddots &amp;  \<br>0 &amp; &amp; &amp; -\frac{a<em>{mk}}{a</em>{lk}} &amp;  &amp;  1<br> \end{bmatrix}<br>$$</p>
+<p>推导得到：</p>
+<p>$$<br>E_{lk}= (B^{-1}B_1)^{-1} = B^{-1}_1B \Rightarrow B^{-1}<em>1 = E</em>{lk}B^{-1}<br>$$</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>问题如下：</p>
+<p>$$<br>\begin{aligned}<br>max \ Z = &amp; 3x_1 + 2x_2 \<br>&amp; x_1 + x_2 + x_3 = 40 \<br>&amp; 2x_1 + x_2 + x_4 = 60<br>\end{aligned}<br>$$</p>
+<p>解：<br>得到$C=(3,2,0,0)$，$A=\begin{bmatrix}1&amp;1&amp;1&amp;0 \ 2&amp;1&amp;0&amp;1\end{bmatrix}$，$b=\begin{bmatrix}40\60\end{bmatrix}$，容易看到基变量为$x_3,x_4$，非基变量为$x_1, x_2$：</p>
+<p>$$<br>B_0 =(P_3, P_4)= \begin{bmatrix}1 &amp; 0 \ 0 &amp; 1 \end{bmatrix} = B_0^{-1} \<br>X_B = B_0^{-1}b = \begin{bmatrix} 40 \ 60 \end{bmatrix} \<br>X_0 = \begin{bmatrix} 0 \ 0 \ 40 \ 60 \end{bmatrix}<br>$$</p>
+<p>最优性校验：</p>
+<p>$$<br>\begin{aligned}<br>\sigma_N &amp; = C_N-C_BB^{-1}_0N \<br>&amp; = (c_1,c_2) - C_BB^{-1}_0(P_1, P_2) \<br>&amp; = (3,2)-(0,0)\begin{bmatrix}1&amp;0\0&amp;1\end{bmatrix}\begin{bmatrix}1&amp;1\2&amp;1\end{bmatrix} \<br>&amp; = (3,2) &gt; 0<br>\end{aligned}<br>$$</p>
+<p>得到$x_1$为入基，接着：</p>
+<p>$$<br>\begin{aligned}<br>B_0^{-1}P_1 &amp; = \begin{bmatrix}1&amp;0\0&amp;1\end{bmatrix}\begin{bmatrix}1\2\end{bmatrix} \<br> &amp; =\begin{bmatrix}1\2\end{bmatrix} \<br> &amp; &gt; 0 \<br>min{\frac{(B_0^{-1}b)_3}{(B_0^{-1}P_1)_3},\frac{(B_0^{-1}b)_4}{(B_0^{-1}P_1)_4}} &amp; = { \frac{40}{1},\frac{60}{2}} \<br> &amp; = \frac{60}{2}<br>\end{aligned}<br>$$</p>
+<p>得到换出变量应该为$x_4$。此时基变量为$x_3,x_1$，非基变量为$x_2,x_4$，更新逆矩阵为：</p>
+<p>$$<br>B<em>1^{-1}<br>= E</em>{41}B_0^{-1}<br>=\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}\begin{bmatrix}1&amp;0\0&amp;1\end{bmatrix}<br>=\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}<br>$$</p>
+<p>开始第二次迭代：</p>
+<p>$$<br>X_B<br>=B_1^{-1}b<br>=\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}\begin{bmatrix}40\60\end{bmatrix}<br>=\begin{bmatrix}10\30\end{bmatrix} \<br>X_1=\begin{bmatrix}30\0\10\0\end{bmatrix}<br>$$</p>
+<p>最优性校验：</p>
+<p>$$<br>\begin{aligned}<br>\sigma_N &amp; = C_N-C_BB^{-1}_1N \<br>&amp; = (c_2,c_4) - C_BB^{-1}_1(P_2, P_4) \<br>&amp; = (2,0)-(0,3)\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}\begin{bmatrix}1&amp;0\1&amp;1\end{bmatrix} \<br>&amp; = (\frac{1}{2},-\frac{3}{2}) &gt; 0<br>\end{aligned}<br>$$</p>
+<p>得到$x_2$为入基，接着：</p>
+<p>$$<br>\begin{aligned}<br>B_1^{-1}P_2 &amp; = \begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}\begin{bmatrix}1\1\end{bmatrix} \<br> &amp; =\begin{bmatrix}\frac{1}{2}\ \frac{1}{2}\end{bmatrix} \<br> &amp; &gt; 0 \<br>min{\frac{(B_1^{-1}b)_3}{(B_1^{-1}P_2)_3},\frac{(B_1^{-1}b)_1}{(B_1^{-1}P_2)_1}} &amp; = { \frac{10}{1/2},\frac{30}{1/2}} \<br> &amp; = \frac{10}{1/2}<br>\end{aligned}<br>$$</p>
+<p>得到换出变量应该为$x_3$。此时基变量为$x_2,x_1$，非基变量为$x_3,x_4$，更新逆矩阵为：</p>
+<p>$$<br>B<em>2^{-1}<br>= E</em>{32}B_1^{-1}<br>=\begin{bmatrix}2&amp;0\ -1&amp;1\end{bmatrix}\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}<br>=\begin{bmatrix}2&amp;-1\ -1&amp;1\end{bmatrix}<br>$$</p>
+<p>开始第三次迭代：</p>
+<p>$$<br>X_B<br>=B_2^{-1}b<br>=\begin{bmatrix}2&amp;-1\ -1&amp;1\end{bmatrix}\begin{bmatrix}40\60\end{bmatrix}<br>=\begin{bmatrix}20\20\end{bmatrix} \<br>X_2=\begin{bmatrix}20\20\0\0\end{bmatrix}<br>$$</p>
+<p>最优性校验：</p>
+<p>$$<br>\begin{aligned}<br>\sigma_N &amp; = C_N-C_BB^{-1}_2N \<br>&amp; = (c_3,c_4) - (c_2,c_1)B^{-1}_2(P_3, P_4) \<br>&amp; = (0,0)-(2,3)\begin{bmatrix}2&amp;-1\ -1&amp;1\end{bmatrix}\begin{bmatrix}1&amp;0\0&amp;1\end{bmatrix} \<br>&amp; = (-1,-1) &lt; 0<br>\end{aligned}<br>$$</p>
+<p>非基变量对应的校验数没有正数，于是得到最优解。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>$n$个变量对应的系数可以看做是$m$维空间中的$n$个变量，可以从中选择$m$个作为基：</p>
+<blockquote>
+<p>非基变量可以用基变量表示，也就是非基变量的变化可以用基变量的变化来表示。</p>
+</blockquote>
+<p>对于非基变量有$x_i &gt; 0$则可以看做是空间中的一个平面上方的部分：</p>
+<blockquote>
+<p>约束条件对应的可行域便是由这些非基变量表示的平面包成的凸多面体。</p>
+</blockquote>
+<p>非基变量都为0时，一定是在多面体的一个顶点上，此时如何找相邻的更优秀的顶点呢？沿着边找比较形象，但不容易实现，而换基的操作可以理解为：</p>
+<blockquote>
+<p>尝试沿着某个平面法向量的方向增长来找更优的顶点。</p>
+</blockquote>
+<p>多面体还是那个多面体，只不过是空间在不停地变换，而解则始终是在基的方向上搜索，这样可操作性会强一些。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag">#算法</a>
+          
+            <a href="/tags/最优化/" rel="tag">#最优化</a>
+          
+            <a href="/tags/数学/" rel="tag">#数学</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/10/innodb-lock-1/" rel="next" title="InnoDB的锁机制">
+                <i class="fa fa-chevron-left"></i> InnoDB的锁机制
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/01/random-search-overview-1/" rel="prev" title="随机性搜索算法">
+                随机性搜索算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/11/23/simplex-method-1/"
+     data-title="单纯形法"
+     data-content=""
+     data-url="http://yoursite.com/2016/11/23/simplex-method-1/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/23/simplex-method-1/"
+           data-title="单纯形法" data-url="http://yoursite.com/2016/11/23/simplex-method-1/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#统一模型及解法"><span class="nav-number">2.</span> <span class="nav-text">统一模型及解法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标准形式"><span class="nav-number">2.1.</span> <span class="nav-text">标准形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始可行解"><span class="nav-number">2.2.</span> <span class="nav-text">初始可行解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#大M法"><span class="nav-number">2.2.1.</span> <span class="nav-text">大M法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#两阶段法"><span class="nav-number">2.2.2.</span> <span class="nav-text">两阶段法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最优性校验"><span class="nav-number">2.3.</span> <span class="nav-text">最优性校验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化"><span class="nav-number">2.4.</span> <span class="nav-text">优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改进"><span class="nav-number">3.</span> <span class="nav-text">改进</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#例子"><span class="nav-number">4.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思考"><span class="nav-number">5.</span> <span class="nav-text">思考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"wsztRush"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

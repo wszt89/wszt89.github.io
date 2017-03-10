@@ -1,0 +1,793 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="算法,最优化," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="写在前面大学时ACM教练说过：
+
+所有的问题都可以通过搜索来解决，只要你搜的好。
+
+时过境迁，由于工作不得不在重操旧业，慢慢把之前搞过的算法都一个一个再捡起来。
+常见算法提到搜索，首先想到的是DFS和BFS，这两种算法一般的使用场景为：
+
+解空间比较小，或能用经典算法可以进行有效地减枝。
+
+但现实太复杂，往往不是想搜就能搜，比如旅行商问题，规模较大时，一个暴力搜索下去，可能几百年过去了也没个结果。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="随机性搜索算法">
+<meta property="og:url" content="http://yoursite.com/2017/01/01/random-search-overview-1/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="写在前面大学时ACM教练说过：
+
+所有的问题都可以通过搜索来解决，只要你搜的好。
+
+时过境迁，由于工作不得不在重操旧业，慢慢把之前搞过的算法都一个一个再捡起来。
+常见算法提到搜索，首先想到的是DFS和BFS，这两种算法一般的使用场景为：
+
+解空间比较小，或能用经典算法可以进行有效地减枝。
+
+但现实太复杂，往往不是想搜就能搜，比如旅行商问题，规模较大时，一个暴力搜索下去，可能几百年过去了也没个结果。">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/594db4bcf195ba3e307741fe1156672d/image.png">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/bc595240016fc6b965feae4ec5f65af5/image.png">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5b32599321dc78d425088f8e18b76dac/image.png">
+<meta property="og:updated_time" content="2017-02-06T22:41:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="随机性搜索算法">
+<meta name="twitter:description" content="写在前面大学时ACM教练说过：
+
+所有的问题都可以通过搜索来解决，只要你搜的好。
+
+时过境迁，由于工作不得不在重操旧业，慢慢把之前搞过的算法都一个一个再捡起来。
+常见算法提到搜索，首先想到的是DFS和BFS，这两种算法一般的使用场景为：
+
+解空间比较小，或能用经典算法可以进行有效地减枝。
+
+但现实太复杂，往往不是想搜就能搜，比如旅行商问题，规模较大时，一个暴力搜索下去，可能几百年过去了也没个结果。">
+<meta name="twitter:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/594db4bcf195ba3e307741fe1156672d/image.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/01/random-search-overview-1/"/>
+
+
+  <title> 随机性搜索算法 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                随机性搜索算法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-01T20:53:00+08:00" content="2017-01-01">
+              2017-01-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/01/random-search-overview-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/01/random-search-overview-1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>大学时ACM教练说过：</p>
+<blockquote>
+<p>所有的问题都可以通过搜索来解决，只要你搜的好。</p>
+</blockquote>
+<p>时过境迁，由于工作不得不在重操旧业，慢慢把之前搞过的算法都一个一个再捡起来。</p>
+<h2 id="常见算法"><a href="#常见算法" class="headerlink" title="常见算法"></a>常见算法</h2><p>提到搜索，首先想到的是<a href="http://baike.baidu.com/item/DFS/5055" target="_blank" rel="external">DFS</a>和<a href="http://baike.baidu.com/link?url=bkfO6VdGhbfXiQgH_6pk6O6QGp6wnCZEpJgHY-J3q2H0eiX6bvoXcFA1YhNrC3pxvQoh0jpEDNWIUejVoBwlSeZGzFxhsefjmxVM1XLuyVIDfqn0gafNUNqcXywXxWf6cta5sE8mH_hrxEXOt_XthSsZAfpRIt-w3VvDg5CWM1caaqxLdbfAYwQFJinkpWDJ" target="_blank" rel="external">BFS</a>，这两种算法一般的使用场景为：</p>
+<blockquote>
+<p>解空间比较小，或能用经典算法可以进行有效地减枝。</p>
+</blockquote>
+<p>但现实太复杂，往往不是想搜就能搜，比如<a href="http://baike.baidu.com/link?url=zQ31wSIpIVt9CcrXDQG0GcQjCuA1mhV1P_uYgc3no_h5-tsHu3FSna9BpzIBaNnySYcrBy-oXVcUe7uUuI5cfJfk63ywzq0WITOdLAASJ4D-HNFMoo1nc1Id-0naKWydFOElAoXwDyFJ4nA3pMHWVq" target="_blank" rel="external">旅行商问题</a>，规模较大时，一个暴力搜索下去，可能几百年过去了也没个结果。</p>
+<p>不要急着放弃，找不到最好、找到次优解也是可以的。</p>
+<h3 id="爬山算法"><a href="#爬山算法" class="headerlink" title="爬山算法"></a>爬山算法</h3><p>所谓爬山，就是贪心策略：</p>
+<blockquote>
+<p>每次找附近的一个更优解，没有就不动了。</p>
+</blockquote>
+<p>没有被严格证明过的贪心策略容易陷入局部最优解，看下图（A为初始解）：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/594db4bcf195ba3e307741fe1156672d/image.png" alt="image"></p>
+<p>从A爬到B以后，已经无处可爬（A、C都比B低），无法到达最高点D。</p>
+<h3 id="模拟退火算法"><a href="#模拟退火算法" class="headerlink" title="模拟退火算法"></a>模拟退火算法</h3><p>源于对金属退火过程的模拟：</p>
+<blockquote>
+<p>温度越高，分子运动的随机性越大，随着温度的降低趋于稳定。</p>
+</blockquote>
+<p>结合到上面例子，在到B时会有一定的概率选择C（走下坡路）：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/bc595240016fc6b965feae4ec5f65af5/image.png" alt="image"></p>
+<p>随着温度的降低（迭代次数的增加），接受较差结果的可能性会越来越低。这样做的好处是：</p>
+<ol>
+<li>利用随机性来跳出局部最优；</li>
+<li>让整个过程尽量收敛；</li>
+</ol>
+<p>简单来说就是一种随机策略，不要被复杂的物理学公式吓懵逼了。</p>
+<h3 id="启发式算法"><a href="#启发式算法" class="headerlink" title="启发式算法"></a>启发式算法</h3><p>随机尝试有些盲目，如果能优先走好走的路可能（仅仅是可能）会快些：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5b32599321dc78d425088f8e18b76dac/image.png" alt="image"></p>
+<p>在B处可以向A、C走，由于C比较好一点（从高度判断），那么先尝试C：</p>
+<ol>
+<li>启发函数需要一些直觉；</li>
+<li>快速找到结果之后使用剪枝加快搜索，减少不必要的尝试；</li>
+</ol>
+<p>启发式地搜索最短路径可以看<a href="http://blog.csdn.net/bmexue/article/details/6967027" target="_blank" rel="external">这里</a>。</p>
+<h3 id="蚁群算法"><a href="#蚁群算法" class="headerlink" title="蚁群算法"></a>蚁群算法</h3><p>灵感来源于蚂蚁找食物的过程：</p>
+<blockquote>
+<p>没有哪只蚂蚁有上帝视角，也不知道食物在哪里，但它们往往能找到通向食物的最短路径。</p>
+</blockquote>
+<p>它们是怎么做到的呢？</p>
+<ol>
+<li>每只蚂蚁会随机地朝各个方向前进，过程中会参考同伴留下的信息素，倾向于往信息素多的地方走；</li>
+<li>找到食物<strong>之后</strong>，它会在路径上留下信息素来吸引其他蚂蚁；</li>
+<li>信息素会挥发；</li>
+</ol>
+<p>在比较短的路径上会聚集越来越多的信息素，于是找到的最短路径。程序实现需要考虑：</p>
+<ol>
+<li>如何计算蚂蚁去各个临近点的可能性？</li>
+<li>如何设置留下信息素的多少？通常和目标有关。</li>
+</ol>
+<p>对TSP问题的优化程序可以参考<a href="http://blog.csdn.net/jjj19891128/article/details/25230089" target="_blank" rel="external">这里</a>，每只蚂蚁互相之间影响较小，需要同步的仅仅是信息素，看似可以搞成并行计算。</p>
+<h3 id="粒子群算法"><a href="#粒子群算法" class="headerlink" title="粒子群算法"></a>粒子群算法</h3><p>灵感来源于鸟群觅食行为：</p>
+<blockquote>
+<p>一群麻雀中，每只都知道自己距离玉米地有多远，但不知道具体在哪里。麻雀想吃玉米的话，需要留心观察离玉米地最近的麻雀所在位置的附近。</p>
+</blockquote>
+<p>其中：</p>
+<ol>
+<li>麻雀离玉米地的距离：评估函数；</li>
+<li>离玉米地最近的麻雀所在位置：全局最优解；</li>
+</ol>
+<p>最终鸟群就可能聚集在玉米地了。简单描述算法的思路为：</p>
+<blockquote>
+<p>通过参考全局最优解来优化自己，有点启发式地味道。</p>
+</blockquote>
+<p>旅行商问题的粒子群解法可以参考<a href="http://www.cnblogs.com/maybe2030/p/5043356.html" target="_blank" rel="external">这里</a>，与蚁群算法的区别参考<a href="http://www.doc88.com/p-444545622421.html" target="_blank" rel="external">这里</a>。</p>
+<h3 id="遗传算法"><a href="#遗传算法" class="headerlink" title="遗传算法"></a>遗传算法</h3><p>灵感来源于达尔文进化论：</p>
+<blockquote>
+<p>种群中每个个体都有自己的DNA，经过不断的繁衍，越来越适应环境，从而生存下来。</p>
+</blockquote>
+<p>繁衍的过程包括：</p>
+<ol>
+<li>选择：把优秀的DNA直接传给下一代；</li>
+<li>交叉：把两个优秀的DNA中的某一段进行交换，然后传给下一代；</li>
+<li>变异：把优秀的DNA中间的某一段进行突变（随机性变化，可能变化也可能变好）；</li>
+</ol>
+<p>经过一段时间之后，整个种群会越来越适应环境。可以看出：程序设计关键在于适应函数和算子。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>因为都没有复杂的逻辑，所以就不写DEMO了。一句话总结：</p>
+<blockquote>
+<p>不懂生物学的开发不是合格的工程师。</p>
+</blockquote>
+<p>嗯，正经点：</p>
+<blockquote>
+<p>通过随机来跳出局部最优，通过启发式来增强搜索速度，通过衰减来提高局部优化能力。</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag">#算法</a>
+          
+            <a href="/tags/最优化/" rel="tag">#最优化</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/23/simplex-method-1/" rel="next" title="单纯形法">
+                <i class="fa fa-chevron-left"></i> 单纯形法
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/07/how-to-communicate/" rel="prev" title="如何沟通">
+                如何沟通 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/01/01/random-search-overview-1/"
+     data-title="随机性搜索算法"
+     data-content=""
+     data-url="http://yoursite.com/2017/01/01/random-search-overview-1/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/01/01/random-search-overview-1/"
+           data-title="随机性搜索算法" data-url="http://yoursite.com/2017/01/01/random-search-overview-1/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见算法"><span class="nav-number">2.</span> <span class="nav-text">常见算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#爬山算法"><span class="nav-number">2.1.</span> <span class="nav-text">爬山算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模拟退火算法"><span class="nav-number">2.2.</span> <span class="nav-text">模拟退火算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启发式算法"><span class="nav-number">2.3.</span> <span class="nav-text">启发式算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#蚁群算法"><span class="nav-number">2.4.</span> <span class="nav-text">蚁群算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#粒子群算法"><span class="nav-number">2.5.</span> <span class="nav-text">粒子群算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遗传算法"><span class="nav-number">2.6.</span> <span class="nav-text">遗传算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"wsztRush"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
