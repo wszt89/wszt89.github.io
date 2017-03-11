@@ -120,7 +120,7 @@
 
 非负
 可加：f(">
-<meta property="og:updated_time" content="2017-03-11T03:14:26.000Z">
+<meta property="og:updated_time" content="2017-03-11T03:25:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ID3">
 <meta name="twitter:description" content="信息熵对一片文章，我们可能会评价信息量很大，也可能会说废话连篇。那么：
@@ -507,9 +507,9 @@
 <p>当$outlook=sunny$时，$p_n=3/5$,$p_p=2/5$，得到信息熵为：</p>
 <p>$$<br>-\frac{3}{5}log(\frac{3}{5})-\frac{2}{5}log(\frac{2}{5})=0.971<br>$$</p>
 <p>同样可以得到$outlook=overcast$时的信息熵为0,$outlook=rain$时为0.971,于是此时的信息增益为：</p>
-<p>$$<br>gain(outlook)=0.940 - (\frac{5}{14} <em> 0.971 + \frac{4}{14} </em> 0 + \frac{5}{14} * 0.971) = 0.246<br>$$</p>
+<p>$$<br>gain(outlook)=0.940-(\frac{5}{14}*0.971+\frac{4}{14}*0+\frac{5}{14}*0.971)=0.246<br>$$</p>
 <p>同样的方法可以得到：</p>
-<p>$$<br>\begin{align}<br>gain(temperature) &amp;= 0.029 \<br>gain(humidity) &amp;= 0.151 \<br>gain(windy) &amp;= 0.048<br>\end{align}<br>$$</p>
+<p>$$<br>\begin{align}<br>gain(temperature) &amp;= 0.029 \\<br>gain(humidity) &amp;= 0.151 \\<br>gain(windy) &amp;= 0.048<br>\end{align}<br>$$</p>
 <p>这样第一层选择$outlook$作为条件效果最好，后面各层可以依次进行选择。</p>
 <h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2>
       
