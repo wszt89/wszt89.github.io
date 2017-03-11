@@ -98,9 +98,8 @@
 
 概率发生的变化越大（从无序到有序），信息量也就越大！而且信息量的多少应该满足：
 
-正数
-可加性
-连">
+非负
+可加：f(">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ID3">
 <meta property="og:url" content="http://yoursite.com/2017/03/10/id3/index.html">
@@ -119,10 +118,9 @@
 
 概率发生的变化越大（从无序到有序），信息量也就越大！而且信息量的多少应该满足：
 
-正数
-可加性
-连">
-<meta property="og:updated_time" content="2017-03-10T14:28:10.000Z">
+非负
+可加：f(">
+<meta property="og:updated_time" content="2017-03-11T03:14:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ID3">
 <meta name="twitter:description" content="信息熵对一片文章，我们可能会评价信息量很大，也可能会说废话连篇。那么：
@@ -139,9 +137,8 @@
 
 概率发生的变化越大（从无序到有序），信息量也就越大！而且信息量的多少应该满足：
 
-正数
-可加性
-连">
+非负
+可加：f(">
 
 
 
@@ -375,15 +372,146 @@
 </blockquote>
 <p><strong>概率发生的变化越大（从无序到有序），信息量也就越大！</strong>而且信息量的多少应该满足：</p>
 <ul>
-<li>正数</li>
-<li>可加性</li>
-<li>连续性</li>
+<li>非负</li>
+<li>可加：f(xy)=f(x)+f(y)</li>
+<li>连续</li>
 <li>递减：概率越小，信息量越大</li>
 </ul>
 <p>满足这些性质的函数只有：</p>
 <p>$$<br>-log(x)<br>$$</p>
+<p>对于全概率事件$(A_1,A_2,…,A_n)$，每个事件的概率为$(p_1,p_2,…,p_n)$，信息量为：</p>
+<p>$$<br>entropy(X) = -\sum p_i \times log(p_i)<br>$$</p>
 <p>这就是香农大神搞出来的<strong>信息熵</strong>。</p>
-<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2>
+<h2 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h2><p>简单来说，目的就是：</p>
+<blockquote>
+<p>叶子节点的信息熵越小越好。</p>
+</blockquote>
+<p>也就是说，在每次选择一个属性时，对样本整体的熵降低的越多越好，也就是<strong>信息增益</strong>越大越好。</p>
+<blockquote>
+<p>选出来的属性就不是“废话”了~</p>
+</blockquote>
+<p>举个例子：</p>
+<table>
+<thead>
+<tr>
+<th>outlook</th>
+<th>temperature</th>
+<th>humidity</th>
+<th>windy</th>
+<th>class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sunny</td>
+<td>hot</td>
+<td>high</td>
+<td>false</td>
+<td>N</td>
+</tr>
+<tr>
+<td>sunny</td>
+<td>hot</td>
+<td>high</td>
+<td>true</td>
+<td>N</td>
+</tr>
+<tr>
+<td>overcast</td>
+<td>hot</td>
+<td>high</td>
+<td>false</td>
+<td>P</td>
+</tr>
+<tr>
+<td>rain</td>
+<td>mild</td>
+<td>high</td>
+<td>false</td>
+<td>P</td>
+</tr>
+<tr>
+<td>rain</td>
+<td>cool</td>
+<td>normal</td>
+<td>false</td>
+<td>P</td>
+</tr>
+<tr>
+<td>rain</td>
+<td>cool</td>
+<td>normal</td>
+<td>true</td>
+<td>N</td>
+</tr>
+<tr>
+<td>overcast</td>
+<td>cool</td>
+<td>normal</td>
+<td>true</td>
+<td>P</td>
+</tr>
+<tr>
+<td>sunny</td>
+<td>mild</td>
+<td>high</td>
+<td>false</td>
+<td>N</td>
+</tr>
+<tr>
+<td>sunny</td>
+<td>cool</td>
+<td>normal</td>
+<td>false</td>
+<td>P</td>
+</tr>
+<tr>
+<td>rain</td>
+<td>mild</td>
+<td>normal</td>
+<td>false</td>
+<td>P </td>
+</tr>
+<tr>
+<td>sunny</td>
+<td>mild</td>
+<td>normal</td>
+<td>true</td>
+<td>P </td>
+</tr>
+<tr>
+<td>overcast</td>
+<td>mild</td>
+<td>high</td>
+<td>true</td>
+<td>P </td>
+</tr>
+<tr>
+<td>overcast</td>
+<td>hot</td>
+<td>normal</td>
+<td>false</td>
+<td>P </td>
+</tr>
+<tr>
+<td>rain</td>
+<td>mild</td>
+<td>high</td>
+<td>true</td>
+<td>N</td>
+</tr>
+</tbody>
+</table>
+<p>于是有$p_n=5/14$,$p_p=9/14$，整体的信息熵为：</p>
+<p>$$<br>-\frac{5}{14}log(\frac{5}{14})-\frac{9}{14}log(\frac{9}{14})=0.94<br>$$</p>
+<p>当$outlook=sunny$时，$p_n=3/5$,$p_p=2/5$，得到信息熵为：</p>
+<p>$$<br>-\frac{3}{5}log(\frac{3}{5})-\frac{2}{5}log(\frac{2}{5})=0.971<br>$$</p>
+<p>同样可以得到$outlook=overcast$时的信息熵为0,$outlook=rain$时为0.971,于是此时的信息增益为：</p>
+<p>$$<br>gain(outlook)=0.940 - (\frac{5}{14} <em> 0.971 + \frac{4}{14} </em> 0 + \frac{5}{14} * 0.971) = 0.246<br>$$</p>
+<p>同样的方法可以得到：</p>
+<p>$$<br>\begin{align}<br>gain(temperature) &amp;= 0.029 \<br>gain(humidity) &amp;= 0.151 \<br>gain(windy) &amp;= 0.048<br>\end{align}<br>$$</p>
+<p>这样第一层选择$outlook$作为条件效果最好，后面各层可以依次进行选择。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2>
       
     </div>
 
@@ -559,7 +687,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息熵"><span class="nav-number">1.</span> <span class="nav-text">信息熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法"><span class="nav-number">2.</span> <span class="nav-text">算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息熵"><span class="nav-number">1.</span> <span class="nav-text">信息熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法原理"><span class="nav-number">2.</span> <span class="nav-text">算法原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
         </section>
