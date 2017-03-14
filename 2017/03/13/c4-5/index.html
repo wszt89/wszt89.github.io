@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="机器学习,决策树," />
 
 
 
@@ -84,12 +84,55 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="wsztrush">
-<meta property="og:url" content="http://yoursite.com/archives/2017/03/index.html">
+<meta name="description" content="针对ID3算法的缺点：
+
+不能处理连续数据
+倾向于选择可选值较多的属性（分得越细信息增益越大）
+过拟合
+贪心无法保证最优
+
+在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。
+信息增益率在属性上分的较细时，信息增益率较大，需要找一个量来抑制这种增加：
+
+越细属性自身的信息量也会增加。
+
+在ID3中的例子，信息增益为：
+$$Gain(outlook)=0.940-(\frac{">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C4.5">
+<meta property="og:url" content="http://yoursite.com/2017/03/13/c4-5/index.html">
 <meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="针对ID3算法的缺点：
+
+不能处理连续数据
+倾向于选择可选值较多的属性（分得越细信息增益越大）
+过拟合
+贪心无法保证最优
+
+在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。
+信息增益率在属性上分的较细时，信息增益率较大，需要找一个量来抑制这种增加：
+
+越细属性自身的信息量也会增加。
+
+在ID3中的例子，信息增益为：
+$$Gain(outlook)=0.940-(\frac{">
+<meta property="og:updated_time" content="2017-03-14T00:18:49.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="wsztrush">
+<meta name="twitter:title" content="C4.5">
+<meta name="twitter:description" content="针对ID3算法的缺点：
+
+不能处理连续数据
+倾向于选择可选值较多的属性（分得越细信息增益越大）
+过拟合
+贪心无法保证最优
+
+在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。
+信息增益率在属性上分的较细时，信息增益率较大，需要找一个量来抑制这种增加：
+
+越细属性自身的信息量也会增加。
+
+在ID3中的例子，信息增益为：
+$$Gain(outlook)=0.940-(\frac{">
 
 
 
@@ -110,10 +153,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2017/03/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/13/c4-5/"/>
 
 
-  <title> 归档 | wsztrush </title>
+  <title> C4.5 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -134,7 +177,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  page-archive  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -222,177 +265,186 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
-
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 10 篇日志。 继续努力。
-    </span>
-
+  <div id="posts" class="posts-expand">
     
-
-      
-      
-      
-
-      
-        
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2017">2017</h2>
-        </div>
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/03/13/c4-5/" itemprop="url">
-              
-                <span itemprop="name">C4.5</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-03-13T14:57:29+08:00"
-              content="2017-03-13" >
-          03-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/03/10/id3/" itemprop="url">
-              
-                <span itemprop="name">ID3</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-03-10T21:28:01+08:00"
-              content="2017-03-10" >
-          03-10
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/03/10/gbdt/" itemprop="url">
-              
-                <span itemprop="name">梯度提升决策树</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-03-10T15:22:09+08:00"
-              content="2017-03-10" >
-          03-10
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/03/09/landor/" itemprop="url">
-              
-                <span itemprop="name">生与死</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-03-09T09:58:48+08:00"
-              content="2017-03-09" >
-          03-09
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
 
   
+  
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                C4.5
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-13T14:57:29+08:00" content="2017-03-13">
+              2017-03-13
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/03/13/c4-5/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/13/c4-5/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>针对<a href="http://owl-pi.com/2017/03/10/id3/" target="_blank" rel="external">ID3</a>算法的缺点：</p>
+<ol>
+<li>不能处理连续数据</li>
+<li>倾向于选择可选值较多的属性（分得越细信息增益越大）</li>
+<li>过拟合</li>
+<li>贪心无法保证最优</li>
+</ol>
+<p>在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。</p>
+<h2 id="信息增益率"><a href="#信息增益率" class="headerlink" title="信息增益率"></a>信息增益率</h2><p>在属性上分的较细时，信息增益率较大，需要找一个量来抑制这种增加：</p>
+<blockquote>
+<p>越细属性自身的信息量也会增加。</p>
+</blockquote>
+<p>在<a href="http://owl-pi.com/2017/03/10/id3/" target="_blank" rel="external">ID3</a>中的例子，信息增益为：</p>
+<p>$$<br>Gain(outlook)=0.940-(\frac{5}{14}*0.971+\frac{4}{14}*0+\frac{5}{14}*0.971)=0.246<br>$$</p>
+<p>属性本身的信息量为：</p>
+<p>$$<br>I(outlook)=-\frac{5}{14}*log(\frac{5}{14})-\frac{4}{14}*log(\frac{4}{14})-\frac{5}{14}*log(\frac{5}{14})=1.58<br>$$</p>
+<p>那么此时的信息增益率为：</p>
+<p>$$<br>GainRatio(outlook)=\frac{Gain(outlook)}{I(outlook)}=\frac{0.246}{1.58}<br>$$</p>
+<h2 id="连续型"><a href="#连续型" class="headerlink" title="连续型"></a>连续型</h2>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/决策树/" rel="tag">#决策树</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/10/id3/" rel="next" title="ID3">
+                <i class="fa fa-chevron-left"></i> ID3
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/03/13/c4-5/"
+     data-title="C4.5"
+     data-content=""
+     data-url="http://yoursite.com/2017/03/13/c4-5/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
 
 
           </div>
@@ -400,6 +452,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/03/13/c4-5/"
+           data-title="C4.5" data-url="http://yoursite.com/2017/03/13/c4-5/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -419,8 +479,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -470,6 +539,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息增益率"><span class="nav-number">1.</span> <span class="nav-text">信息增益率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连续型"><span class="nav-number">2.</span> <span class="nav-text">连续型</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -570,11 +650,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
 
 
   
