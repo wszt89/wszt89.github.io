@@ -117,7 +117,7 @@ $$Gain(outlook)=0.">
 继续ID3中的例子，信息增益为：
 $$Gain(outlook)=0.">
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5f317c1d7339ac9e69deab6465d8ffb0/image.png">
-<meta property="og:updated_time" content="2017-03-14T03:46:39.000Z">
+<meta property="og:updated_time" content="2017-03-14T03:54:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C4.5">
 <meta name="twitter:description" content="针对ID3算法的缺点：
@@ -378,13 +378,16 @@ $$Gain(outlook)=0.">
 <li>大于阈值</li>
 <li>小于阈值</li>
 </ol>
-<p>如果属性有N个不同的值，那么阈值有N-1种选择。一个优化办法是：</p>
+<p>如果属性有N个不同的值，那么阈值有N-1种选择，计算量较大。一个优化办法是：</p>
 <blockquote>
 <p>将属性的值先排序，只有在Class发生变化的时候才考虑该阈值（在Class不变时，评估函数是单调的）。</p>
 </blockquote>
-<p>比如下图：</p>
+<p>比如：</p>
 <p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5f317c1d7339ac9e69deab6465d8ffb0/image.png" alt="image"></p>
-<p>笨办法需要考虑13种可能，而用优化后的办法只需要考虑7种。</p>
+<p>原来需要考虑13种可能，而优化后只需要7种。另外：</p>
+<blockquote>
+<p>在选择阈值时分割数相同，所以用<strong>信息增益率</strong>的作为选择标准是不合适的，反而用<strong>信息增益</strong>会好一些。</p>
+</blockquote>
 <h2 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h2>
       
     </div>
