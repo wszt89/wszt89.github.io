@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="机器学习,决策树," />
 
 
 
@@ -84,12 +84,48 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="wsztrush">
-<meta property="og:url" content="http://yoursite.com/archives/2016/11/index.html">
+<meta name="description" content="基尼系数劳伦茨曲线是由经济学家劳伦茨提出用来描述收入分配：
+
+其中：
+
+横轴为人口累计
+纵轴为收入累计
+
+阿尔伯特·赫希曼在此基础上提出基尼系数，用来描述是否平均（面积的比例）：
+$$G = \frac{A}{A+B}$$
+对一个数据集来说，基尼系数越大，数据越偏向于某个分类。
+算法原理代码实现总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CART-分类回归树">
+<meta property="og:url" content="http://yoursite.com/2017/03/14/cart/index.html">
 <meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="基尼系数劳伦茨曲线是由经济学家劳伦茨提出用来描述收入分配：
+
+其中：
+
+横轴为人口累计
+纵轴为收入累计
+
+阿尔伯特·赫希曼在此基础上提出基尼系数，用来描述是否平均（面积的比例）：
+$$G = \frac{A}{A+B}$$
+对一个数据集来说，基尼系数越大，数据越偏向于某个分类。
+算法原理代码实现总结">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/2046c1f2b077a9a9d174c3e52a8377be/image.png">
+<meta property="og:updated_time" content="2017-03-14T08:02:19.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="wsztrush">
+<meta name="twitter:title" content="CART-分类回归树">
+<meta name="twitter:description" content="基尼系数劳伦茨曲线是由经济学家劳伦茨提出用来描述收入分配：
+
+其中：
+
+横轴为人口累计
+纵轴为收入累计
+
+阿尔伯特·赫希曼在此基础上提出基尼系数，用来描述是否平均（面积的比例）：
+$$G = \frac{A}{A+B}$$
+对一个数据集来说，基尼系数越大，数据越偏向于某个分类。
+算法原理代码实现总结">
+<meta name="twitter:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/2046c1f2b077a9a9d174c3e52a8377be/image.png">
 
 
 
@@ -110,10 +146,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2016/11/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/14/cart/"/>
 
 
-  <title> 归档 | wsztrush </title>
+  <title> CART-分类回归树 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -134,7 +170,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  page-archive  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -222,140 +258,178 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
-
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 11 篇日志。 继续努力。
-    </span>
-
+  <div id="posts" class="posts-expand">
     
-
-      
-      
-      
-
-      
-        
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
-        </div>
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/11/23/simplex-method-1/" itemprop="url">
-              
-                <span itemprop="name">单纯形法</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-11-23T20:53:00+08:00"
-              content="2016-11-23" >
-          11-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/11/10/innodb-lock-1/" itemprop="url">
-              
-                <span itemprop="name">InnoDB的锁机制</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-11-10T11:48:42+08:00"
-              content="2016-11-10" >
-          11-10
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/11/09/transaction-1/" itemprop="url">
-              
-                <span itemprop="name">事务问题（一）</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-11-09T21:19:52+08:00"
-              content="2016-11-09" >
-          11-09
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
 
   
+  
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                CART-分类回归树
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-14T14:05:05+08:00" content="2017-03-14">
+              2017-03-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/03/14/cart/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/14/cart/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基尼系数"><a href="#基尼系数" class="headerlink" title="基尼系数"></a>基尼系数</h2><p>劳伦茨曲线是由经济学家劳伦茨提出用来描述收入分配：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/2046c1f2b077a9a9d174c3e52a8377be/image.png" alt="image"></p>
+<p>其中：</p>
+<ul>
+<li>横轴为人口累计</li>
+<li>纵轴为收入累计</li>
+</ul>
+<p>阿尔伯特·赫希曼在此基础上提出基尼系数，用来描述是否平均（面积的比例）：</p>
+<p>$$<br>G = \frac{A}{A+B}<br>$$</p>
+<p>对一个数据集来说，基尼系数越大，数据越偏向于某个分类。</p>
+<h2 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h2><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/决策树/" rel="tag">#决策树</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/13/c4-5/" rel="next" title="C4.5">
+                <i class="fa fa-chevron-left"></i> C4.5
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/03/14/cart/"
+     data-title="CART-分类回归树"
+     data-content=""
+     data-url="http://yoursite.com/2017/03/14/cart/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
 
 
           </div>
@@ -363,6 +437,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/03/14/cart/"
+           data-title="CART-分类回归树" data-url="http://yoursite.com/2017/03/14/cart/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -382,8 +464,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -433,6 +524,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基尼系数"><span class="nav-number">1.</span> <span class="nav-text">基尼系数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法原理"><span class="nav-number">2.</span> <span class="nav-text">算法原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -533,11 +635,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
 
 
   
