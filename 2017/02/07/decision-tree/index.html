@@ -84,68 +84,56 @@
 
 
 
-<meta name="description" content="写在前面概述在做决策时，我们的大脑中会有这样的一个思考过程：
+<meta name="description" content="做决定时，大脑中可能有这样的一个思考过程：
 
-影响因素有：
+这样“精确”的逻辑可能是经历了很多事情才得到的。决策树也类似这个过程：
 
-是否有房
-是否够帅
+在样本上，通过精确地划分，形成这样树形的决策逻辑。
 
-决策目标有：
+存在两种类型的节点：
 
-可以结婚
-不能结婚
+内部节点：条件或者阈值，决定下一步应该去哪个子树
+叶子节点：类型或者预测值
 
-那么判断的过程可以描述为：
-
-依次考虑相关的一些因素来做决策，对于每个因素都有相应的阈值。
-
-我们可以模拟这个思路来做数据的分类和预测，由于很容易描述为（也比较容易联想到）一个树形结构，于是将其称为决策树。
-算法描述决策树是一类有监督算法，在选定的样本上，根据">
+可以理解为：从上到下，通过内部节点将可能性空间不断细分，最终到达一个目标状态（叶子节点）。
+基础知识选择哪些维度以及如何划分">
 <meta property="og:type" content="article">
 <meta property="og:title" content="决策树">
 <meta property="og:url" content="http://yoursite.com/2017/02/07/decision-tree/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="写在前面概述在做决策时，我们的大脑中会有这样的一个思考过程：
+<meta property="og:description" content="做决定时，大脑中可能有这样的一个思考过程：
 
-影响因素有：
+这样“精确”的逻辑可能是经历了很多事情才得到的。决策树也类似这个过程：
 
-是否有房
-是否够帅
+在样本上，通过精确地划分，形成这样树形的决策逻辑。
 
-决策目标有：
+存在两种类型的节点：
 
-可以结婚
-不能结婚
+内部节点：条件或者阈值，决定下一步应该去哪个子树
+叶子节点：类型或者预测值
 
-那么判断的过程可以描述为：
-
-依次考虑相关的一些因素来做决策，对于每个因素都有相应的阈值。
-
-我们可以模拟这个思路来做数据的分类和预测，由于很容易描述为（也比较容易联想到）一个树形结构，于是将其称为决策树。
-算法描述决策树是一类有监督算法，在选定的样本上，根据">
+可以理解为：从上到下，通过内部节点将可能性空间不断细分，最终到达一个目标状态（叶子节点）。
+基础知识选择哪些维度以及如何划分">
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/3314af47a35f930ae15d7f88f4b740c9/image.png">
-<meta property="og:updated_time" content="2017-03-20T03:33:03.000Z">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/ec99081729eed6a5c8cc98e0853851ae/medium.jpg">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/2046c1f2b077a9a9d174c3e52a8377be/image.png">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/034c6ec4957449176da3b94cb6ddd7f0/a.png">
+<meta property="og:updated_time" content="2017-03-20T23:12:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="决策树">
-<meta name="twitter:description" content="写在前面概述在做决策时，我们的大脑中会有这样的一个思考过程：
+<meta name="twitter:description" content="做决定时，大脑中可能有这样的一个思考过程：
 
-影响因素有：
+这样“精确”的逻辑可能是经历了很多事情才得到的。决策树也类似这个过程：
 
-是否有房
-是否够帅
+在样本上，通过精确地划分，形成这样树形的决策逻辑。
 
-决策目标有：
+存在两种类型的节点：
 
-可以结婚
-不能结婚
+内部节点：条件或者阈值，决定下一步应该去哪个子树
+叶子节点：类型或者预测值
 
-那么判断的过程可以描述为：
-
-依次考虑相关的一些因素来做决策，对于每个因素都有相应的阈值。
-
-我们可以模拟这个思路来做数据的分类和预测，由于很容易描述为（也比较容易联想到）一个树形结构，于是将其称为决策树。
-算法描述决策树是一类有监督算法，在选定的样本上，根据">
+可以理解为：从上到下，通过内部节点将可能性空间不断细分，最终到达一个目标状态（叶子节点）。
+基础知识选择哪些维度以及如何划分">
 <meta name="twitter:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/3314af47a35f930ae15d7f88f4b740c9/image.png">
 
 
@@ -376,33 +364,220 @@
       
 
       
-        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在做决策时，我们的大脑中会有这样的一个思考过程：</p>
-<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/3314af47a35f930ae15d7f88f4b740c9/image.png" alt="image"></p>
-<p>影响因素有：</p>
-<ul>
-<li>是否有房</li>
-<li>是否够帅</li>
-</ul>
-<p>决策目标有：</p>
-<ul>
-<li>可以结婚</li>
-<li>不能结婚</li>
-</ul>
-<p>那么判断的过程可以描述为：</p>
+        <p>做决定时，大脑中可能有这样的一个思考过程：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/3314af47a35f930ae15d7f88f4b740c9/image.png" alt=""></p>
+<p>这样“精确”的逻辑可能是经历了很多事情才得到的。决策树也类似这个过程：</p>
 <blockquote>
-<p>依次考虑相关的一些因素来做决策，对于每个因素都有相应的阈值。</p>
+<p>在样本上，通过精确地划分，形成这样<font color="red">树形</font>的决策逻辑。</p>
 </blockquote>
-<p>我们可以模拟这个思路来做数据的分类和预测，由于很容易描述为（也比较容易联想到）一个树形结构，于是将其称为决策树。</p>
-<h2 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h2><p>决策树是一类有监督算法，在选定的样本上，根据不同的策略来选择<strong>相应的维度</strong>，调整阈值以使得结果最优，不同的策略对应不同的算法。</p>
-<h3 id="ID3"><a href="#ID3" class="headerlink" title="ID3"></a>ID3</h3><p>该算法以信息论为基础，以信息熵的下降速度为选取测试属性的标准。信息熵的概念如下：</p>
-<blockquote>
-<p>对于同样的的一段话，我们会评价它包含的信息很多（或很少），而这只是根据自身经验的感性评价，香农给出了理性的度量方法。</p>
-</blockquote>
+<p>存在两种类型的节点：</p>
 <ul>
-<li>TODO 信息熵</li>
-<li>TODO 算法规则</li>
+<li>内部节点：条件或者阈值，决定下一步应该去哪个子树</li>
+<li>叶子节点：类型或者预测值</li>
 </ul>
-<h3 id="C4-5"><a href="#C4-5" class="headerlink" title="C4.5"></a>C4.5</h3><h3 id="C5-0"><a href="#C5-0" class="headerlink" title="C5.0"></a>C5.0</h3><h3 id="CART"><a href="#CART" class="headerlink" title="CART"></a>CART</h3><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2>
+<p>可以理解为：从上到下，通过内部节点将可能性空间不断细分，最终到达一个目标状态（叶子节点）。</p>
+<h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><p>选择哪些维度以及如何划分是决策树的核心，也是最难的，需要一些知识准备。</p>
+<h2 id="信息熵"><a href="#信息熵" class="headerlink" title="信息熵"></a>信息熵</h2><p>对一片文章的评价可能是信息量很大，也可能是废话连篇。那么：</p>
+<blockquote>
+<p>能否量化信息的多少？</p>
+</blockquote>
+<p>什么样的话是废话？</p>
+<blockquote>
+<p>原来确定的事情，再说一遍就是废话，比如：太阳今天会从东边升起！</p>
+</blockquote>
+<p>什么样的话信息量比较大？</p>
+<blockquote>
+<p>原来不确定的事情，再说遍就比较确定了，比如：今天某个股票的财报很好，明天股票会大涨！</p>
+</blockquote>
+<p><strong>概率发生的变化越大（从无序到有序），信息量也就越大！</strong>而且信息量的多少应该满足：</p>
+<ul>
+<li>非负</li>
+<li>可加：f(xy)=f(x)+f(y)</li>
+<li>连续</li>
+<li>递减：概率越小，信息量越大</li>
+</ul>
+<p>满足这些性质的函数只有：</p>
+<p>$$<br>-log(x)<br>$$</p>
+<p>而信息论祖师爷<strong>Shannon</strong>搞出来的信息熵的含义是：</p>
+<blockquote>
+<p>系统中所含有的平均信息量的大小，或者是说，描述一个系统需要的最小空间。</p>
+</blockquote>
+<p>于是，对于概率事件$(A_1,A_2,…,A_n)$，并且各事件对应的概率为$(p_1,p_2,…,p_n)$，则其信息熵为：</p>
+<p>$$<br>H(X) = -\sum p_i \times log(p_i)<br>$$</p>
+<p>熵函数图形如下：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/ec99081729eed6a5c8cc98e0853851ae/medium.jpg" alt="medium"></p>
+<h2 id="多维度的信息熵"><a href="#多维度的信息熵" class="headerlink" title="多维度的信息熵"></a>多维度的信息熵</h2><p>当系统中有两个维度时，其<font color="red">联合熵</font>为：</p>
+<p>$$<br>H(X,Y) = \sum_i \sum_j - p(x_i, y_j) \times log(p(x_i, y_j))<br>$$</p>
+<p>显然，当$X$、$Y$<font color="red">不相关</font>时有：</p>
+<p>$$<br>H(X,Y) = H(X) + H(Y)<br>$$</p>
+<p>并且，当向系统中引入新的维度以后，信息熵总数增加的：</p>
+<p>$$<br>H(X,Y) \geqslant H(X) \ \ \ \  H(X,Y) \geqslant H(Y)<br>$$</p>
+<p>当某个维度（条件）的值固定（已知）时，其他维度的熵为<font color="red">条件熵</font>：</p>
+<p>$$<br>H(Y|X) = \sum p(x_i) \times H(Y|x_i) = H(X,Y) - H(X)<br>$$</p>
+<p>两个维度相关的话，说明他们之间有公共的信息（<font color="red">互信息</font>）：</p>
+<p>$$<br>\begin{align}<br>I(X;Y) &amp; = H(X) - H(X|Y) \\<br> &amp; = H(Y) - H(Y|X) \\<br> &amp; = H(X) + H(Y) - H(X,Y) \\<br> &amp; = H(X,Y) - H(X|Y) - H(Y|X) \\<br> &amp; = \sum \sum p(x,y) \times log \left ( \frac{p(x,y)}{p(x)\times p(y)}\right )<br>\end{align}<br>$$</p>
+<h2 id="信息增益和信息增益比"><a href="#信息增益和信息增益比" class="headerlink" title="信息增益和信息增益比"></a>信息增益和信息增益比</h2><p>互信息从另外一个角度理解：</p>
+<blockquote>
+<p>当某个维度固定之后，对其他维度的信息熵的影响多少。</p>
+</blockquote>
+<p>此时的说法就是<font color="red">信息增益</font>了。直观上<strong>信息增益越大越相关</strong>，但是缺点很明显：</p>
+<blockquote>
+<p>不同维度的基数不一样，大家的起跑线也就不同了。</p>
+</blockquote>
+<p>可以用通过影响量的比例（<font color="red">信息增益比</font>）来衡量效果的好坏：</p>
+<p>$$<br>I_r = \frac{I(X,Y)}{I(X)}<br>$$</p>
+<h2 id="基尼系数"><a href="#基尼系数" class="headerlink" title="基尼系数"></a>基尼系数</h2><p>劳伦茨曲线是由经济学家劳伦茨提出用来描述收入分配：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/2046c1f2b077a9a9d174c3e52a8377be/image.png" alt="image"></p>
+<p>其中：</p>
+<ul>
+<li>横轴为人口累计（人口对应的收入从低到高）</li>
+<li>纵轴为收入累计</li>
+</ul>
+<p>阿尔伯特·赫希曼在此基础上提出基尼系数，用来描述是否平均（面积的比例，比例越大越不平均）：</p>
+<p>$$<br>Gini = \frac{A}{A+B}<br>$$</p>
+<p>对一个数据集上的概率，$Gini$系数计算方式如下：</p>
+<p>$$<br>Gini = 1 - \sum p_i^2 = \sum p_i \times (1-p_i)<br>$$</p>
+<p>基尼系数越大系统越混乱（不确定），貌似和经济学中的概念不大一样，反而看$y=x \times (1-x)$的图形更好理解一些（先留个坑）：</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/034c6ec4957449176da3b94cb6ddd7f0/a.png" alt="a"></p>
+<h1 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h1><p>不同决策树算法的流程是相似的：</p>
+<ul>
+<li>生成树模型</li>
+<li>剪枝</li>
+<li>预测：回归/分类，也就是模型的使用</li>
+</ul>
+<p>下面依次来看！</p>
+<h2 id="生成树"><a href="#生成树" class="headerlink" title="生成树"></a>生成树</h2><p>总体来说是希望在细分样本的过程中，不确定性不断地降低，不同衡量的准则产生了不同的算法。</p>
+<h3 id="ID3"><a href="#ID3" class="headerlink" title="ID3"></a>ID3</h3><p>衡量标准为信息增益：</p>
+<blockquote>
+<p>每次选择出来的维度，信息增益越大越好。</p>
+</blockquote>
+<p><strong>举个栗子</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>outlook</th>
+<th>temperature</th>
+<th>humidity</th>
+<th>windy</th>
+<th>class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sunny</td>
+<td>hot</td>
+<td>high</td>
+<td>false</td>
+<td>N</td>
+</tr>
+<tr>
+<td>sunny</td>
+<td>hot</td>
+<td>high</td>
+<td>true</td>
+<td>N</td>
+</tr>
+<tr>
+<td>overcast</td>
+<td>hot</td>
+<td>high</td>
+<td>false</td>
+<td>P</td>
+</tr>
+<tr>
+<td>rain</td>
+<td>mild</td>
+<td>high</td>
+<td>false</td>
+<td>P</td>
+</tr>
+<tr>
+<td>rain</td>
+<td>cool</td>
+<td>normal</td>
+<td>false</td>
+<td>P</td>
+</tr>
+<tr>
+<td>rain</td>
+<td>cool</td>
+<td>normal</td>
+<td>true</td>
+<td>N</td>
+</tr>
+<tr>
+<td>overcast</td>
+<td>cool</td>
+<td>normal</td>
+<td>true</td>
+<td>P</td>
+</tr>
+<tr>
+<td>sunny</td>
+<td>mild</td>
+<td>high</td>
+<td>false</td>
+<td>N</td>
+</tr>
+<tr>
+<td>sunny</td>
+<td>cool</td>
+<td>normal</td>
+<td>false</td>
+<td>P</td>
+</tr>
+<tr>
+<td>rain</td>
+<td>mild</td>
+<td>normal</td>
+<td>false</td>
+<td>P </td>
+</tr>
+<tr>
+<td>sunny</td>
+<td>mild</td>
+<td>normal</td>
+<td>true</td>
+<td>P </td>
+</tr>
+<tr>
+<td>overcast</td>
+<td>mild</td>
+<td>high</td>
+<td>true</td>
+<td>P </td>
+</tr>
+<tr>
+<td>overcast</td>
+<td>hot</td>
+<td>normal</td>
+<td>false</td>
+<td>P </td>
+</tr>
+<tr>
+<td>rain</td>
+<td>mild</td>
+<td>high</td>
+<td>true</td>
+<td>N</td>
+</tr>
+</tbody>
+</table>
+<p>于是有$p_n=5/14$,$p_p=9/14$，整体的信息熵为：</p>
+<p>$$<br>-\frac{5}{14}log(\frac{5}{14})-\frac{9}{14}log(\frac{9}{14})=0.94<br>$$</p>
+<p>当$outlook=sunny$时，$p_n=3/5$,$p_p=2/5$，得到信息熵为：</p>
+<p>$$<br>-\frac{3}{5}log(\frac{3}{5})-\frac{2}{5}log(\frac{2}{5})=0.971<br>$$</p>
+<p>同样可以得到$outlook=overcast$时的信息熵为0,$outlook=rain$时为0.971,于是此时的信息增益为：</p>
+<p>$$<br>gain(outlook)=0.940-(\frac{5}{14} \times 0.971+\frac{4}{14} \times 0+\frac{5}{14} \times 0.971)=0.246<br>$$</p>
+<p>同样的方法可以得到：</p>
+<p>$$<br>\begin{align}<br>gain(temperature) &amp;= 0.029 \\<br>gain(humidity) &amp;= 0.151 \\<br>gain(windy) &amp;= 0.048<br>\end{align}<br>$$</p>
+<p>这样第一层选择$outlook$作为条件效果最好，后面各层可以依次进行选择。</p>
+<p><strong>代码实现</strong>（勉强先看吧- -!）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> math</div><div class="line"></div><div class="line"><span class="comment"># 计算目标分类的信息熵</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_class_entropy</span><span class="params">(data)</span>:</span></div><div class="line">    n_num = p_num = <span class="number">0</span></div><div class="line">    <span class="keyword">for</span> record <span class="keyword">in</span> data:</div><div class="line">        <span class="keyword">if</span> record[<span class="number">-1</span>] == <span class="string">'N'</span>:</div><div class="line">            n_num += <span class="number">1</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            p_num += <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> calc_entropy(p_num, len(data)) + calc_entropy(n_num, len(data))</div><div class="line"></div><div class="line"><span class="comment"># 计算信息熵</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_entropy</span><span class="params">(p, t)</span>:</span></div><div class="line">    <span class="keyword">if</span> p == <span class="number">0</span>:</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> -(p / t) * math.log2(p / t)</div><div class="line"></div><div class="line"><span class="comment"># 计算按照某列来分类得到的信息熵</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_column_score</span><span class="params">(data, column)</span>:</span></div><div class="line">    column_key_count = &#123;&#125;</div><div class="line">    column_key_record = &#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> record <span class="keyword">in</span> data:</div><div class="line">        column_key = record[column]</div><div class="line">        column_key_count[column_key] = column_key_count[column_key] + <span class="number">1</span> <span class="keyword">if</span> column_key <span class="keyword">in</span> column_key_count <span class="keyword">else</span> <span class="number">1</span></div><div class="line"></div><div class="line">        column_key_record[column_key] = column_key_record[column_key] <span class="keyword">if</span> column_key <span class="keyword">in</span> column_key_record <span class="keyword">else</span> []</div><div class="line">        column_key_record[column_key].append(record)</div><div class="line"></div><div class="line">    ret = <span class="number">0</span></div><div class="line">    <span class="keyword">for</span> key <span class="keyword">in</span> column_key_count:</div><div class="line">        ret += column_key_count[key] / len(data) * calc_class_entropy(column_key_record[key])</div><div class="line"></div><div class="line">    <span class="keyword">return</span> ret</div><div class="line"></div><div class="line"><span class="comment"># 处理一层</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">process</span><span class="params">(data, parent_column, parent_column_value)</span>:</span></div><div class="line">    min_entropy = calc_class_entropy(data)</div><div class="line">    target_column = <span class="number">-1</span></div><div class="line"></div><div class="line">    <span class="keyword">for</span> column <span class="keyword">in</span> range(len(data[<span class="number">0</span>]) - <span class="number">1</span>):</div><div class="line">        tmp = calc_column_score(data, column)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> tmp &lt; min_entropy:</div><div class="line">            min_entropy = tmp</div><div class="line">            target_column = column</div><div class="line"></div><div class="line">    print(parent_column, parent_column_value, target_column)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> min_entropy == <span class="number">0</span>:</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line">    sub_data = &#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> record <span class="keyword">in</span> data:</div><div class="line">        key = record[target_column]</div><div class="line"></div><div class="line">        <span class="keyword">del</span> record[target_column]</div><div class="line"></div><div class="line">        sub_data[key] = sub_data[key] <span class="keyword">if</span> key <span class="keyword">in</span> sub_data <span class="keyword">else</span> []</div><div class="line">        sub_data[key].append(record)</div><div class="line"></div><div class="line">    <span class="keyword">for</span> key <span class="keyword">in</span> sub_data:</div><div class="line">        process(sub_data[key], target_column, key)</div><div class="line"></div><div class="line"><span class="comment"># 主函数</span></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    fp = open(<span class="string">"./data.txt"</span>, <span class="string">"r"</span>)</div><div class="line"></div><div class="line">    data = []</div><div class="line"></div><div class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> fp:</div><div class="line">        data.append(line.strip().split(<span class="string">','</span>)[:])</div><div class="line"></div><div class="line">    process(data, <span class="number">0</span>, <span class="string">"#"</span>)</div></pre></td></tr></table></figure>
+<h3 id="C4-5"><a href="#C4-5" class="headerlink" title="C4.5"></a>C4.5</h3><h3 id="CART"><a href="#CART" class="headerlink" title="CART"></a>CART</h3><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://ccckmit.wikidot.com/st:mutualinformation" target="_blank" rel="external">http://ccckmit.wikidot.com/st:mutualinformation</a></li>
+</ol>
+
       
     </div>
 
@@ -570,7 +745,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法描述"><span class="nav-number">1.2.</span> <span class="nav-text">算法描述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ID3"><span class="nav-number">1.2.1.</span> <span class="nav-text">ID3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C4-5"><span class="nav-number">1.2.2.</span> <span class="nav-text">C4.5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C5-0"><span class="nav-number">1.2.3.</span> <span class="nav-text">C5.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CART"><span class="nav-number">1.2.4.</span> <span class="nav-text">CART</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础知识"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息熵"><span class="nav-number">1.1.</span> <span class="nav-text">信息熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多维度的信息熵"><span class="nav-number">1.2.</span> <span class="nav-text">多维度的信息熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息增益和信息增益比"><span class="nav-number">1.3.</span> <span class="nav-text">信息增益和信息增益比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基尼系数"><span class="nav-number">1.4.</span> <span class="nav-text">基尼系数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法流程"><span class="nav-number">2.</span> <span class="nav-text">算法流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成树"><span class="nav-number">2.1.</span> <span class="nav-text">生成树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ID3"><span class="nav-number">2.1.1.</span> <span class="nav-text">ID3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C4-5"><span class="nav-number">2.1.2.</span> <span class="nav-text">C4.5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CART"><span class="nav-number">2.1.3.</span> <span class="nav-text">CART</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
