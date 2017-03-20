@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习,决策树," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,57 +84,13 @@
 
 
 
-<meta name="description" content="针对ID3算法的缺点：
-
-不能处理连续数据
-倾向于选择可选值较多的属性（分得越细信息增益越大）
-过拟合
-贪心无法保证最优
-
-在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。
-信息增益率在属性上分的较细时，信息增益较大，需要找一个量来抑制这种增加：
-
-如果属性上的可选值越多，那么属性上的信息熵也就越大。
-
-继续ID3中的例子，信息增益为：
-$$Gain(outlook)=0.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C4.5">
-<meta property="og:url" content="http://yoursite.com/2017/03/13/c4-5/index.html">
+<meta property="og:title" content="decision-tree">
+<meta property="og:url" content="http://yoursite.com/2017/03/20/decision-tree-1/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="针对ID3算法的缺点：
-
-不能处理连续数据
-倾向于选择可选值较多的属性（分得越细信息增益越大）
-过拟合
-贪心无法保证最优
-
-在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。
-信息增益率在属性上分的较细时，信息增益较大，需要找一个量来抑制这种增加：
-
-如果属性上的可选值越多，那么属性上的信息熵也就越大。
-
-继续ID3中的例子，信息增益为：
-$$Gain(outlook)=0.">
-<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5f317c1d7339ac9e69deab6465d8ffb0/image.png">
-<meta property="og:updated_time" content="2017-03-14T06:05:46.000Z">
+<meta property="og:updated_time" content="2017-03-20T03:13:09.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C4.5">
-<meta name="twitter:description" content="针对ID3算法的缺点：
-
-不能处理连续数据
-倾向于选择可选值较多的属性（分得越细信息增益越大）
-过拟合
-贪心无法保证最优
-
-在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。
-信息增益率在属性上分的较细时，信息增益较大，需要找一个量来抑制这种增加：
-
-如果属性上的可选值越多，那么属性上的信息熵也就越大。
-
-继续ID3中的例子，信息增益为：
-$$Gain(outlook)=0.">
-<meta name="twitter:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5f317c1d7339ac9e69deab6465d8ffb0/image.png">
+<meta name="twitter:title" content="decision-tree">
 
 
 
@@ -155,10 +111,10 @@ $$Gain(outlook)=0.">
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/13/c4-5/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/20/decision-tree-1/"/>
 
 
-  <title> C4.5 | wsztrush </title>
+  <title> decision-tree | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -288,7 +244,7 @@ $$Gain(outlook)=0.">
             
             
               
-                C4.5
+                decision-tree
               
             
           </h1>
@@ -300,38 +256,19 @@ $$Gain(outlook)=0.">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-13T14:57:29+08:00" content="2017-03-13">
-              2017-03-13
+            <time itemprop="dateCreated" datetime="2017-03-20T11:13:09+08:00" content="2017-03-20">
+              2017-03-20
             </time>
           </span>
 
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/03/13/c4-5/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/03/13/c4-5/" itemprop="commentsCount"></span>
+                <a href="/2017/03/20/decision-tree-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/03/20/decision-tree-1/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -354,43 +291,7 @@ $$Gain(outlook)=0.">
       
 
       
-        <p>针对<a href="http://owl-pi.com/2017/03/10/id3/" target="_blank" rel="external">ID3</a>算法的缺点：</p>
-<ol>
-<li>不能处理连续数据</li>
-<li>倾向于选择可选值较多的属性（分得越细信息增益越大）</li>
-<li>过拟合</li>
-<li>贪心无法保证最优</li>
-</ol>
-<p>在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。</p>
-<h2 id="信息增益率"><a href="#信息增益率" class="headerlink" title="信息增益率"></a>信息增益率</h2><p>在属性上分的较细时，信息增益较大，需要找一个量来抑制这种增加：</p>
-<blockquote>
-<p>如果属性上的可选值越多，那么属性上的信息熵也就越大。</p>
-</blockquote>
-<p>继续<a href="http://owl-pi.com/2017/03/10/id3/" target="_blank" rel="external">ID3</a>中的例子，信息增益为：</p>
-<p>$$<br>Gain(outlook)=0.940-(\frac{5}{14}*0.971+\frac{4}{14}*0+\frac{5}{14}*0.971)=0.246<br>$$</p>
-<p>属性本身的信息量为：</p>
-<p>$$<br>I(outlook)=-\frac{5}{14}*log(\frac{5}{14})-\frac{4}{14}*log(\frac{4}{14})-\frac{5}{14}*log(\frac{5}{14})=1.58<br>$$</p>
-<p>那么此时的信息增益率（把信息熵放到分母上来起到抑制作用）为：</p>
-<p>$$<br>GainRatio(outlook)=\frac{Gain(outlook)}{I(outlook)}=\frac{0.246}{1.58}<br>$$</p>
-<p>想不说废话也是有一定难度的，在选择时要把这种难度体现出来。</p>
-<h2 id="连续型"><a href="#连续型" class="headerlink" title="连续型"></a>连续型</h2><p>对于连续型的数据，可以将其转为离散 型：</p>
-<ol>
-<li>大于阈值</li>
-<li>小于阈值</li>
-</ol>
-<p>如果属性有N个不同的值，那么阈值有N-1种选择，计算量较大。一个优化办法是：</p>
-<blockquote>
-<p>将属性的值先排序，只有在Class发生变化的时候才考虑该阈值（在Class不变时，评估函数是单调的）。</p>
-</blockquote>
-<p>比如：</p>
-<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5f317c1d7339ac9e69deab6465d8ffb0/image.png" alt="image"></p>
-<p>原来需要考虑13种可能，而优化后只需要7种。另外：</p>
-<blockquote>
-<p>在选择阈值时分割数相同，所以用<strong>信息增益率</strong>的作为选择标准是不合适的，反而用<strong>信息增益</strong>会好一些。</p>
-</blockquote>
-<h2 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h2><p>如果树不断生长，最终一定是每个叶子节点上都只有一种类型，其实此时已经是比较严重的过拟合了，在后面的文章中再来看如果剪枝。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>感觉上C4.5像是ID3的一个可执行版本。。。</p>
-
+        
       
     </div>
 
@@ -410,30 +311,18 @@ $$Gain(outlook)=0.">
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
-          
-            <a href="/tags/决策树/" rel="tag">#决策树</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/10/id3/" rel="next" title="ID3">
-                <i class="fa fa-chevron-left"></i> ID3
+              <a href="/2017/03/16/bayes/" rel="next" title="bayes">
+                <i class="fa fa-chevron-left"></i> bayes
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/14/cart/" rel="prev" title="CART-分类回归树">
-                CART-分类回归树 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -554,7 +443,7 @@ $$Gain(outlook)=0.">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息增益率"><span class="nav-number">1.</span> <span class="nav-text">信息增益率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连续型"><span class="nav-number">2.</span> <span class="nav-text">连续型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#剪枝"><span class="nav-number">3.</span> <span class="nav-text">剪枝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
         </section>
@@ -678,9 +567,9 @@ $$Gain(outlook)=0.">
 
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
-      var disqus_identifier = '2017/03/13/c4-5/';
-      var disqus_title = "C4.5";
-      var disqus_url = 'http://yoursite.com/2017/03/13/c4-5/';
+      var disqus_identifier = '2017/03/20/decision-tree-1/';
+      var disqus_title = "decision-tree";
+      var disqus_url = 'http://yoursite.com/2017/03/20/decision-tree-1/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
