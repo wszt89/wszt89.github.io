@@ -119,7 +119,7 @@ $$G">
 阿尔伯特·赫希曼在此基础上提出基尼系数，用来描述是否平均（面积的比例）：
 $$G">
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/2046c1f2b077a9a9d174c3e52a8377be/image.png">
-<meta property="og:updated_time" content="2017-03-16T07:07:23.000Z">
+<meta property="og:updated_time" content="2017-03-20T23:48:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CART-分类回归树">
 <meta name="twitter:description" content="综述CART从结构上看是一棵二叉树，每个节点有一个划分条件，根据条件判断分别归于左子树和右子树。分类、回归所用的标准不同：
@@ -595,9 +595,9 @@ $$G">
 </tr>
 </tbody>
 </table>
-<p>对于体温为<u>恒温</u>的样本中，有5个哺乳类、2个鸟类，于是得到：</p>
+<p>对于体温为恒温的样本中，有5个哺乳类、2个鸟类，于是得到：</p>
 <p>$$<br>G = 1 - (\frac{5}{7})^2 - (\frac{2}{7})^2 = \frac{20}{49}<br>$$</p>
-<p>对于体温为<u>非恒温</u>的样本，有3个爬行类、3个鱼类、2个两栖类，于是得到：</p>
+<p>对于体温为非恒温的样本，有3个爬行类、3个鱼类、2个两栖类，于是得到：</p>
 <p>$$<br>G = 1 - (\frac{3}{8})^2 - (\frac{3}{8})^2 - (\frac{2}{8})^2 = \frac{42}{64}<br>$$</p>
 <p>于是得到根据体温划分的整体基尼系数为：</p>
 <p>$$<br>G = \frac{7}{15} * \frac{20}{49} + \frac{8}{15} * \frac{42}{64}= 0.540<br>$$</p>
@@ -614,9 +614,7 @@ $$G">
 </ul>
 <p>等指标低于阈值，当然也可以设置更复杂的指标。</p>
 <h1 id="决策树生成"><a href="#决策树生成" class="headerlink" title="决策树生成"></a>决策树生成</h1><p>和分类树所选择的评估方式不同，采用方差：</p>
-<p>$$<br>T = min [min \sum (y_i-c_1)^2 + min \sum(y_j-c_2)^2]<br>$$</p>
-<p>其中：</p>
-<p>$$<br>c_k = \frac{\sum y_i}{n_k}<br>$$</p>
+<p>$$<br>T = min [min \sum (y_i-c_1)^2 + min \sum(y_j-c_2)^2] \\<br>c_k = \frac{\sum y_i}{n_k}<br>$$</p>
 <p>其他步骤相同。</p>
 <h1 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h1><p>在不影响预测准确度的基础上，对树结构进行剪枝，防止<font color="red">过拟合</font>。</p>
 <h2 id="前剪枝"><a href="#前剪枝" class="headerlink" title="前剪枝"></a>前剪枝</h2><p>生成树的过程中，通过一些条件来停止生成，这种就是前剪枝，先略过。</p>
