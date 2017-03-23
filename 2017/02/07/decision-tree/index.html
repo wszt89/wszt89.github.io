@@ -119,7 +119,8 @@
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/2046c1f2b077a9a9d174c3e52a8377be/image.png">
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/034c6ec4957449176da3b94cb6ddd7f0/a.png">
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5f317c1d7339ac9e69deab6465d8ffb0/image.png">
-<meta property="og:updated_time" content="2017-03-21T00:14:43.000Z">
+<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/4e3dace9071d73c0c5f3c6d693dbc4e8/image.png">
+<meta property="og:updated_time" content="2017-03-23T23:49:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="决策树">
 <meta name="twitter:description" content="做决定时，大脑中可能有这样的一个思考过程：
@@ -804,15 +805,56 @@
 <p>于是得到根据体温划分的整体基尼系数为：</p>
 <p>$$<br>Gini = \frac{7}{15} \times \frac{20}{49} + \frac{8}{15} \times \frac{42}{64}= 0.540<br>$$</p>
 <p>继续计算其他切分点和维度，在所有结果中选$Gini$系数最小的。</p>
-<h2 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h2><p>将树无限的细分下去，会导致严重的过拟合，对于Tree-Based算法剪枝可能比生成还重要。两种剪枝思路:</p>
+<h2 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h2><p>将树无限的细分下去，会导致严重的过拟合，对于Tree-Based算法剪枝比生成还重要。两种剪枝方法:</p>
 <ul>
 <li>前剪枝：在生成的过程中根据一些指标决定不再分裂</li>
 <li>后剪枝：在生成的树上，裁剪掉一些子树</li>
 </ul>
 <p>前剪枝的规则一般较简单、粗暴，比如深度、阈值等，重点关注后剪枝。</p>
-<h3 id="代价复杂度"><a href="#代价复杂度" class="headerlink" title="代价复杂度"></a>代价复杂度</h3><h3 id="错误率降低"><a href="#错误率降低" class="headerlink" title="错误率降低"></a>错误率降低</h3><h3 id="悲观剪枝"><a href="#悲观剪枝" class="headerlink" title="悲观剪枝"></a>悲观剪枝</h3><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<h3 id="Reduced-Error-Pruning（错误率降低）"><a href="#Reduced-Error-Pruning（错误率降低）" class="headerlink" title="Reduced-Error Pruning（错误率降低）"></a>Reduced-Error Pruning（错误率降低）</h3><p>既然过拟合导致错误率升高，那就从错误率入手：</p>
+<blockquote>
+<p>找一组新数据，想办法来修剪模型（降低），来降低错误率。</p>
+</blockquote>
+<p>依次尝试内部节点：</p>
+<ol>
+<li>删除子节点</li>
+<li>计算本节点类型</li>
+<li>验证新树错误率，如果降低则保留修改</li>
+</ol>
+<p>循环执行，直到找不到可删的节点。</p>
+<h3 id="Pessimistic-Error-Pruning（悲观）"><a href="#Pessimistic-Error-Pruning（悲观）" class="headerlink" title="Pessimistic-Error Pruning（悲观）"></a>Pessimistic-Error Pruning（悲观）</h3><p>没有新的数据的话怎么办？<strong>REP</strong>本身是否可能过拟合？换种思路：</p>
+<blockquote>
+<p>既然过拟合是因为“太精确”了，那么在样本上不那么精确的话可能泛化能力会强一些。</p>
+</blockquote>
+<p>这里要讲平衡：<strong>要放开也不能放得太开，不然反而不精确</strong>，这里可以用统计概念<font color="red">置信区间</font>：</p>
+<blockquote>
+<p>当给出某个估计值的90%置信区间为【a,b】时,可以理解为我们有90%的信心可以说样本的平均值介于a到b之间,而发生错误的概率为10%.</p>
+</blockquote>
+<p>知道样本均值(M)和标准差(ST)时：</p>
+<p>$$<br>a = M - n \times ST \ \ \ \ b = M + n \times ST<br>$$</p>
+<p>假设误差符合二项分布，那么判断是否需要剪枝的条件为（其中$\frac{1}{2}$为修正因子）：</p>
+<p>$$<br>\begin{align}<br>condition\ \ \ &amp; e’(t) \leqslant e’(T_t) + S_e(e’(T_t)) \\<br>&amp; e’(t)=\left [ e(t) + \frac{1}{2} \right ] \\<br>&amp; e’(T_t) = \sum e(i) + N_t \times \frac{1}{2} \\<br>&amp; S_e(e’(T_t)) = \sqrt{N_t \times \frac{e’(t)}{N_t} \times \left (1 - \frac{e’(t)}{N_t}\right )}<br>\end{align}<br>$$</p>
+<p>看个例子:</p>
+<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/4e3dace9071d73c0c5f3c6d693dbc4e8/image.png" alt="image"></p>
+<p>计算得到：</p>
+<p>$$<br>\begin{align}<br>&amp; e’(t)=\left [ e(t) + \frac{1}{2} \right ]  = 8.5 \\<br>&amp; e’(T_t) = \sum e(i) + N_t \times \frac{1}{2} = 4 + 1 + 1 + 3 \times \frac{1}{2} = 7.5 \\<br>&amp; S_e(e’(T_t)) = \sqrt{N_t \times \frac{e’(t)}{N_t} \times \left (1 - \frac{e’(t)}{N_t}\right )}  = \sqrt{3 \times \frac{7.5}{18} \times (1-\frac{7.5}{18})} = 2.09<br>\end{align}<br>$$</p>
+<p>于是得到：</p>
+<p>$$<br>e’(t) \leqslant e’(T_t) + S_e(e’(T_t))<br>$$</p>
+<p>该子树可以被剪掉。</p>
+<h3 id="Cost-Complexity-Pruning（代价复杂度）"><a href="#Cost-Complexity-Pruning（代价复杂度）" class="headerlink" title="Cost-Complexity Pruning（代价复杂度）"></a>Cost-Complexity Pruning（代价复杂度）</h3><p><strong>REP</strong>和<strong>PEP</strong>都是站在单个节点上判断要不要剪，CCP的思路为：</p>
+<blockquote>
+<p>递归生成一组剪完的子树，然后在通过验证数据挑最优子树。</p>
+</blockquote>
+<p>对于当前子树$T<em>i$，计算内部节点误差增益，假设样本数为$C</em>{all}$：</p>
+<p>$$<br>\begin{align}<br>&amp; R(t) = \frac{e_t}{C_t} \times \frac{N<em>t}{C</em>{all}} \\<br>&amp; R(T) = \sum \frac{e_i}{C_i} \times \frac{C<em>i}{C</em>{all}} \\<br>&amp; \alpha = \frac{R(t) - R(T)}{N_t - 1}<br>\end{align}<br>$$</p>
+<p>对于上面的例子，在$C_{all} = 40$时：</p>
+<p>$$<br>\begin{align}<br>&amp; R(t) = \frac{e_t}{C_t} \times \frac{C<em>t}{N</em>{all}} = \frac{8}{18} \times \frac{18}{40} = \frac{8}{40} \\<br>&amp; R(T) = \sum \frac{e_i}{C_i} \times \frac{C<em>i}{C</em>{all}} = \frac{4}{9} \times \frac{9}{40} + \frac{1}{6} \times \frac{6}{40} + \frac{1}{3} \times \frac{3}{40} = \frac{6}{40} \\<br>&amp; \alpha = \frac{R(t) - R(T)}{N_t - 1} = \frac{\frac{8}{40} - \frac{6}{40}}{3 - 1} = \frac{1}{40}<br>\end{align}<br>$$</p>
+<p>从$T<em>i$中剪去$\alpha$最小的得到$T</em>{i+1}$，循环执行得到$\left { T_0,…,T_n \right }$，利用验证数据从中选择最优子树即可。</p>
+<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li><a href="http://ccckmit.wikidot.com/st:mutualinformation" target="_blank" rel="external">http://ccckmit.wikidot.com/st:mutualinformation</a></li>
 <li><a href="http://www.cnblogs.com/yonghao/p/5135386.html" target="_blank" rel="external">http://www.cnblogs.com/yonghao/p/5135386.html</a></li>
+<li><a href="http://blog.sina.com.cn/s/blog_4e4dec6c0101fdz6.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_4e4dec6c0101fdz6.html</a></li>
+<li><a href="http://www.cnblogs.com/yonghao/p/5064996.html" target="_blank" rel="external">http://www.cnblogs.com/yonghao/p/5064996.html</a></li>
 </ol>
 
       
@@ -982,7 +1024,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础知识"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息熵"><span class="nav-number">1.1.</span> <span class="nav-text">信息熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多维度的信息熵"><span class="nav-number">1.2.</span> <span class="nav-text">多维度的信息熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息增益和信息增益比"><span class="nav-number">1.3.</span> <span class="nav-text">信息增益和信息增益比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基尼系数"><span class="nav-number">1.4.</span> <span class="nav-text">基尼系数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法流程"><span class="nav-number">2.</span> <span class="nav-text">算法流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成树"><span class="nav-number">2.1.</span> <span class="nav-text">生成树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ID3"><span class="nav-number">2.1.1.</span> <span class="nav-text">ID3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C4-5"><span class="nav-number">2.1.2.</span> <span class="nav-text">C4.5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CART"><span class="nav-number">2.1.3.</span> <span class="nav-text">CART</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#剪枝"><span class="nav-number">2.2.</span> <span class="nav-text">剪枝</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代价复杂度"><span class="nav-number">2.2.1.</span> <span class="nav-text">代价复杂度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#错误率降低"><span class="nav-number">2.2.2.</span> <span class="nav-text">错误率降低</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#悲观剪枝"><span class="nav-number">2.2.3.</span> <span class="nav-text">悲观剪枝</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础知识"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息熵"><span class="nav-number">1.1.</span> <span class="nav-text">信息熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多维度的信息熵"><span class="nav-number">1.2.</span> <span class="nav-text">多维度的信息熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息增益和信息增益比"><span class="nav-number">1.3.</span> <span class="nav-text">信息增益和信息增益比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基尼系数"><span class="nav-number">1.4.</span> <span class="nav-text">基尼系数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法流程"><span class="nav-number">2.</span> <span class="nav-text">算法流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成树"><span class="nav-number">2.1.</span> <span class="nav-text">生成树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ID3"><span class="nav-number">2.1.1.</span> <span class="nav-text">ID3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C4-5"><span class="nav-number">2.1.2.</span> <span class="nav-text">C4.5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CART"><span class="nav-number">2.1.3.</span> <span class="nav-text">CART</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#剪枝"><span class="nav-number">2.2.</span> <span class="nav-text">剪枝</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Reduced-Error-Pruning（错误率降低）"><span class="nav-number">2.2.1.</span> <span class="nav-text">Reduced-Error Pruning（错误率降低）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pessimistic-Error-Pruning（悲观）"><span class="nav-number">2.2.2.</span> <span class="nav-text">Pessimistic-Error Pruning（悲观）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cost-Complexity-Pruning（代价复杂度）"><span class="nav-number">2.2.3.</span> <span class="nav-text">Cost-Complexity Pruning（代价复杂度）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工具"><span class="nav-number">3.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
