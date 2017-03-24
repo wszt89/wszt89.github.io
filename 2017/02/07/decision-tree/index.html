@@ -120,7 +120,7 @@
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/034c6ec4957449176da3b94cb6ddd7f0/a.png">
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5f317c1d7339ac9e69deab6465d8ffb0/image.png">
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/4e3dace9071d73c0c5f3c6d693dbc4e8/image.png">
-<meta property="og:updated_time" content="2017-03-23T23:49:40.000Z">
+<meta property="og:updated_time" content="2017-03-24T00:33:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="决策树">
 <meta name="twitter:description" content="做决定时，大脑中可能有这样的一个思考过程：
@@ -845,12 +845,16 @@
 <blockquote>
 <p>递归生成一组剪完的子树，然后在通过验证数据挑最优子树。</p>
 </blockquote>
-<p>对于当前子树$T<em>i$，计算内部节点误差增益，假设样本数为$C</em>{all}$：</p>
-<p>$$<br>\begin{align}<br>&amp; R(t) = \frac{e_t}{C_t} \times \frac{N<em>t}{C</em>{all}} \\<br>&amp; R(T) = \sum \frac{e_i}{C_i} \times \frac{C<em>i}{C</em>{all}} \\<br>&amp; \alpha = \frac{R(t) - R(T)}{N_t - 1}<br>\end{align}<br>$$</p>
+<p>对于当前子树$T_i$,计算内部节点误差增益，假设样本数为$C_{all}$：</p>
+<p>$$<br>\begin{align}<br>&amp; R(t) = \frac{e_t}{C_t} \times \frac{N_t}{C_{all}} \\<br>&amp; R(T) = \sum \frac{e_i}{C_i} \times \frac{C_i}{C_{all}} \\<br>&amp; \alpha = \frac{R(t) - R(T)}{N_t - 1}<br>\end{align}<br>$$</p>
 <p>对于上面的例子，在$C_{all} = 40$时：</p>
-<p>$$<br>\begin{align}<br>&amp; R(t) = \frac{e_t}{C_t} \times \frac{C<em>t}{N</em>{all}} = \frac{8}{18} \times \frac{18}{40} = \frac{8}{40} \\<br>&amp; R(T) = \sum \frac{e_i}{C_i} \times \frac{C<em>i}{C</em>{all}} = \frac{4}{9} \times \frac{9}{40} + \frac{1}{6} \times \frac{6}{40} + \frac{1}{3} \times \frac{3}{40} = \frac{6}{40} \\<br>&amp; \alpha = \frac{R(t) - R(T)}{N_t - 1} = \frac{\frac{8}{40} - \frac{6}{40}}{3 - 1} = \frac{1}{40}<br>\end{align}<br>$$</p>
-<p>从$T<em>i$中剪去$\alpha$最小的得到$T</em>{i+1}$，循环执行得到$\left { T_0,…,T_n \right }$，利用验证数据从中选择最优子树即可。</p>
-<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<p>$$<br>\begin{align}<br>&amp; R(t) = \frac{e_t}{C_t} \times \frac{C_t}{N_{all}} = \frac{8}{18} \times \frac{18}{40} = \frac{8}{40} \\<br>&amp; R(T) = \sum \frac{e_i}{C_i} \times \frac{C_i}{C_{all}} = \frac{4}{9} \times \frac{9}{40} + \frac{1}{6} \times \frac{6}{40} + \frac{1}{3} \times \frac{3}{40} = \frac{6}{40} \\<br>&amp; \alpha = \frac{R(t) - R(T)}{N_t - 1} = \frac{\frac{8}{40} - \frac{6}{40}}{3 - 1} = \frac{1}{40}<br>\end{align}<br>$$</p>
+<p>从$T_i$中剪去$\alpha$最小的得到$T_{i+1}$，循环执行得到$ T_0,…,T_n $，利用验证数据从中选择最优子树即可。</p>
+<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><p>使用sklearn中决策树做分类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span></div></pre></td></tr></table></figure>
+<p>回归：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span></div></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li><a href="http://ccckmit.wikidot.com/st:mutualinformation" target="_blank" rel="external">http://ccckmit.wikidot.com/st:mutualinformation</a></li>
 <li><a href="http://www.cnblogs.com/yonghao/p/5135386.html" target="_blank" rel="external">http://www.cnblogs.com/yonghao/p/5135386.html</a></li>
 <li><a href="http://blog.sina.com.cn/s/blog_4e4dec6c0101fdz6.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_4e4dec6c0101fdz6.html</a></li>

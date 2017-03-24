@@ -394,7 +394,7 @@
 </ol>
 <p>这类最优化问题的标准形式用向量描述如下：</p>
 <p>$$<br>\begin{aligned}<br>max\ Z&amp; = CX \<br>s.t. &amp; AX = b \<br>&amp; X \geqslant 0<br>\end{aligned}<br>$$</p>
-<p>其中：$C=\begin{bmatrix} c_1, …, c<em>n\end{bmatrix}$，$A=\begin{bmatrix} a</em>{11} &amp; … &amp; a<em>{1n}\ … &amp;  &amp; … \ a</em>{m1} &amp; … &amp; a_{mn}\end{bmatrix}$，$b=\begin{bmatrix} b_1 \ … \ b_m\end{bmatrix}$，$X=\begin{bmatrix}x_1 \ …\ x_n\end{bmatrix}$，特点为：</p>
+<p>其中：$C=\begin{bmatrix} c_1, …, c_n\end{bmatrix}$，$A=\begin{bmatrix} a_{11} &amp; … &amp; a_{1n}\ … &amp;  &amp; … \ a_{m1} &amp; … &amp; a_{mn}\end{bmatrix}$，$b=\begin{bmatrix} b_1 \ … \ b_m\end{bmatrix}$，$X=\begin{bmatrix}x_1 \ …\ x_n\end{bmatrix}$，特点为：</p>
 <ol>
 <li>目标函数：最大化</li>
 <li>约束条件：等式</li>
@@ -451,11 +451,11 @@
 <p>假如当前的逆矩阵为$B^{-1}$，基为$B=\begin{pmatrix}P_1, P_2, …, P_l, …P_m \end{pmatrix}$，新基为$B_1=\begin{pmatrix}P_1, P_2, …, P_k, …P_m \end{pmatrix}$，对比：</p>
 <p>$$<br>\begin{aligned}<br>B^{-1}B &amp; = \begin{pmatrix} B^{-1}P_1,B^{-1}P_2,…,B^{-1}P_l,…,B^{-1}P_m\end{pmatrix} \<br> &amp; = \begin{pmatrix} e_1,e_2,…,e_l,…,e_m\end{pmatrix} \<br> &amp; = I \<br>B^{-1}B_1 &amp; = \begin{pmatrix} B^{-1}P_1,B^{-1}P_2,…,B^{-1}P_k,…,B^{-1}P_m\end{pmatrix} \<br> &amp; =\begin{pmatrix} e_1,e_2,…,B^{-1}P_k,…,e_m\end{pmatrix} \<br>\end{aligned}<br>$$</p>
 <p>假设不同的列的值为：</p>
-<p>$$<br>B^{-1}P<em>k = \begin{bmatrix} a</em>{1k} \ a<em>{2k} \ … \ a</em>{lk} \ … \ a_{mk} \end{bmatrix}<br>$$</p>
+<p>$$<br>B^{-1}P_k = \begin{bmatrix} a_{1k} \ a_{2k} \ … \ a_{lk} \ … \ a_{mk} \end{bmatrix}<br>$$</p>
 <p>于是有：</p>
-<p>$$<br>E_{lk}= (B^{-1}B<em>1)^{-1} = \begin{bmatrix}<br>1 &amp; 0 &amp; &amp; -\frac{a</em>{1k}}{a<em>{lk}} &amp;  &amp; 0 \<br>0 &amp; 1 &amp; &amp; -\frac{a</em>{2k}}{a<em>{lk}} &amp;  &amp;  0 \<br> &amp; &amp; \ddots &amp; \vdots &amp; &amp; \<br> &amp;  &amp;  &amp; \frac{1}{a</em>{lk}} &amp;  &amp;  \<br> &amp; &amp; &amp; \vdots &amp; \ddots &amp;  \<br>0 &amp; &amp; &amp; -\frac{a<em>{mk}}{a</em>{lk}} &amp;  &amp;  1<br> \end{bmatrix}<br>$$</p>
+<p>$$<br>E_{lk}= (B^{-1}B_1)^{-1} = \begin{bmatrix}<br>1 &amp; 0 &amp; &amp; -\frac{a_{1k}}{a_{lk}} &amp;  &amp; 0 \<br>0 &amp; 1 &amp; &amp; -\frac{a_{2k}}{a_{lk}} &amp;  &amp;  0 \<br> &amp; &amp; \ddots &amp; \vdots &amp; &amp; \<br> &amp;  &amp;  &amp; \frac{1}{a_{lk}} &amp;  &amp;  \<br> &amp; &amp; &amp; \vdots &amp; \ddots &amp;  \<br>0 &amp; &amp; &amp; -\frac{a_{mk}}{a_{lk}} &amp;  &amp;  1<br> \end{bmatrix}<br>$$</p>
 <p>推导得到：</p>
-<p>$$<br>E_{lk}= (B^{-1}B_1)^{-1} = B^{-1}_1B \Rightarrow B^{-1}<em>1 = E</em>{lk}B^{-1}<br>$$</p>
+<p>$$<br>E_{lk}= (B^{-1}B_1)^{-1} = B^{-1}_1B \Rightarrow B^{-1}_1 = E_{lk}B^{-1}<br>$$</p>
 <h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>问题如下：</p>
 <p>$$<br>\begin{aligned}<br>max \ Z = &amp; 3x_1 + 2x_2 \<br>&amp; x_1 + x_2 + x_3 = 40 \<br>&amp; 2x_1 + x_2 + x_4 = 60<br>\end{aligned}<br>$$</p>
 <p>解：<br>得到$C=(3,2,0,0)$，$A=\begin{bmatrix}1&amp;1&amp;1&amp;0 \ 2&amp;1&amp;0&amp;1\end{bmatrix}$，$b=\begin{bmatrix}40\60\end{bmatrix}$，容易看到基变量为$x_3,x_4$，非基变量为$x_1, x_2$：</p>
@@ -465,7 +465,7 @@
 <p>得到$x_1$为入基，接着：</p>
 <p>$$<br>\begin{aligned}<br>B_0^{-1}P_1 &amp; = \begin{bmatrix}1&amp;0\0&amp;1\end{bmatrix}\begin{bmatrix}1\2\end{bmatrix} \<br> &amp; =\begin{bmatrix}1\2\end{bmatrix} \<br> &amp; &gt; 0 \<br>min{\frac{(B_0^{-1}b)_3}{(B_0^{-1}P_1)_3},\frac{(B_0^{-1}b)_4}{(B_0^{-1}P_1)_4}} &amp; = { \frac{40}{1},\frac{60}{2}} \<br> &amp; = \frac{60}{2}<br>\end{aligned}<br>$$</p>
 <p>得到换出变量应该为$x_4$。此时基变量为$x_3,x_1$，非基变量为$x_2,x_4$，更新逆矩阵为：</p>
-<p>$$<br>B<em>1^{-1}<br>= E</em>{41}B_0^{-1}<br>=\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}\begin{bmatrix}1&amp;0\0&amp;1\end{bmatrix}<br>=\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}<br>$$</p>
+<p>$$<br>B_1^{-1}<br>= E_{41}B_0^{-1}<br>=\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}\begin{bmatrix}1&amp;0\0&amp;1\end{bmatrix}<br>=\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}<br>$$</p>
 <p>开始第二次迭代：</p>
 <p>$$<br>X_B<br>=B_1^{-1}b<br>=\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}\begin{bmatrix}40\60\end{bmatrix}<br>=\begin{bmatrix}10\30\end{bmatrix} \<br>X_1=\begin{bmatrix}30\0\10\0\end{bmatrix}<br>$$</p>
 <p>最优性校验：</p>
@@ -473,7 +473,7 @@
 <p>得到$x_2$为入基，接着：</p>
 <p>$$<br>\begin{aligned}<br>B_1^{-1}P_2 &amp; = \begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}\begin{bmatrix}1\1\end{bmatrix} \<br> &amp; =\begin{bmatrix}\frac{1}{2}\ \frac{1}{2}\end{bmatrix} \<br> &amp; &gt; 0 \<br>min{\frac{(B_1^{-1}b)_3}{(B_1^{-1}P_2)_3},\frac{(B_1^{-1}b)_1}{(B_1^{-1}P_2)_1}} &amp; = { \frac{10}{1/2},\frac{30}{1/2}} \<br> &amp; = \frac{10}{1/2}<br>\end{aligned}<br>$$</p>
 <p>得到换出变量应该为$x_3$。此时基变量为$x_2,x_1$，非基变量为$x_3,x_4$，更新逆矩阵为：</p>
-<p>$$<br>B<em>2^{-1}<br>= E</em>{32}B_1^{-1}<br>=\begin{bmatrix}2&amp;0\ -1&amp;1\end{bmatrix}\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}<br>=\begin{bmatrix}2&amp;-1\ -1&amp;1\end{bmatrix}<br>$$</p>
+<p>$$<br>B_2^{-1}<br>= E_{32}B_1^{-1}<br>=\begin{bmatrix}2&amp;0\ -1&amp;1\end{bmatrix}\begin{bmatrix}1&amp;-\frac{1}{2}\0&amp;\frac{1}{2}\end{bmatrix}<br>=\begin{bmatrix}2&amp;-1\ -1&amp;1\end{bmatrix}<br>$$</p>
 <p>开始第三次迭代：</p>
 <p>$$<br>X_B<br>=B_2^{-1}b<br>=\begin{bmatrix}2&amp;-1\ -1&amp;1\end{bmatrix}\begin{bmatrix}40\60\end{bmatrix}<br>=\begin{bmatrix}20\20\end{bmatrix} \<br>X_2=\begin{bmatrix}20\20\0\0\end{bmatrix}<br>$$</p>
 <p>最优性校验：</p>
