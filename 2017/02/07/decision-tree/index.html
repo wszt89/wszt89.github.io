@@ -120,7 +120,7 @@
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/034c6ec4957449176da3b94cb6ddd7f0/a.png">
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5f317c1d7339ac9e69deab6465d8ffb0/image.png">
 <meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/4e3dace9071d73c0c5f3c6d693dbc4e8/image.png">
-<meta property="og:updated_time" content="2017-03-24T06:45:32.000Z">
+<meta property="og:updated_time" content="2017-03-24T06:52:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="决策树">
 <meta name="twitter:description" content="做决定时，大脑中可能有这样的一个思考过程：
@@ -854,7 +854,8 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> tree</div><div class="line"></div><div class="line">X = [[<span class="number">0</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>]]</div><div class="line">Y = [<span class="number">0</span>, <span class="number">1</span>]</div><div class="line">clf = tree.DecisionTreeClassifier()</div><div class="line"></div><div class="line">clf = clf.fit(X, Y)</div><div class="line"></div><div class="line">print(clf.predict([[<span class="number">2.</span>, <span class="number">2.</span>]]))</div></pre></td></tr></table></figure>
 <p>回归：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> tree</div><div class="line"></div><div class="line">X = [[<span class="number">0</span>, <span class="number">0</span>], [<span class="number">2</span>, <span class="number">2</span>]]</div><div class="line">Y = [<span class="number">0.5</span>, <span class="number">2.5</span>]</div><div class="line"></div><div class="line">clf = tree.DecisionTreeRegressor()</div><div class="line">clf = clf.fit(X, Y)</div><div class="line"></div><div class="line">clf.predict([[<span class="number">1</span>, <span class="number">1</span>]])</div></pre></td></tr></table></figure>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过树形的方式，相较其他直观很多，感觉上可以跟其他的一些算法组合来玩。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li><a href="http://ccckmit.wikidot.com/st:mutualinformation" target="_blank" rel="external">http://ccckmit.wikidot.com/st:mutualinformation</a></li>
 <li><a href="http://www.cnblogs.com/yonghao/p/5135386.html" target="_blank" rel="external">http://www.cnblogs.com/yonghao/p/5135386.html</a></li>
 <li><a href="http://blog.sina.com.cn/s/blog_4e4dec6c0101fdz6.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_4e4dec6c0101fdz6.html</a></li>
