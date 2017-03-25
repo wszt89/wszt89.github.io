@@ -84,13 +84,46 @@
 
 
 
+<meta name="description" content="平面上有两种不同类型的点：
+
+用支持向量机将他们分开的思路是：
+
+找到一个划分平面，将蓝色和红色分开，同时尽量离他们比较远（间隔越大越好）。
+
+显然上面的并不是最好，找最优解的过程比较精彩，慢慢来看。
+模型假设空间中有训练数据集$(x_1, y_1),(x_2, y_2),…,(x_n, y_n)$，得到的划分平面为：
+$$w · x + b = 0$$
+$(x_i, y_i)$到平面的函数间隔为">
 <meta property="og:type" content="article">
 <meta property="og:title" content="支持向量机">
 <meta property="og:url" content="http://yoursite.com/2017/03/16/svm/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:updated_time" content="2017-03-24T06:53:19.000Z">
+<meta property="og:description" content="平面上有两种不同类型的点：
+
+用支持向量机将他们分开的思路是：
+
+找到一个划分平面，将蓝色和红色分开，同时尽量离他们比较远（间隔越大越好）。
+
+显然上面的并不是最好，找最优解的过程比较精彩，慢慢来看。
+模型假设空间中有训练数据集$(x_1, y_1),(x_2, y_2),…,(x_n, y_n)$，得到的划分平面为：
+$$w · x + b = 0$$
+$(x_i, y_i)$到平面的函数间隔为">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/image.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/2.jpg">
+<meta property="og:updated_time" content="2017-03-25T04:37:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="支持向量机">
+<meta name="twitter:description" content="平面上有两种不同类型的点：
+
+用支持向量机将他们分开的思路是：
+
+找到一个划分平面，将蓝色和红色分开，同时尽量离他们比较远（间隔越大越好）。
+
+显然上面的并不是最好，找最优解的过程比较精彩，慢慢来看。
+模型假设空间中有训练数据集$(x_1, y_1),(x_2, y_2),…,(x_n, y_n)$，得到的划分平面为：
+$$w · x + b = 0$$
+$(x_i, y_i)$到平面的函数间隔为">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/image.png">
 
 
 
@@ -320,7 +353,34 @@
       
 
       
-        
+        <p>平面上有两种不同类型的点：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/svm/image.png" alt="image"></p>
+<p>用支持向量机将他们分开的思路是：</p>
+<blockquote>
+<p>找到一个划分平面，将蓝色和红色分开，同时尽量离他们比较远（间隔越大越好）。</p>
+</blockquote>
+<p>显然上面的并不是最好，找最优解的过程比较精彩，慢慢来看。</p>
+<h1 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h1><p>假设空间中有训练数据集$(x_1, y_1),(x_2, y_2),…,(x_n, y_n)$，得到的划分平面为：</p>
+<p>$$<br>w · x + b = 0<br>$$</p>
+<p>$(x_i, y_i)$到平面的<font color="red">函数间隔</font>为：</p>
+<p>$$<br>\hat{\gamma} = min\ y_i \times (w·x_i + b)<br>$$</p>
+<p>在$w,b$同比例变化时，平面没有动，但是函数间隔却增大了，于是有了<font color="red">几何间隔</font>：</p>
+<p>$$<br>\gamma = min\ y_i \times (\frac{w}{\left \| w \right \|}·x_i + \frac{b}{\left \| w \right \|})<br>$$</p>
+<p>模型要将数据划分开，并且在最差（异类接近）的数据上也分的最开：</p>
+<p>$$<br>\begin{align}<br>max\ &amp; \quad \gamma \\<br>st. &amp; \quad y_i \times (\frac{w}{\left \| w \right \|} · x_i + \frac{b}{\left \| w \right \|}) \geqslant \gamma<br>\end{align}<br>$$</p>
+<p>等价于：</p>
+<p>$$<br>\begin{align}<br>min&amp; \quad \frac{1}{2} ·\left \| w \right \|^2 \\<br>st.&amp; \quad y_i \times (w·x_i + b) - 1 \geqslant 0<br>\end{align}<br>$$</p>
+<p>然而有的训练集无法分割，此时可以通过松弛变量$\xi_i$来做一些放宽：</p>
+<p>$$<br>\begin{align}<br>min&amp; \quad \frac{1}{2} ·\left \| w \right \|^2 + C \sum \xi_i\\<br>st.&amp; \quad y_i \times (w·x_i + b) - 1 \geqslant \xi_i<br>\end{align}<br>$$</p>
+<h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><h2 id="拉格朗日乘子法"><a href="#拉格朗日乘子法" class="headerlink" title="拉格朗日乘子法"></a>拉格朗日乘子法</h2><p>有条件的优化问题：</p>
+<p>$$<br>\begin{align}<br>min&amp; \quad f(x) \\<br>st.&amp; \quad g_i(x) = 0<br>\end{align}<br>$$</p>
+<p>构造函数$F(x) = f(x) + \sum \lambda_i·g_i(x)$，求偏导方程：</p>
+<p>$$<br>\begin{cases}<br> &amp; \partial F / \partial x = 0 \\<br> &amp; \partial F / \partial \lambda = 0<br>\end{cases}<br>$$</p>
+<p>得到的便是原问题的极值点。一种理解方式如下图（约束$g(x)$是一条曲线）：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/svm/2.jpg" alt=""></p>
+<p>当$f(x)$与$g(x)$的法向量相反时$f(x)$可以取得极值：</p>
+<p>$$<br>\frac{\partial f}{\partial x} = - \lambda \frac{\partial g}{\partial x} \Rightarrow \frac{\partial f + \lambda · \partial g}{\partial x}<br>$$</p>
+<h2 id="对偶问题"><a href="#对偶问题" class="headerlink" title="对偶问题"></a>对偶问题</h2><h2 id="KKT"><a href="#KKT" class="headerlink" title="KKT"></a>KKT</h2><h2 id="SMO"><a href="#SMO" class="headerlink" title="SMO"></a>SMO</h2><h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1>
       
     </div>
 
@@ -488,7 +548,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型"><span class="nav-number">1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-number">2.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日乘子法"><span class="nav-number">2.1.</span> <span class="nav-text">拉格朗日乘子法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对偶问题"><span class="nav-number">2.2.</span> <span class="nav-text">对偶问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KKT"><span class="nav-number">2.3.</span> <span class="nav-text">KKT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SMO"><span class="nav-number">2.4.</span> <span class="nav-text">SMO</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工具"><span class="nav-number">3.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
