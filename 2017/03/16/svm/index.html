@@ -110,7 +110,7 @@ $$w · x + b = 0$$
 $(x_i, y_i)$到平面的函数间隔为">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/0.png">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/1.jpg">
-<meta property="og:updated_time" content="2017-03-25T08:35:45.000Z">
+<meta property="og:updated_time" content="2017-03-26T12:55:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="支持向量机">
 <meta name="twitter:description" content="平面上有两种不同类型的点：
@@ -390,19 +390,16 @@ $(x_i, y_i)$到平面的函数间隔为">
 <p>$$<br>\theta_p(x) = \max_{\alpha_i \geqslant 0} \; L(x, \alpha, \beta) =<br>\begin{cases}<br> &amp; f(x) \quad 存在最大值 \\<br> &amp; \infty<br>\end{cases}<br>$$</p>
 <p>这样原问题变为：</p>
 <p>$$<br>\min \; f(x) = \min \; \theta_p(x) = \min_x \; \max_{\alpha_i \geqslant 0,\beta_i} \; L(x, \alpha, \beta)<br>$$</p>
-<p>到这里直接求解的困难是对于第一层优化：</p>
-<blockquote>
-<p>$\alpha_i$上有不等式约束。</p>
-</blockquote>
 <p>在优先考虑$x$时有函数：</p>
 <p>$$<br>\theta_d(\alpha, \beta) = \min L(x, \alpha, \beta)<br>$$</p>
 <p>得到原问题的对偶形式：</p>
 <p>$$<br>\max_{\alpha_i \geqslant 0,\beta_i} \; \min_x \; L(x, \alpha, \beta)<br>$$</p>
-<p>显然有$\min \theta_p \geqslant \max \theta_d$，满足<font color="red">KKT</font>时相等：</p>
-<p>$$<br>\begin{cases}<br>\frac{\partial }{\partial x}L(x, \alpha, \beta) &amp;  = 0 \\<br>\frac{\partial }{\partial \beta}L(x, \alpha, \beta) &amp;  = 0 \\<br>\alpha_i g(x_i) &amp; = 0 \\<br>g(x_i) &amp; \leqslant 0 \\<br>\alpha_i &amp; \geqslant 0<br>\end{cases}<br>$$</p>
+<p>显然有$\min \theta_p \geqslant \max \theta_d$。而满足<font color="red">KKT</font>时相等：</p>
+<p>$$<br>\begin{cases}<br>\frac{\partial }{\partial x}L(x, \alpha, \beta) &amp;  = 0 \\<br>\frac{\partial }{\partial \beta}L(x, \alpha, \beta) &amp;  = 0 \\<br>\alpha_i · g(x_i) &amp; = 0 \\<br>g(x_i) &amp; \leqslant 0 \\<br>\alpha_i &amp; \geqslant 0<br>\end{cases}<br>$$</p>
 <h2 id="SMO"><a href="#SMO" class="headerlink" title="SMO"></a>SMO</h2><h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf" target="_blank" rel="external">https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf</a></li>
 <li><a href="https://ocw.mit.edu/courses/mechanical-engineering/2-854-introduction-to-manufacturing-systems-fall-2010/lecture-notes/MIT2_854F10_kkt_ex.pdf" target="_blank" rel="external">https://ocw.mit.edu/courses/mechanical-engineering/2-854-introduction-to-manufacturing-systems-fall-2010/lecture-notes/MIT2_854F10_kkt_ex.pdf</a></li>
+<li><a href="http://www.hanlongfei.com/convex/2015/11/08/kkt" target="_blank" rel="external">http://www.hanlongfei.com/convex/2015/11/08/kkt</a></li>
 </ul>
 
       
