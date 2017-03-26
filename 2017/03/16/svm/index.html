@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="算法,机器学习,分类,回归," />
+  <meta name="keywords" content="机器学习,算法,分类,回归," />
 
 
 
@@ -110,7 +110,7 @@ $$w · x + b = 0$$
 $(x_i, y_i)$到平面的函数间隔为">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/0.png">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/1.jpg">
-<meta property="og:updated_time" content="2017-03-26T23:42:19.000Z">
+<meta property="og:updated_time" content="2017-03-26T23:46:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="支持向量机">
 <meta name="twitter:description" content="平面上有两种不同类型的点：
@@ -399,14 +399,14 @@ $(x_i, y_i)$到平面的函数间隔为">
 <p>得到原问题的<font color="red">对偶形式</font>：</p>
 <p>$$<br>\max_{\alpha_i \geqslant 0,\beta_i} \; \min_x \; L(x, \alpha, \beta)<br>$$</p>
 <p>显然有：</p>
-<p>$$<br>\theta_p(x) \geqslant \theta_p(x^<em>) \geqslant L(x^</em>, \alpha, \beta) \geqslant \theta_d(\alpha, \beta)<br>$$</p>
+<p>$$<br>\theta_p(x) \geqslant \theta_p(x^\star) \geqslant L(x^\star, \alpha, \beta) \geqslant \theta_d(\alpha, \beta)<br>$$</p>
 <p>于是有$\min \theta_p \geqslant \max \theta_d$。相等时满足<font color="red">KKT</font>条件（必要性）：</p>
 <p>$$<br>\begin{cases}<br>\frac{\partial }{\partial x}L(x, \alpha, \beta) &amp;  = 0 \quad from \; \theta_d \\<br>\frac{\partial }{\partial \beta}L(x, \alpha, \beta) \quad = h(x) &amp;  = 0 \quad from \; \theta_p \\<br>\alpha_i · g(x_i) &amp; = 0 \quad from \; \theta_p \\<br>g(x_i) &amp; \leqslant 0 \\<br>\alpha_i &amp; \geqslant 0<br>\end{cases}<br>$$</p>
-<p>如果有$(x^<em>, \alpha^</em>,\beta^*)$满足KKT条件（充分性），根据①有：</p>
-<p>$$<br>L(x^<em>, \alpha^</em>, \beta^<em>) = \theta_d(\alpha^</em>, \beta^*)<br>$$</p>
+<p>如果有$(x^\star, \alpha^\star,\beta^\star)$满足KKT条件（充分性），根据①有：</p>
+<p>$$<br>L(x^\star, \alpha^\star, \beta^\star) = \theta_d(\alpha^\star, \beta^\star)<br>$$</p>
 <p>根据②③④⑤有：</p>
-<p>$$<br>L(x^<em>, \alpha^</em>, \beta^<em>) = \theta_p(x^</em>)<br>$$</p>
-<p>又根据$\theta_p(x) \geqslant \theta_p(\alpha, \beta)$，于是必然有$\min \theta_p(x^<em>) = \max \theta_p(\alpha^</em>, \beta^<em>) = L(x^</em>, \alpha^<em>, \beta^</em>)$。</p>
+<p>$$<br>L(x^\star, \alpha^\star, \beta^*) = \theta_p(x^\star)<br>$$</p>
+<p>又根据$\theta_p(x) \geqslant \theta_p(\alpha, \beta)$，于是必然有$\min \theta_p(x^\star) = \max \theta_p(\alpha^\star, \beta^\star) = L(x^\star, \alpha^\star, \beta^\star)$。</p>
 <h2 id="SMO"><a href="#SMO" class="headerlink" title="SMO"></a>SMO</h2><h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf" target="_blank" rel="external">https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf</a></li>
 <li><a href="https://ocw.mit.edu/courses/mechanical-engineering/2-854-introduction-to-manufacturing-systems-fall-2010/lecture-notes/MIT2_854F10_kkt_ex.pdf" target="_blank" rel="external">https://ocw.mit.edu/courses/mechanical-engineering/2-854-introduction-to-manufacturing-systems-fall-2010/lecture-notes/MIT2_854F10_kkt_ex.pdf</a></li>
@@ -434,9 +434,9 @@ $(x_i, y_i)$到平面的函数间隔为">
       
         <div class="post-tags">
           
-            <a href="/tags/算法/" rel="tag">#算法</a>
-          
             <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/算法/" rel="tag">#算法</a>
           
             <a href="/tags/分类/" rel="tag">#分类</a>
           
