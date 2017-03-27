@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习,算法,分类,回归," />
+  <meta name="keywords" content="算法,机器学习,分类,回归," />
 
 
 
@@ -110,7 +110,7 @@ $$w · x + b = 0$$
 $(x_i, y_i)$到平面的函数间隔为">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/0.png">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/1.jpg">
-<meta property="og:updated_time" content="2017-03-26T23:46:19.000Z">
+<meta property="og:updated_time" content="2017-03-27T00:43:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="支持向量机">
 <meta name="twitter:description" content="平面上有两种不同类型的点：
@@ -372,7 +372,17 @@ $(x_i, y_i)$到平面的函数间隔为">
 <p>$$<br>\begin{align}<br>min&amp; \quad \frac{1}{2} ·\left \| w \right \|^2 \\<br>st.&amp; \quad y_i \times (w·x_i + b) - 1 \geqslant 0<br>\end{align}<br>$$</p>
 <p>然而有的训练集无法分割，此时可以通过松弛变量$\xi_i$来做一些放宽：</p>
 <p>$$<br>\begin{align}<br>min&amp; \quad \frac{1}{2} ·\left \| w \right \|^2 + C \sum \xi_i\\<br>st.&amp; \quad y_i \times (w·x_i + b) - 1 \geqslant \xi_i<br>\end{align}<br>$$</p>
-<h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><h2 id="拉格朗日乘子法"><a href="#拉格朗日乘子法" class="headerlink" title="拉格朗日乘子法"></a>拉格朗日乘子法</h2><p>有条件的优化问题：</p>
+<h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><p>构造原问题的拉格朗日函数：</p>
+<p>$$<br>L(w,b,\alpha) = \frac{1}{2} \left \|w \right \|^2 - \sum \alpha_iy_i(w·x_i+b) + \sum \alpha_i<br>$$</p>
+<p>等价于：</p>
+<p>$$<br>\min_{w,b} \max_{\alpha_i \geqslant 0} L(w, b, \alpha)<br>$$</p>
+<p>对偶形式为：</p>
+<p>$$<br>\max_{\alpha_i \geqslant 0} \min_{w,b} L(w, b, \alpha)<br>$$</p>
+<p>根据$\min L(w, b, \alpha)$于是有：</p>
+<p>$$<br>\begin{cases}<br>\frac{\partial }{\partial w}L(w, b, \alpha) &amp; = 0 &amp; \Rightarrow &amp; w = \sum \alpha_iy_ix_i &amp; ① \\<br>\frac{\partial }{\partial b}L(w, b, \alpha) &amp; = 0 &amp; \Rightarrow &amp; \sum a_iy_i = 0 &amp; ②<br>\end{cases}<br>$$</p>
+<p>将①②带入$L(w, b, \alpha)$中得到：</p>
+<p>$$<br>\begin{align}<br>L(w, b, \alpha) &amp; = \frac{1}{2} \sum_i \sum_j \alpha_i \alpha_j y_i y_j (x_i·x_j) - \sum_i \alpha_i y_i \left ( \left ( \sum \alpha_j y_j x_j \right ) · x_i + b \right ) + \sum_i \alpha_i &amp; from \; ①\\<br>&amp; = -\frac{1}{2} \sum_i \sum_j \alpha_i \alpha_j y_i y_j (x_i·x_j) + \sum_i \alpha_i &amp; from \; ②<br>\end{align}<br>$$</p>
+<h2 id="拉格朗日乘子法"><a href="#拉格朗日乘子法" class="headerlink" title="拉格朗日乘子法"></a>拉格朗日乘子法</h2><p>有条件的优化问题：</p>
 <p>$$<br>\begin{align}<br>min&amp; \quad f(x) \\<br>st.&amp; \quad g_i(x) = 0<br>\end{align}<br>$$</p>
 <p>构造函数$F(x) = f(x) + \sum \lambda_i·g_i(x)$，求偏导方程：</p>
 <p>$$<br>\begin{cases}<br> &amp; \partial F / \partial x = 0 \\<br> &amp; \partial F / \partial \lambda = 0<br>\end{cases}<br>$$</p>
@@ -407,7 +417,7 @@ $(x_i, y_i)$到平面的函数间隔为">
 <p>根据②③④⑤有：</p>
 <p>$$<br>L(x^\star, \alpha^\star, \beta^*) = \theta_p(x^\star)<br>$$</p>
 <p>又根据$\theta_p(x) \geqslant \theta_p(\alpha, \beta)$，于是必然有$\min \theta_p(x^\star) = \max \theta_p(\alpha^\star, \beta^\star) = L(x^\star, \alpha^\star, \beta^\star)$。</p>
-<h2 id="SMO"><a href="#SMO" class="headerlink" title="SMO"></a>SMO</h2><h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<h2 id="序列最小最优化算法"><a href="#序列最小最优化算法" class="headerlink" title="序列最小最优化算法"></a>序列最小最优化算法</h2><h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf" target="_blank" rel="external">https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf</a></li>
 <li><a href="https://ocw.mit.edu/courses/mechanical-engineering/2-854-introduction-to-manufacturing-systems-fall-2010/lecture-notes/MIT2_854F10_kkt_ex.pdf" target="_blank" rel="external">https://ocw.mit.edu/courses/mechanical-engineering/2-854-introduction-to-manufacturing-systems-fall-2010/lecture-notes/MIT2_854F10_kkt_ex.pdf</a></li>
 <li><a href="http://www.hanlongfei.com/convex/2015/11/08/kkt" target="_blank" rel="external">http://www.hanlongfei.com/convex/2015/11/08/kkt</a></li>
@@ -434,9 +444,9 @@ $(x_i, y_i)$到平面的函数间隔为">
       
         <div class="post-tags">
           
-            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
-          
             <a href="/tags/算法/" rel="tag">#算法</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
           
             <a href="/tags/分类/" rel="tag">#分类</a>
           
@@ -580,7 +590,7 @@ $(x_i, y_i)$到平面的函数间隔为">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型"><span class="nav-number">1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-number">2.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日乘子法"><span class="nav-number">2.1.</span> <span class="nav-text">拉格朗日乘子法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对偶与KKT"><span class="nav-number">2.2.</span> <span class="nav-text">对偶与KKT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SMO"><span class="nav-number">2.3.</span> <span class="nav-text">SMO</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工具"><span class="nav-number">3.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型"><span class="nav-number">1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-number">2.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日乘子法"><span class="nav-number">2.1.</span> <span class="nav-text">拉格朗日乘子法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对偶与KKT"><span class="nav-number">2.2.</span> <span class="nav-text">对偶与KKT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列最小最优化算法"><span class="nav-number">2.3.</span> <span class="nav-text">序列最小最优化算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工具"><span class="nav-number">3.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
