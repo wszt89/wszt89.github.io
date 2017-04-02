@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="存储,编程," />
 
 
 
@@ -84,13 +84,22 @@
 
 
 
+<meta name="description" content="堆内缓存堆外缓存Chronicle用法&amp;amp;特点原理嵌入式存储RocksDB在LevelDB的基础开发，牺牲部分写性能，提升大量读性能。
+用法&amp;amp;特点基本的Kev/Value操作：
+12345678910111213141516171819202122232425262728293031323334353637383940414243public class TestMain &amp;#123">
 <meta property="og:type" content="article">
-<meta property="og:title" content="knn">
-<meta property="og:url" content="http://yoursite.com/2017/03/16/knn/index.html">
+<meta property="og:title" content="本地数据存储">
+<meta property="og:url" content="http://yoursite.com/2017/03/31/local-storage/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:updated_time" content="2017-03-16T06:51:27.000Z">
+<meta property="og:description" content="堆内缓存堆外缓存Chronicle用法&amp;amp;特点原理嵌入式存储RocksDB在LevelDB的基础开发，牺牲部分写性能，提升大量读性能。
+用法&amp;amp;特点基本的Kev/Value操作：
+12345678910111213141516171819202122232425262728293031323334353637383940414243public class TestMain &amp;#123">
+<meta property="og:updated_time" content="2017-04-02T01:10:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="knn">
+<meta name="twitter:title" content="本地数据存储">
+<meta name="twitter:description" content="堆内缓存堆外缓存Chronicle用法&amp;amp;特点原理嵌入式存储RocksDB在LevelDB的基础开发，牺牲部分写性能，提升大量读性能。
+用法&amp;amp;特点基本的Kev/Value操作：
+12345678910111213141516171819202122232425262728293031323334353637383940414243public class TestMain &amp;#123">
 
 
 
@@ -111,10 +120,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/16/knn/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/31/local-storage/"/>
 
 
-  <title> knn | wsztrush </title>
+  <title> 本地数据存储 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -254,7 +263,7 @@
             
             
               
-                knn
+                本地数据存储
               
             
           </h1>
@@ -266,19 +275,38 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-16T14:51:27+08:00" content="2017-03-16">
-              2017-03-16
+            <time itemprop="dateCreated" datetime="2017-03-31T14:50:46+08:00" content="2017-03-31">
+              2017-03-31
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/03/16/knn/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/03/16/knn/" itemprop="commentsCount"></span>
+                <a href="/2017/03/31/local-storage/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/03/31/local-storage/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -301,7 +329,10 @@
       
 
       
-        
+        <h2 id="堆内缓存"><a href="#堆内缓存" class="headerlink" title="堆内缓存"></a>堆内缓存</h2><h2 id="堆外缓存"><a href="#堆外缓存" class="headerlink" title="堆外缓存"></a>堆外缓存</h2><h3 id="Chronicle"><a href="#Chronicle" class="headerlink" title="Chronicle"></a>Chronicle</h3><h4 id="用法-amp-特点"><a href="#用法-amp-特点" class="headerlink" title="用法&amp;特点"></a>用法&amp;特点</h4><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><h2 id="嵌入式存储"><a href="#嵌入式存储" class="headerlink" title="嵌入式存储"></a>嵌入式存储</h2><h3 id="RocksDB"><a href="#RocksDB" class="headerlink" title="RocksDB"></a>RocksDB</h3><p>在LevelDB的基础开发，牺牲部分写性能，提升大量读性能。</p>
+<h4 id="用法-amp-特点-1"><a href="#用法-amp-特点-1" class="headerlink" title="用法&amp;特点"></a>用法&amp;特点</h4><p>基本的Kev/Value操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestMain</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        RocksDB.loadLibrary();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="comment">// INIT</span></div><div class="line">        Options options = <span class="keyword">new</span> Options();</div><div class="line">        options.setCreateIfMissing(<span class="keyword">true</span>);</div><div class="line">        RocksDB rocksDB = RocksDB.open(options, <span class="string">"/Users/tianchi.gzt/workspace/rocksdb/"</span>);</div><div class="line">        <span class="keyword">byte</span>[] key = <span class="string">"key"</span>.getBytes(), value = <span class="string">"value"</span>.getBytes();</div><div class="line"></div><div class="line">        <span class="comment">// PUT</span></div><div class="line">        rocksDB.put(key, value);</div><div class="line"></div><div class="line">        <span class="comment">// GET</span></div><div class="line">        str(rocksDB.get(key));</div><div class="line"></div><div class="line">        <span class="comment">// MULTI GET</span></div><div class="line">        Map&lt;<span class="keyword">byte</span>[], <span class="keyword">byte</span>[]&gt; ret = rocksDB.multiGet(Lists.newArrayList(key));</div><div class="line">        <span class="keyword">for</span> (Map.Entry&lt;<span class="keyword">byte</span>[], <span class="keyword">byte</span>[]&gt; entry : ret.entrySet()) &#123;</div><div class="line">            str(entry.getKey(), entry.getValue());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// ITER</span></div><div class="line">        RocksIterator iterator = rocksDB.newIterator();</div><div class="line">        <span class="keyword">for</span> (iterator.seekToFirst(); iterator.isValid(); iterator.next()) &#123;</div><div class="line">            str(iterator.key(), iterator.value());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// DELETE</span></div><div class="line">        rocksDB.delete(key);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">str</span><span class="params">(<span class="keyword">byte</span>[]... bytes)</span> </span>&#123;</div><div class="line">        List&lt;String&gt; content = Lists.newArrayList();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">byte</span>[] b : bytes) &#123;</div><div class="line">            content.add(<span class="keyword">new</span> String(b));</div><div class="line">        &#125;</div><div class="line">        System.out.println(Joiner.on(<span class="string">' '</span>).join(content));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4><h3 id="SQLite"><a href="#SQLite" class="headerlink" title="SQLite"></a>SQLite</h3><h4 id="用法-amp-特点-2"><a href="#用法-amp-特点-2" class="headerlink" title="用法&amp;特点"></a>用法&amp;特点</h4><h4 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h4>
       
     </div>
 
@@ -321,22 +352,26 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/存储/" rel="tag">#存储</a>
+          
+            <a href="/tags/编程/" rel="tag">#编程</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/10/gbdt/" rel="next" title="梯度提升决策树">
-                <i class="fa fa-chevron-left"></i> 梯度提升决策树
+              <a href="/2017/03/16/bayes/" rel="next" title="bayes">
+                <i class="fa fa-chevron-left"></i> bayes
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/16/svm/" rel="prev" title="支持向量机">
-                支持向量机 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -457,7 +492,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#堆内缓存"><span class="nav-number">1.</span> <span class="nav-text">堆内缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#堆外缓存"><span class="nav-number">2.</span> <span class="nav-text">堆外缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Chronicle"><span class="nav-number">2.1.</span> <span class="nav-text">Chronicle</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用法-amp-特点"><span class="nav-number">2.1.1.</span> <span class="nav-text">用法&特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原理"><span class="nav-number">2.1.2.</span> <span class="nav-text">原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#嵌入式存储"><span class="nav-number">3.</span> <span class="nav-text">嵌入式存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RocksDB"><span class="nav-number">3.1.</span> <span class="nav-text">RocksDB</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用法-amp-特点-1"><span class="nav-number">3.1.1.</span> <span class="nav-text">用法&特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原理-1"><span class="nav-number">3.1.2.</span> <span class="nav-text">原理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQLite"><span class="nav-number">3.2.</span> <span class="nav-text">SQLite</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用法-amp-特点-2"><span class="nav-number">3.2.1.</span> <span class="nav-text">用法&特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原理-2"><span class="nav-number">3.2.2.</span> <span class="nav-text">原理</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
         </section>
@@ -581,9 +616,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
-      var disqus_identifier = '2017/03/16/knn/';
-      var disqus_title = "knn";
-      var disqus_url = 'http://yoursite.com/2017/03/16/knn/';
+      var disqus_identifier = '2017/03/31/local-storage/';
+      var disqus_title = "本地数据存储";
+      var disqus_url = 'http://yoursite.com/2017/03/31/local-storage/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

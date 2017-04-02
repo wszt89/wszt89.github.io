@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习,算法,分类,回归," />
+  <meta name="keywords" content="算法,机器学习,分类,回归," />
 
 
 
@@ -111,7 +111,7 @@ $(x_i, y_i)$到平面的函数间隔为">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/0.png">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/3.jpeg">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/1.jpg">
-<meta property="og:updated_time" content="2017-03-27T05:34:06.000Z">
+<meta property="og:updated_time" content="2017-03-27T14:42:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="支持向量机">
 <meta name="twitter:description" content="平面上有两种不同类型的点：
@@ -389,7 +389,7 @@ $(x_i, y_i)$到平面的函数间隔为">
 <p>$$<br>\sum \alpha_i y_i (x · x_i) + b = 0<br>$$</p>
 <p>其中$\alpha_i &gt; 0$对应的$x_i$为<font color="red">支持向量</font>。类似这个过程，可以求得带有松弛变量$\xi_i$的对偶问题为：</p>
 <p>$$<br>\begin{align}<br>\min \quad &amp; \frac{1}{2} \sum \sum \alpha_i \alpha_j y_i y_j (x_i · x_j) - \sum \alpha_i \\<br>st. \quad &amp; \sum \alpha_i y_i = 0 \\<br>&amp; 0 \leqslant \alpha_i \leqslant C<br>\end{align}<br>$$</p>
-<p>而超平面方程相同。</p>
+<p>而超平面方程相同。对一些问题本身就是非线性可分的，此时就需要利用Kernel Trick：</p>
 <p><img src="http://oncm4c1fl.bkt.clouddn.com//image/svm/3.jpeg" alt=""></p>
 <h2 id="拉格朗日函数"><a href="#拉格朗日函数" class="headerlink" title="拉格朗日函数"></a>拉格朗日函数</h2><p>有条件的优化问题：</p>
 <p>$$<br>\begin{align}<br>min&amp; \quad f(x) \\<br>st.&amp; \quad g_i(x) = 0<br>\end{align}<br>$$</p>
@@ -424,7 +424,7 @@ $(x_i, y_i)$到平面的函数间隔为">
 <p>如果有$(x^\star, \alpha^\star,\beta^\star)$满足KKT条件（充分性），根据①有：</p>
 <p>$$<br>L(x^\star, \alpha^\star, \beta^\star) = \theta_d(\alpha^\star, \beta^\star)<br>$$</p>
 <p>根据②③④⑤有：</p>
-<p>$$<br>L(x^\star, \alpha^\star, \beta^*) = \theta_p(x^\star)<br>$$</p>
+<p>$$<br>L(x^\star, \alpha^\star, \beta^\star) = \theta_p(x^\star)<br>$$</p>
 <p>又根据$\theta_p(x) \geqslant \theta_p(\alpha, \beta)$，于是必然有$\min \theta_p(x^\star) = \max \theta_p(\alpha^\star, \beta^\star) = L(x^\star, \alpha^\star, \beta^\star)$。</p>
 <h2 id="序列最小最优化算法"><a href="#序列最小最优化算法" class="headerlink" title="序列最小最优化算法"></a>序列最小最优化算法</h2><h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf" target="_blank" rel="external">https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf</a></li>
@@ -453,9 +453,9 @@ $(x_i, y_i)$到平面的函数间隔为">
       
         <div class="post-tags">
           
-            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
-          
             <a href="/tags/算法/" rel="tag">#算法</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
           
             <a href="/tags/分类/" rel="tag">#分类</a>
           
@@ -553,7 +553,7 @@ $(x_i, y_i)$到平面的函数间隔为">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -570,7 +570,7 @@ $(x_i, y_i)$到平面的函数间隔为">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
