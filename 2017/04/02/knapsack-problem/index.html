@@ -111,7 +111,7 @@ $$\begin{al">
 假设每种物品的数量为$count[i]$，于是有：
 $$\begin{al">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/knapsack-problem/0.png">
-<meta property="og:updated_time" content="2017-04-02T04:01:09.000Z">
+<meta property="og:updated_time" content="2017-04-02T04:02:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="背包问题">
 <meta name="twitter:description" content="背包问题是一类组合优化的NP问题：
@@ -385,7 +385,7 @@ $$\begin{al">
 <blockquote>
 <p>将物品$i$转换为重量为$2^0·weight[i],2^1·weight[i],…,2^{log(count[i])}·weight[i]$的不同商品。</p>
 </blockquote>
-<p>于是多重背包可以转换为0-1背包处理。</p>
+<p>于是多重背包可以转换为0-1背包处理（利用二进制的思想来加快速度还是很有意思的）。</p>
 <h1 id="二维背包"><a href="#二维背包" class="headerlink" title="二维背包"></a>二维背包</h1><p>问题描述：</p>
 <blockquote>
 <p>有$N$种物品，重量为$weight[i]$、体积为<font color="red">$volume[i]$</font>、价值为$value[i]$，现有背包承重$totalWegiht$、体积为$totalVolume$，每种物品最多拿一个，怎样拿总价值最大？</p>
