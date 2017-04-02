@@ -326,9 +326,9 @@
       
         
           
-          堆内缓存堆外缓存Chronicle用法&amp;特点原理嵌入式存储RocksDB在LevelDB的基础开发，牺牲部分写性能，提升大量读性能。
-用法&amp;特点基本的Kev/Value操作：
-123456789101112131415161718192021222324252627282930313
+          Chronicle同时支持堆外和持久化。
+用法&amp;特点在创建的时候如果是create则用堆外内存，如果是createPersistedTo(file)则能持久化。
+123456789101112131415public class TestMain &#123;    @Test    pub
           ...
 
           <div class="post-more-link text-center">
