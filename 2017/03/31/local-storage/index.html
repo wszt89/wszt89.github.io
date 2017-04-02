@@ -84,22 +84,40 @@
 
 
 
-<meta name="description" content="Chronicle同时支持堆外和持久化。
-用法&amp;amp;特点在创建的时候如果是create则用堆外内存，如果是createPersistedTo(file)则能持久化。
-123456789101112131415public class TestMain &amp;#123;    @Test    public void test() throws Exception &amp;#123;        Chr">
+<meta name="description" content="最近在考虑如何做算法的优化计算，有两个地方比较头疼：
+
+耗时
+内存
+
+现在的做法是一股脑把所有的东西丢到内存，做起来简单，但是一个任务开跑400MB+的内存就没了，有点慌。
+而读取这400MB+的数据耗时也是挺可观的，如果能将需要的信息放到本地，在执行任务的时候就地取材应该也能提升不少。这两天对常见的一些本地存储数据的方式了解一下。
+Chronicle同时支持堆外和持久化。
+用法&amp;amp;特点在创">
 <meta property="og:type" content="article">
 <meta property="og:title" content="本地数据存储">
 <meta property="og:url" content="http://yoursite.com/2017/03/31/local-storage/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="Chronicle同时支持堆外和持久化。
-用法&amp;amp;特点在创建的时候如果是create则用堆外内存，如果是createPersistedTo(file)则能持久化。
-123456789101112131415public class TestMain &amp;#123;    @Test    public void test() throws Exception &amp;#123;        Chr">
-<meta property="og:updated_time" content="2017-04-02T02:04:34.000Z">
+<meta property="og:description" content="最近在考虑如何做算法的优化计算，有两个地方比较头疼：
+
+耗时
+内存
+
+现在的做法是一股脑把所有的东西丢到内存，做起来简单，但是一个任务开跑400MB+的内存就没了，有点慌。
+而读取这400MB+的数据耗时也是挺可观的，如果能将需要的信息放到本地，在执行任务的时候就地取材应该也能提升不少。这两天对常见的一些本地存储数据的方式了解一下。
+Chronicle同时支持堆外和持久化。
+用法&amp;amp;特点在创">
+<meta property="og:updated_time" content="2017-04-02T02:11:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="本地数据存储">
-<meta name="twitter:description" content="Chronicle同时支持堆外和持久化。
-用法&amp;amp;特点在创建的时候如果是create则用堆外内存，如果是createPersistedTo(file)则能持久化。
-123456789101112131415public class TestMain &amp;#123;    @Test    public void test() throws Exception &amp;#123;        Chr">
+<meta name="twitter:description" content="最近在考虑如何做算法的优化计算，有两个地方比较头疼：
+
+耗时
+内存
+
+现在的做法是一股脑把所有的东西丢到内存，做起来简单，但是一个任务开跑400MB+的内存就没了，有点慌。
+而读取这400MB+的数据耗时也是挺可观的，如果能将需要的信息放到本地，在执行任务的时候就地取材应该也能提升不少。这两天对常见的一些本地存储数据的方式了解一下。
+Chronicle同时支持堆外和持久化。
+用法&amp;amp;特点在创">
 
 
 
@@ -329,7 +347,14 @@
       
 
       
-        <h1 id="Chronicle"><a href="#Chronicle" class="headerlink" title="Chronicle"></a>Chronicle</h1><p>同时支持堆外和持久化。</p>
+        <p>最近在考虑如何做算法的优化计算，有两个地方比较头疼：</p>
+<ul>
+<li>耗时</li>
+<li>内存</li>
+</ul>
+<p>现在的做法是一股脑把所有的东西丢到内存，做起来简单，但是一个任务开跑400MB+的内存就没了，有点慌。</p>
+<p>而读取这400MB+的数据耗时也是挺可观的，如果能将需要的信息放到本地，在执行任务的时候就地取材应该也能提升不少。这两天对常见的一些本地存储数据的方式了解一下。</p>
+<h1 id="Chronicle"><a href="#Chronicle" class="headerlink" title="Chronicle"></a>Chronicle</h1><p>同时支持堆外和持久化。</p>
 <h2 id="用法-amp-特点"><a href="#用法-amp-特点" class="headerlink" title="用法&amp;特点"></a>用法&amp;特点</h2><p>在创建的时候如果是<code>create</code>则用堆外内存，如果是<code>createPersistedTo(file)</code>则能持久化。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestMain</span> </span>&#123;</div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        ChronicleMap&lt;Integer, String&gt; chronicleMap = ChronicleMap</div><div class="line">                .of(Integer.class, String.class)</div><div class="line">                .name(<span class="string">"test-map"</span>)</div><div class="line">                .averageValue(<span class="string">"123123"</span>)</div><div class="line">                .entries(<span class="number">10000</span>)</div><div class="line">                .create();</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</div><div class="line">            chronicleMap.put(i, <span class="string">"123"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><h1 id="RocksDB"><a href="#RocksDB" class="headerlink" title="RocksDB"></a>RocksDB</h1><p>在LevelDB的基础开发，牺牲部分写性能，提升大量读性能。</p>
