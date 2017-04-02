@@ -89,7 +89,12 @@
 给定一组物品，每个物品有一定的重量和价值，在一定的限制内，我们如何选择才能使总价值最高？
 
 不同限制的解法也不相同。
-0/1背包问题描述解决思路">
+0-1背包问题描述：
+
+有$N$种物品，重量为$weight[i]$、价值为$value[i]$，现有背包承重$total$，每种物品最多拿一个，怎样拿总价值最大？
+
+假设每种物品的数量为$count[i]$，于是有：
+$$\begin{al">
 <meta property="og:type" content="article">
 <meta property="og:title" content="背包问题">
 <meta property="og:url" content="http://yoursite.com/2017/04/02/knapsack-problem/index.html">
@@ -99,9 +104,14 @@
 给定一组物品，每个物品有一定的重量和价值，在一定的限制内，我们如何选择才能使总价值最高？
 
 不同限制的解法也不相同。
-0/1背包问题描述解决思路">
+0-1背包问题描述：
+
+有$N$种物品，重量为$weight[i]$、价值为$value[i]$，现有背包承重$total$，每种物品最多拿一个，怎样拿总价值最大？
+
+假设每种物品的数量为$count[i]$，于是有：
+$$\begin{al">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/knapsack-problem/0.png">
-<meta property="og:updated_time" content="2017-04-02T02:52:35.000Z">
+<meta property="og:updated_time" content="2017-04-02T04:01:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="背包问题">
 <meta name="twitter:description" content="背包问题是一类组合优化的NP问题：
@@ -109,7 +119,12 @@
 给定一组物品，每个物品有一定的重量和价值，在一定的限制内，我们如何选择才能使总价值最高？
 
 不同限制的解法也不相同。
-0/1背包问题描述解决思路">
+0-1背包问题描述：
+
+有$N$种物品，重量为$weight[i]$、价值为$value[i]$，现有背包承重$total$，每种物品最多拿一个，怎样拿总价值最大？
+
+假设每种物品的数量为$count[i]$，于是有：
+$$\begin{al">
 <meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/knapsack-problem/0.png">
 
 
@@ -346,7 +361,49 @@
 <p>给定一组物品，每个物品有一定的重量和价值，在一定的限制内，我们如何选择才能使总价值最高？</p>
 </blockquote>
 <p>不同限制的解法也不相同。</p>
-<h1 id="0-1背包"><a href="#0-1背包" class="headerlink" title="0/1背包"></a>0/1背包</h1><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2>
+<h1 id="0-1背包"><a href="#0-1背包" class="headerlink" title="0-1背包"></a>0-1背包</h1><p>问题描述：</p>
+<blockquote>
+<p>有$N$种物品，重量为$weight[i]$、价值为$value[i]$，现有背包承重$total$，每种物品<font color="red">最多拿一个</font>，怎样拿总价值最大？</p>
+</blockquote>
+<p>假设每种物品的数量为$count[i]$，于是有：</p>
+<p>$$<br>\begin{align}<br>\max \quad &amp; \sum count[i] · value[i] \\<br>st \quad &amp; \sum count[i] · weight[i] \leqslant total \\<br>&amp; count[i] \in { 0, 1}<br>\end{align}<br>$$</p>
+<p>当$total$不是很大的时候，打表$tab[i]$为重量为$i$时的最大价值，依次考虑物品$j$，有：</p>
+<p>$$<br>tab[i+weight[j]] = max (tab[i+weight[j]], tab[i] + value[j])<br>$$</p>
+<h1 id="完全背包"><a href="#完全背包" class="headerlink" title="完全背包"></a>完全背包</h1><p>问题描述：</p>
+<blockquote>
+<p>有$N$种物品，重量为$weight[i]$、价值为$value[i]$，现有背包承重$total$，每种物品<font color="red">可以拿任意个</font>，怎样拿总价值最大？</p>
+</blockquote>
+<p>假设每种物品的数量为$count[i]$，于是有：</p>
+<p>$$<br>\begin{align}<br>\max \quad &amp; \sum count[i] · value[i] \\<br>st \quad &amp; \sum count[i] · weight[i] \leqslant total \\<br>&amp; count[i] \in N<br>\end{align}<br>$$</p>
+<p>打表$tab[i]$为重量为$i$时的最大价值，依次考虑物品$j$放入$k$件的情况，有：</p>
+<p>$$<br>tab[i+weight[j] · k] = max(tab[i+weight[j] · k], tab[i] + value[j] · k)<br>$$</p>
+<h1 id="多重背包"><a href="#多重背包" class="headerlink" title="多重背包"></a>多重背包</h1><p>问题描述：</p>
+<blockquote>
+<p>有$N$种物品，重量为$weight[i]$、价值为$value[i]$，现有背包承重$total$的背包，每种物品分别可以拿<font color="red">$count[i]$</font>个，怎样拿总价值最大？</p>
+</blockquote>
+<p>和完全背包的解法相同，仅仅是在超过物品数限制之后不再尝试即可。另一种解法是：</p>
+<blockquote>
+<p>将物品$i$转换为重量为$2^0·weight[i],2^1·weight[i],…,2^{log(count[i])}·weight[i]$的不同商品。</p>
+</blockquote>
+<p>于是多重背包可以转换为0-1背包处理。</p>
+<h1 id="二维背包"><a href="#二维背包" class="headerlink" title="二维背包"></a>二维背包</h1><p>问题描述：</p>
+<blockquote>
+<p>有$N$种物品，重量为$weight[i]$、体积为<font color="red">$volume[i]$</font>、价值为$value[i]$，现有背包承重$totalWegiht$、体积为$totalVolume$，每种物品最多拿一个，怎样拿总价值最大？</p>
+</blockquote>
+<p>假设每种物品的数量为$count[i]$，于是有：</p>
+<p>$$<br>\begin{align}<br>\max \quad &amp; \sum count[i] · value[i] \\<br>st \quad &amp; \sum count[i] · weight[i] \leqslant totalWeight \\<br>&amp; \sum count[i] · volume[i] \leqslant totalVolume \\<br>&amp; count[i] \in { 0, 1}<br>\end{align}<br>$$</p>
+<p>此时打个二维表$tab[i][j]$表示重量为$i$、体积为$j$时的最大价值，转移方程为：</p>
+<p>$$<br>tab[i+weight[k]][j+volume[k]] = max (tab[i+weight[k]][j+volume[k]], tab[i][j] + value[k])<br>$$</p>
+<h1 id="多背包"><a href="#多背包" class="headerlink" title="多背包"></a>多背包</h1><p>问题描述：</p>
+<blockquote>
+<p>有$N$种物品，重量为$weight[i]$、价值为$value[i]$，现有<font color="red">$M$</font>背包分别承重$totalWegiht$，每种物品最多拿一个，怎样拿总价值最大？</p>
+</blockquote>
+<p>现在没想到（也没找到）比较好的确定算法，大多思路为启发式搜索或者有一定策略的贪心。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://www.cnblogs.com/jbelial/articles/2116074.html" target="_blank" rel="external">http://www.cnblogs.com/jbelial/articles/2116074.html</a></li>
+<li><a href="https://wenku.baidu.com/view/83262672f46527d3240ce0d7.html" target="_blank" rel="external">https://wenku.baidu.com/view/83262672f46527d3240ce0d7.html</a></li>
+</ul>
+
       
     </div>
 
@@ -508,7 +565,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0-1背包"><span class="nav-number">1.</span> <span class="nav-text">0/1背包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决思路"><span class="nav-number">1.2.</span> <span class="nav-text">解决思路</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0-1背包"><span class="nav-number">1.</span> <span class="nav-text">0-1背包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完全背包"><span class="nav-number">2.</span> <span class="nav-text">完全背包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多重背包"><span class="nav-number">3.</span> <span class="nav-text">多重背包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二维背包"><span class="nav-number">4.</span> <span class="nav-text">二维背包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多背包"><span class="nav-number">5.</span> <span class="nav-text">多背包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
