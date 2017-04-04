@@ -111,7 +111,7 @@ $(x_i, y_i)$到平面的函数间隔为">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/0.png">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/3.jpeg">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/1.jpg">
-<meta property="og:updated_time" content="2017-03-27T14:42:18.000Z">
+<meta property="og:updated_time" content="2017-04-04T04:50:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="支持向量机">
 <meta name="twitter:description" content="平面上有两种不同类型的点：
@@ -389,8 +389,17 @@ $(x_i, y_i)$到平面的函数间隔为">
 <p>$$<br>\sum \alpha_i y_i (x · x_i) + b = 0<br>$$</p>
 <p>其中$\alpha_i &gt; 0$对应的$x_i$为<font color="red">支持向量</font>。类似这个过程，可以求得带有松弛变量$\xi_i$的对偶问题为：</p>
 <p>$$<br>\begin{align}<br>\min \quad &amp; \frac{1}{2} \sum \sum \alpha_i \alpha_j y_i y_j (x_i · x_j) - \sum \alpha_i \\<br>st. \quad &amp; \sum \alpha_i y_i = 0 \\<br>&amp; 0 \leqslant \alpha_i \leqslant C<br>\end{align}<br>$$</p>
-<p>而超平面方程相同。对一些问题本身就是非线性可分的，此时就需要利用Kernel Trick：</p>
+<p>而超平面方程相同。对一些问题本身就是非线性可分的，此时就需要利用Kernel Trick（低维映射到高维之后线性可分）：</p>
 <p><img src="http://oncm4c1fl.bkt.clouddn.com//image/svm/3.jpeg" alt=""></p>
+<p>核函数的定义为：</p>
+<blockquote>
+<p>如果存在从$X$到$H$的映射：$\phi (x) : X \rightarrow H$，使得所有$x,z \in X$函数$K(x,z)$满足$K(x,z)=\phi (x)·\phi (z)$，则称$K(x,z)$为核函数。</p>
+</blockquote>
+<p>核函数定义了映射之后的内积，所以我们只需要知道核函数而不再需要关心映射。引入核函数之后，目标函数变为：</p>
+<p>$$<br>W(\alpha) = \frac{1}{2} \ sum \sum \alpha_i \alpha_j y_i y_j K(x_i, x_j) - \sum \alpha_i<br>$$</p>
+<p>分类决策函数变为：</p>
+<p>$$<br>f(x) = sign \left ( \sum \alpha_iy_iK(x_i, x) + b \right )<br>$$</p>
+<p>当训练集越来越大，常用的凸二次优化算法会非常低效，常用的方法是SMO算法。</p>
 <h2 id="拉格朗日函数"><a href="#拉格朗日函数" class="headerlink" title="拉格朗日函数"></a>拉格朗日函数</h2><p>有条件的优化问题：</p>
 <p>$$<br>\begin{align}<br>min&amp; \quad f(x) \\<br>st.&amp; \quad g_i(x) = 0<br>\end{align}<br>$$</p>
 <p>构造函数$F(x) = f(x) + \sum \lambda_i·g_i(x)$，求偏导方程：</p>
@@ -426,10 +435,37 @@ $(x_i, y_i)$到平面的函数间隔为">
 <p>根据②③④⑤有：</p>
 <p>$$<br>L(x^\star, \alpha^\star, \beta^\star) = \theta_p(x^\star)<br>$$</p>
 <p>又根据$\theta_p(x) \geqslant \theta_p(\alpha, \beta)$，于是必然有$\min \theta_p(x^\star) = \max \theta_p(\alpha^\star, \beta^\star) = L(x^\star, \alpha^\star, \beta^\star)$。</p>
-<h2 id="序列最小最优化算法"><a href="#序列最小最优化算法" class="headerlink" title="序列最小最优化算法"></a>序列最小最优化算法</h2><h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<h2 id="正定核"><a href="#正定核" class="headerlink" title="正定核"></a>正定核</h2><p>设$K:X \times X \rightarrow R$是对称函数，则$K(x,z)$为正定核函数的充分必要条件是对任意的$x_i \in X$，$K(x,z)$对应的$Gram$矩阵：</p>
+<p>$$<br>K = [K(x_i, x_j)]<br>$$</p>
+<p>是半正定的。首先证明<font color="red">必要性</font>：</p>
+<p>$$<br>\begin{align}<br>\sum c_i c_j K(x_i, x_j) &amp; = \sum c_i c_j ( \phi(x_i) · \phi(x_j)) \\<br>&amp; = \left ( \sum c_i \phi(x_i) \right ) · \left ( \sum c_i \phi(x_i) \right ) \\<br>&amp; = \left \| \sum c_i \phi(x_i) \right \|^2 \\<br>&amp; \geqslant 0<br>\end{align}<br>$$</p>
+<p><font color="red">充分性</font>的证明比较麻烦，首先<strong>构造映射</strong>：</p>
+<p>$$<br>\phi : x \rightarrow K(·,x)<br>$$</p>
+<p>对任意的$x_i \in X, \alpha_i \in R$，定义线性组合：</p>
+<p>$$<br>f(·) = \sum \alpha_i K(·,x_i)<br>$$</p>
+<p>由线性组合组成的集合$S$对加法和数乘都是封闭的。接着在该空间上定义<strong>内积</strong>，对于线性组合：</p>
+<p>$$<br>f(·) = \sum \alpha_i K(·,x_i) \\<br>g(·) = \sum \beta_j K(·,z_j)<br>$$</p>
+<p>它们的内积为：</p>
+<p>$$<br>f * g = \sum_i \sum_j \alpha_i \beta_j K(x_i, z_j)<br>$$</p>
+<p>可证明该计算满足：</p>
+<p>$$<br>\begin{cases}<br> &amp; (cf) * g = c(f*g) \\<br> &amp; (f+g)*h = f*h + g*h \\<br> &amp; f*g = g*f \\<br> &amp; f*f \geqslant 0 \\<br> &amp; f*f = 0 \Leftrightarrow f = 0<br>\end{cases}<br>$$</p>
+<p>最后将$S$完备化成希尔伯特空间。</p>
+<h2 id="序列最小最优化算法"><a href="#序列最小最优化算法" class="headerlink" title="序列最小最优化算法"></a>序列最小最优化算法</h2><p>直接训练相当慢，SMO算法的思路是循环优化，迭代步骤为：</p>
+<ol>
+<li>选择两个变量（固定其他变量）</li>
+<li>将原问题变为针对这两个变量的凸二次优化问题并求解</li>
+</ol>
+<p>假设固定的变量是$\alpha_1$、$\alpha_2$，则问题变为（求解好像比较简单）：</p>
+<p>$$<br>\begin{align}<br>\min_{\alpha_1,\alpha_2} \quad W(\alpha_1,\alpha_2) &amp; = \frac{1}{2} K_{11}\alpha_1^2 + \frac{1}{2} K_{22}\alpha_2^2 + y_1y_2K_{12}\alpha_1\alpha_2  \\<br>&amp; - (\alpha_1+\alpha_2) + y_1 \alpha_1 \sum_{i=3} y_i \alpha_i K_{i1} + y_2 \alpha_2 \sum_{i=3} y_i \alpha_i K_{i1} \\<br>st. \quad &amp; \alpha_1y_1 + \alpha_2y_2 = - \sum_{i=3}y_i\alpha_i \\<br>&amp; 0 \leqslant \alpha_1, \alpha_2 \leqslant C<br>\end{align}<br>$$</p>
+<p>选择第一个变量的策略是：</p>
+<blockquote>
+<p>违反KKT条件最严重的样本点。</p>
+</blockquote>
+<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf" target="_blank" rel="external">https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf</a></li>
 <li><a href="https://ocw.mit.edu/courses/mechanical-engineering/2-854-introduction-to-manufacturing-systems-fall-2010/lecture-notes/MIT2_854F10_kkt_ex.pdf" target="_blank" rel="external">https://ocw.mit.edu/courses/mechanical-engineering/2-854-introduction-to-manufacturing-systems-fall-2010/lecture-notes/MIT2_854F10_kkt_ex.pdf</a></li>
 <li><a href="http://www.hanlongfei.com/convex/2015/11/08/kkt" target="_blank" rel="external">http://www.hanlongfei.com/convex/2015/11/08/kkt</a></li>
+<li><a href="http://www.cnblogs.com/jerrylead/archive/2011/03/18/1988419.html" target="_blank" rel="external">http://www.cnblogs.com/jerrylead/archive/2011/03/18/1988419.html</a></li>
 </ul>
 
       
@@ -599,7 +635,7 @@ $(x_i, y_i)$到平面的函数间隔为">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型"><span class="nav-number">1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-number">2.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日函数"><span class="nav-number">2.1.</span> <span class="nav-text">拉格朗日函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对偶与KKT"><span class="nav-number">2.2.</span> <span class="nav-text">对偶与KKT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列最小最优化算法"><span class="nav-number">2.3.</span> <span class="nav-text">序列最小最优化算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工具"><span class="nav-number">3.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型"><span class="nav-number">1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-number">2.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日函数"><span class="nav-number">2.1.</span> <span class="nav-text">拉格朗日函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对偶与KKT"><span class="nav-number">2.2.</span> <span class="nav-text">对偶与KKT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正定核"><span class="nav-number">2.3.</span> <span class="nav-text">正定核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列最小最优化算法"><span class="nav-number">2.4.</span> <span class="nav-text">序列最小最优化算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工具"><span class="nav-number">3.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
