@@ -84,13 +84,28 @@
 
 
 
+<meta name="description" content="概率论中，条件概率定义为：
+$$P(A|B) = \frac{P(AB)}{P(B)}$$
+表示$B$发生时$A$发生的概率，于是有：
+$$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}$$
+贝叶斯最著名的用法是邮件反垃圾：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="朴素贝叶斯">
+<meta property="og:title" content="贝叶斯算法">
 <meta property="og:url" content="http://yoursite.com/2017/03/16/bayes/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:updated_time" content="2017-04-04T09:45:19.000Z">
+<meta property="og:description" content="概率论中，条件概率定义为：
+$$P(A|B) = \frac{P(AB)}{P(B)}$$
+表示$B$发生时$A$发生的概率，于是有：
+$$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}$$
+贝叶斯最著名的用法是邮件反垃圾：">
+<meta property="og:updated_time" content="2017-04-04T13:56:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="朴素贝叶斯">
+<meta name="twitter:title" content="贝叶斯算法">
+<meta name="twitter:description" content="概率论中，条件概率定义为：
+$$P(A|B) = \frac{P(AB)}{P(B)}$$
+表示$B$发生时$A$发生的概率，于是有：
+$$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}$$
+贝叶斯最著名的用法是邮件反垃圾：">
 
 
 
@@ -114,7 +129,7 @@
   <link rel="canonical" href="http://yoursite.com/2017/03/16/bayes/"/>
 
 
-  <title> 朴素贝叶斯 | wsztrush </title>
+  <title> 贝叶斯算法 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -254,7 +269,7 @@
             
             
               
-                朴素贝叶斯
+                贝叶斯算法
               
             
           </h1>
@@ -320,7 +335,23 @@
       
 
       
-        
+        <p>概率论中，条件概率定义为：</p>
+<p>$$<br>P(A|B) = \frac{P(AB)}{P(B)}<br>$$</p>
+<p>表示<strong>$B$发生时$A$发生的概率</strong>，于是有：</p>
+<p>$$<br>P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}<br>$$</p>
+<p>贝叶斯最著名的用法是邮件反垃圾：</p>
+<ul>
+<li>A：单词</li>
+<li>B：是否垃圾邮件</li>
+</ul>
+<p>在给了一些样本后，如何来预测${A_1,A_2,A_3}$的邮件是否为垃圾邮件？如果样本中包含很多相同内容的邮件，那么可以直接计算$P(B|A)$，然而：</p>
+<blockquote>
+<p>这基本上是不可能的（不可能穷举所有垃圾邮件的可能）。</p>
+</blockquote>
+<p>但是，根据样本容易计算出<strong>每个单词在垃圾邮件中出现的概率$P(A|B)$</strong>，根据上面的公式就间接得到$P(B|A)$了。</p>
+<h1 id="朴素贝叶斯"><a href="#朴素贝叶斯" class="headerlink" title="朴素贝叶斯"></a>朴素贝叶斯</h1><p>贝叶斯公式为：</p>
+<p>$$<br>P(B_i|A) = \frac{P(B_i)P(A|B_i)}{\sum P(B_j)P(A|B_j)}<br>$$</p>
+
       
     </div>
 
@@ -488,7 +519,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#朴素贝叶斯"><span class="nav-number">1.</span> <span class="nav-text">朴素贝叶斯</span></a></li></ol></div>
             
           </div>
         </section>
@@ -613,7 +644,7 @@
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
       var disqus_identifier = '2017/03/16/bayes/';
-      var disqus_title = "朴素贝叶斯";
+      var disqus_title = "贝叶斯算法";
       var disqus_url = 'http://yoursite.com/2017/03/16/bayes/';
 
       function run_disqus_script(disqus_script){
