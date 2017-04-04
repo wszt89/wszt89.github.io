@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="算法,机器学习,分类,回归," />
+  <meta name="keywords" content="机器学习,算法,分类,回归," />
 
 
 
@@ -111,7 +111,7 @@ $(x_i, y_i)$到平面的函数间隔为">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/0.png">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/3.jpeg">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/1.jpg">
-<meta property="og:updated_time" content="2017-04-04T04:50:44.000Z">
+<meta property="og:updated_time" content="2017-04-04T08:13:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="支持向量机">
 <meta name="twitter:description" content="平面上有两种不同类型的点：
@@ -461,11 +461,15 @@ $(x_i, y_i)$到平面的函数间隔为">
 <blockquote>
 <p>违反KKT条件最严重的样本点。</p>
 </blockquote>
-<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<p>而第二个变量则尽量选取能优化较多的变量。</p>
+<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><p>大部分人应该会选择用<a href="http://www.csie.ntu.edu.tw/~cjlin/libsvm/" target="_blank" rel="external">LIBSVM</a>，附SKLEARN的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</div><div class="line"></div><div class="line">X = np.array([[<span class="number">-1</span>, <span class="number">-1</span>], [<span class="number">-2</span>, <span class="number">-1</span>], [<span class="number">1</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">1</span>]])</div><div class="line">y = np.array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>])</div><div class="line"></div><div class="line">clf = SVC()</div><div class="line">clf.fit(X, y)</div><div class="line"></div><div class="line">print(clf.predict([[<span class="number">-0.8</span>, <span class="number">-1</span>]]))</div></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf" target="_blank" rel="external">https://www.cs.cmu.edu/~ggordon/10725-F12/slides/16-kkt.pdf</a></li>
 <li><a href="https://ocw.mit.edu/courses/mechanical-engineering/2-854-introduction-to-manufacturing-systems-fall-2010/lecture-notes/MIT2_854F10_kkt_ex.pdf" target="_blank" rel="external">https://ocw.mit.edu/courses/mechanical-engineering/2-854-introduction-to-manufacturing-systems-fall-2010/lecture-notes/MIT2_854F10_kkt_ex.pdf</a></li>
 <li><a href="http://www.hanlongfei.com/convex/2015/11/08/kkt" target="_blank" rel="external">http://www.hanlongfei.com/convex/2015/11/08/kkt</a></li>
 <li><a href="http://www.cnblogs.com/jerrylead/archive/2011/03/18/1988419.html" target="_blank" rel="external">http://www.cnblogs.com/jerrylead/archive/2011/03/18/1988419.html</a></li>
+<li><a href="http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html" target="_blank" rel="external">http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html</a></li>
 </ul>
 
       
@@ -489,9 +493,9 @@ $(x_i, y_i)$到平面的函数间隔为">
       
         <div class="post-tags">
           
-            <a href="/tags/算法/" rel="tag">#算法</a>
-          
             <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/算法/" rel="tag">#算法</a>
           
             <a href="/tags/分类/" rel="tag">#分类</a>
           
@@ -635,7 +639,7 @@ $(x_i, y_i)$到平面的函数间隔为">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型"><span class="nav-number">1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-number">2.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日函数"><span class="nav-number">2.1.</span> <span class="nav-text">拉格朗日函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对偶与KKT"><span class="nav-number">2.2.</span> <span class="nav-text">对偶与KKT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正定核"><span class="nav-number">2.3.</span> <span class="nav-text">正定核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列最小最优化算法"><span class="nav-number">2.4.</span> <span class="nav-text">序列最小最优化算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工具"><span class="nav-number">3.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型"><span class="nav-number">1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-number">2.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日函数"><span class="nav-number">2.1.</span> <span class="nav-text">拉格朗日函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对偶与KKT"><span class="nav-number">2.2.</span> <span class="nav-text">对偶与KKT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正定核"><span class="nav-number">2.3.</span> <span class="nav-text">正定核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列最小最优化算法"><span class="nav-number">2.4.</span> <span class="nav-text">序列最小最优化算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工具"><span class="nav-number">3.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
