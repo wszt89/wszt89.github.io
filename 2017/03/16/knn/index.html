@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="算法,机器学习,分类,有监督," />
 
 
 
@@ -84,13 +84,34 @@
 
 
 
+<meta name="description" content="给定一个数据集，其中实例的类别已经标注完毕，那么：
+
+当有新的实例时，怎么判断它的类别？
+
+最简单的规则便是少数服从多数，假设训练集为$T={(x_1,y_1),(x_2,y_2)…(x_n,y_n)}$，找到与新实例$x$最近的$k$个实例，于是有：
+$$y = \arg \max_{c_j} \sum I(y_i = c_j) \quad i=1,2,..,n,\;j=1,2,..,k$$">
 <meta property="og:type" content="article">
-<meta property="og:title" content="knn">
+<meta property="og:title" content="K近邻算法">
 <meta property="og:url" content="http://yoursite.com/2017/03/16/knn/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:updated_time" content="2017-03-16T06:51:27.000Z">
+<meta property="og:description" content="给定一个数据集，其中实例的类别已经标注完毕，那么：
+
+当有新的实例时，怎么判断它的类别？
+
+最简单的规则便是少数服从多数，假设训练集为$T={(x_1,y_1),(x_2,y_2)…(x_n,y_n)}$，找到与新实例$x$最近的$k$个实例，于是有：
+$$y = \arg \max_{c_j} \sum I(y_i = c_j) \quad i=1,2,..,n,\;j=1,2,..,k$$">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/knn/0.jpg">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/knn/1.jpg">
+<meta property="og:updated_time" content="2017-04-04T09:27:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="knn">
+<meta name="twitter:title" content="K近邻算法">
+<meta name="twitter:description" content="给定一个数据集，其中实例的类别已经标注完毕，那么：
+
+当有新的实例时，怎么判断它的类别？
+
+最简单的规则便是少数服从多数，假设训练集为$T={(x_1,y_1),(x_2,y_2)…(x_n,y_n)}$，找到与新实例$x$最近的$k$个实例，于是有：
+$$y = \arg \max_{c_j} \sum I(y_i = c_j) \quad i=1,2,..,n,\;j=1,2,..,k$$">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/knn/0.jpg">
 
 
 
@@ -114,7 +135,7 @@
   <link rel="canonical" href="http://yoursite.com/2017/03/16/knn/"/>
 
 
-  <title> knn | wsztrush </title>
+  <title> K近邻算法 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -254,7 +275,7 @@
             
             
               
-                knn
+                K近邻算法
               
             
           </h1>
@@ -271,6 +292,25 @@
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
@@ -301,7 +341,43 @@
       
 
       
-        
+        <p><img src="http://oncm4c1fl.bkt.clouddn.com//image/knn/0.jpg" alt=""></p>
+<p>给定一个数据集，其中实例的类别已经标注完毕，那么：</p>
+<blockquote>
+<p>当有新的实例时，怎么判断它的类别？</p>
+</blockquote>
+<p>最简单的规则便是<strong>少数服从多数</strong>，假设训练集为$T={(x_1,y_1),(x_2,y_2)…(x_n,y_n)}$，找到与新实例$x$最近的$k$个实例，于是有：</p>
+<p>$$<br>y = \arg \max_{c_j} \sum I(y_i = c_j) \quad i=1,2,..,n,\;j=1,2,..,k<br>$$</p>
+<p>那么效果的好坏由：</p>
+<ul>
+<li>距离的定义</li>
+<li>K值的选取</li>
+</ul>
+<p>来决定。每次如果都遍历整个样本，效率比较低下，需要借助一些数据结构来优化。</p>
+<h1 id="kd-tree"><a href="#kd-tree" class="headerlink" title="kd-tree"></a>kd-tree</h1><p><img src="http://oncm4c1fl.bkt.clouddn.com//image/knn/1.jpg" alt=""></p>
+<p>通过将空间中的实例地划分到不同的子集中，在检索时就可能可以忽略掉部分子集，从而提高搜索速度，<strong>构造</strong>步骤为：</p>
+<ol>
+<li>构造根节点，代表所有元素；</li>
+<li>对深度为$j$的节点，选择$x^{(l)}$为切分坐标，其中$l = j \% k + 1$，以该节点区域对应的实例的$x^{(l)}$的<strong>中位数</strong>为切分点，分成两个子区域；</li>
+<li>递归切分，直到切分后的子区域中没有实例；</li>
+</ol>
+<p><strong>搜索</strong>步骤为：</p>
+<ol>
+<li>找到包含$x$的叶子节点；</li>
+<li>在该节点中找到最近邻；</li>
+<li>递归向上回退，并执行：<ul>
+<li>检查该节点保存的实例；</li>
+<li>检查另一子节点中是否可能有最近的点（与当前得到的距离构成的圆是否有交集）；</li>
+</ul>
+</li>
+<li>回退到根节点时，搜索完成，所保留的便是最近邻；</li>
+</ol>
+<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><p>使用sklearn处理如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier</div><div class="line"></div><div class="line">X = [[<span class="number">0</span>], [<span class="number">1</span>], [<span class="number">2</span>], [<span class="number">3</span>]]</div><div class="line">y = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]</div><div class="line"></div><div class="line">neigh = KNeighborsClassifier(n_neighbors=<span class="number">3</span>)</div><div class="line">neigh.fit(X, y)</div><div class="line"></div><div class="line">print(neigh.predict([[<span class="number">1.1</span>]]))</div><div class="line">print(neigh.predict_proba([[<span class="number">0.9</span>]]))</div></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html" target="_blank" rel="external">http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html</a></li>
+</ul>
+
       
     </div>
 
@@ -320,6 +396,18 @@
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag">#算法</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/分类/" rel="tag">#分类</a>
+          
+            <a href="/tags/有监督/" rel="tag">#有监督</a>
+          
+        </div>
       
 
       
@@ -428,7 +516,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -457,7 +545,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#kd-tree"><span class="nav-number">1.</span> <span class="nav-text">kd-tree</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工具"><span class="nav-number">2.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
@@ -582,7 +670,7 @@
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
       var disqus_identifier = '2017/03/16/knn/';
-      var disqus_title = "knn";
+      var disqus_title = "K近邻算法";
       var disqus_url = 'http://yoursite.com/2017/03/16/knn/';
 
       function run_disqus_script(disqus_script){
