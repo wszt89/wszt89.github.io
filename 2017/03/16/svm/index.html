@@ -111,7 +111,7 @@ $(x_i, y_i)$到平面的函数间隔为">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/0.png">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/3.jpeg">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/1.jpg">
-<meta property="og:updated_time" content="2017-04-10T14:01:41.000Z">
+<meta property="og:updated_time" content="2017-04-10T14:10:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="支持向量机">
 <meta name="twitter:description" content="平面上有两种不同类型的点：
@@ -369,7 +369,7 @@ $(x_i, y_i)$到平面的函数间隔为">
 <p>$$<br>\gamma = \min \quad y_i \times (\frac{w}{\left \| w \right \|}·x_i + \frac{b}{\left \| w \right \|})<br>$$</p>
 <p>模型要将数据划分开，并且在最差（异类接近）的数据上也分的最开：</p>
 <p>$$<br>\begin{align}<br>\max &amp; \quad \gamma \\<br>st. &amp; \quad y_i \times (\frac{w}{\left \| w \right \|} · x_i + \frac{b}{\left \| w \right \|}) \geqslant \gamma<br>\end{align}<br>$$</p>
-<p>等价于：</p>
+<p>等价于(假设$\gamma \times \|w\| = 1$)：</p>
 <p>$$<br>\begin{align}<br>\min&amp; \quad \frac{1}{2} ·\left \| w \right \|^2 \\<br>st.&amp; \quad y_i \times (w·x_i + b) - 1 \geqslant 0<br>\end{align}<br>$$</p>
 <p>然而有的训练集无法分割，此时可以通过松弛变量$\xi_i$来做一些放宽（C为惩罚系数）：</p>
 <p>$$<br>\begin{align}<br>\min&amp; \quad \frac{1}{2} ·\left \| w \right \|^2 + C \sum \xi_i\\<br>st.&amp; \quad y_i \times (w·x_i + b) - 1 \geqslant \xi_i<br>\end{align}<br>$$</p>
