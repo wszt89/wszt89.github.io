@@ -89,16 +89,16 @@ $$P(A|B) = \frac{P(AB)}{P(B)}$$
 表示$B$发生时$A$发生的概率，在条件概率上进行一步推导便得到贝叶斯定理：
 $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}$$">
 <meta property="og:type" content="article">
-<meta property="og:title" content="贝叶斯算法">
+<meta property="og:title" content="贝叶斯">
 <meta property="og:url" content="http://yoursite.com/2017/03/16/bayes/index.html">
 <meta property="og:site_name" content="wsztrush">
 <meta property="og:description" content="概率论中，条件概率定义为：
 $$P(A|B) = \frac{P(AB)}{P(B)}$$
 表示$B$发生时$A$发生的概率，在条件概率上进行一步推导便得到贝叶斯定理：
 $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}$$">
-<meta property="og:updated_time" content="2017-04-07T12:45:21.000Z">
+<meta property="og:updated_time" content="2017-04-10T14:00:56.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="贝叶斯算法">
+<meta name="twitter:title" content="贝叶斯">
 <meta name="twitter:description" content="概率论中，条件概率定义为：
 $$P(A|B) = \frac{P(AB)}{P(B)}$$
 表示$B$发生时$A$发生的概率，在条件概率上进行一步推导便得到贝叶斯定理：
@@ -126,7 +126,7 @@ $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A)
   <link rel="canonical" href="http://yoursite.com/2017/03/16/bayes/"/>
 
 
-  <title> 贝叶斯算法 | wsztrush </title>
+  <title> 贝叶斯 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -266,7 +266,7 @@ $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A)
             
             
               
-                贝叶斯算法
+                贝叶斯
               
             
           </h1>
@@ -354,15 +354,21 @@ $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A)
 <blockquote>
 <p>这是不可能的，总不能穷举所有垃圾邮件吧，而且很可能$A_1,A_2,A_3$同时出现的邮件样本中压根就没有。</p>
 </blockquote>
-<p>所以还是后验概率的路子还是靠谱些。</p>
-<h1 id="朴素贝叶斯"><a href="#朴素贝叶斯" class="headerlink" title="朴素贝叶斯"></a>朴素贝叶斯</h1><p>假设各因素（$X$）相互独立（朴素的由来）：</p>
+<p>所以后验概率的路子更靠谱一些。</p>
+<h1 id="朴素贝叶斯"><a href="#朴素贝叶斯" class="headerlink" title="朴素贝叶斯"></a>朴素贝叶斯</h1><p>假设各因素$X$<font color="red">相互独立</font>（朴素的由来）：</p>
 <p>$$<br>\begin{align}<br>P(X=x|Y=c_k) &amp; = P(X^{(1)}=x^{(1)},…,X^{(n)}=x^{(n)}|Y=c_k) \\<br> &amp; = \prod_j P(X^{(j)}=x^{(j)}|Y=c_k)<br>\end{align}<br>$$</p>
 <p>将其代入贝叶斯公式得到：</p>
 <p>$$<br>\begin{align}<br>P(Y=c_k|X=x) &amp; = \frac{P(X=x|Y=c_k) \times P(Y=c_k)}{\sum_k P(X=x|Y=c_k) \times P(Y=c_k)} \\<br> &amp; = \frac{P(Y=c_k) \times \prod_j P(X^{(j)}=x^{(j)}|Y=c_k)}{\sum_k P(Y=c_k) \times \prod_j P(X^{(j)}=x^{(j)}|Y=c_k)}<br>\end{align}<br>$$</p>
 <p>对于不同的分类（$Y=c_k$）来说分母都一样，于是进一步简化后得到分类方法为：</p>
 <p>$$<br>y = \arg \max_{c_k} P(Y=c_k)\prod_j P(X^{(j)}=x^{(j)}|Y=c_k)<br>$$</p>
 <p>实际计算过程中要注意0的处理。</p>
-<h1 id="贝叶斯网络"><a href="#贝叶斯网络" class="headerlink" title="贝叶斯网络"></a>贝叶斯网络</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<h1 id="贝叶斯网络"><a href="#贝叶斯网络" class="headerlink" title="贝叶斯网络"></a>贝叶斯网络</h1><font color="red">TODO</font>
+
+<ul>
+<li><a href="http://www.cnblogs.com/leoo2sk/archive/2010/09/18/bayes-network.html" target="_blank" rel="external">http://www.cnblogs.com/leoo2sk/archive/2010/09/18/bayes-network.html</a></li>
+<li><a href="https://www.zhihu.com/question/28006799" target="_blank" rel="external">https://www.zhihu.com/question/28006799</a></li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="http://www.norsys.com/tutorials/netica/secA/tut_A1.htm" target="_blank" rel="external">http://www.norsys.com/tutorials/netica/secA/tut_A1.htm</a></li>
 </ul>
 
@@ -479,7 +485,7 @@ $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A)
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/images/avatar.jpg"
+               src="/images/avatar.jpeg"
                alt="wsztrush" />
           <p class="site-author-name" itemprop="name">wsztrush</p>
           <p class="site-description motion-element" itemprop="description"></p>
@@ -658,7 +664,7 @@ $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A)
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
       var disqus_identifier = '2017/03/16/bayes/';
-      var disqus_title = "贝叶斯算法";
+      var disqus_title = "贝叶斯";
       var disqus_url = 'http://yoursite.com/2017/03/16/bayes/';
 
       function run_disqus_script(disqus_script){

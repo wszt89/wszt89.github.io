@@ -111,7 +111,7 @@ $(x_i, y_i)$到平面的函数间隔为">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/0.png">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/3.jpeg">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/svm/1.jpg">
-<meta property="og:updated_time" content="2017-04-04T08:13:21.000Z">
+<meta property="og:updated_time" content="2017-04-10T14:01:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="支持向量机">
 <meta name="twitter:description" content="平面上有两种不同类型的点：
@@ -364,15 +364,15 @@ $(x_i, y_i)$到平面的函数间隔为">
 <h1 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h1><p>假设空间中有训练数据集$(x_1, y_1),(x_2, y_2),…,(x_n, y_n)$，得到的划分平面为：</p>
 <p>$$<br>w · x + b = 0<br>$$</p>
 <p>$(x_i, y_i)$到平面的<font color="red">函数间隔</font>为：</p>
-<p>$$<br>\hat{\gamma} = min\ y_i \times (w·x_i + b)<br>$$</p>
+<p>$$<br>\hat{\gamma} = \min \quad y_i \times (w·x_i + b)<br>$$</p>
 <p>在$w,b$同比例变化时，平面没有动，但是函数间隔却增大了，于是有了<font color="red">几何间隔</font>：</p>
-<p>$$<br>\gamma = min\ y_i \times (\frac{w}{\left \| w \right \|}·x_i + \frac{b}{\left \| w \right \|})<br>$$</p>
+<p>$$<br>\gamma = \min \quad y_i \times (\frac{w}{\left \| w \right \|}·x_i + \frac{b}{\left \| w \right \|})<br>$$</p>
 <p>模型要将数据划分开，并且在最差（异类接近）的数据上也分的最开：</p>
-<p>$$<br>\begin{align}<br>max\ &amp; \quad \gamma \\<br>st. &amp; \quad y_i \times (\frac{w}{\left \| w \right \|} · x_i + \frac{b}{\left \| w \right \|}) \geqslant \gamma<br>\end{align}<br>$$</p>
+<p>$$<br>\begin{align}<br>\max &amp; \quad \gamma \\<br>st. &amp; \quad y_i \times (\frac{w}{\left \| w \right \|} · x_i + \frac{b}{\left \| w \right \|}) \geqslant \gamma<br>\end{align}<br>$$</p>
 <p>等价于：</p>
-<p>$$<br>\begin{align}<br>min&amp; \quad \frac{1}{2} ·\left \| w \right \|^2 \\<br>st.&amp; \quad y_i \times (w·x_i + b) - 1 \geqslant 0<br>\end{align}<br>$$</p>
+<p>$$<br>\begin{align}<br>\min&amp; \quad \frac{1}{2} ·\left \| w \right \|^2 \\<br>st.&amp; \quad y_i \times (w·x_i + b) - 1 \geqslant 0<br>\end{align}<br>$$</p>
 <p>然而有的训练集无法分割，此时可以通过松弛变量$\xi_i$来做一些放宽（C为惩罚系数）：</p>
-<p>$$<br>\begin{align}<br>min&amp; \quad \frac{1}{2} ·\left \| w \right \|^2 + C \sum \xi_i\\<br>st.&amp; \quad y_i \times (w·x_i + b) - 1 \geqslant \xi_i<br>\end{align}<br>$$</p>
+<p>$$<br>\begin{align}<br>\min&amp; \quad \frac{1}{2} ·\left \| w \right \|^2 + C \sum \xi_i\\<br>st.&amp; \quad y_i \times (w·x_i + b) - 1 \geqslant \xi_i<br>\end{align}<br>$$</p>
 <h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><p>构造原问题的拉格朗日函数：</p>
 <p>$$<br>L(w,b,\alpha) = \frac{1}{2} \left \|w \right \|^2 - \sum \alpha_i(y_i \times (w·x_i+b )-1)<br>$$</p>
 <p>等价于：</p>
@@ -516,8 +516,8 @@ $(x_i, y_i)$到平面的函数间隔为">
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/03/16/bayes/" rel="prev" title="贝叶斯算法">
-                贝叶斯算法 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/03/16/bayes/" rel="prev" title="贝叶斯">
+                贝叶斯 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -585,7 +585,7 @@ $(x_i, y_i)$到平面的函数间隔为">
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/images/avatar.jpg"
+               src="/images/avatar.jpeg"
                alt="wsztrush" />
           <p class="site-author-name" itemprop="name">wsztrush</p>
           <p class="site-description motion-element" itemprop="description"></p>
