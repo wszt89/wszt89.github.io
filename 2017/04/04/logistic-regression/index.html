@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="算法,机器学习,分类,回归," />
 
 
 
@@ -84,13 +84,45 @@
 
 
 
+<meta name="description" content="作用（要解决的问题）是什么？
+模型是什么样的？
+如何训练？
+为什么使用这种函数？
+
+
+可以通过概率的解释来解决问题
+
+极大似然法假设连续$X$满足Logistic Distribution，则分布概率和密度函数分别为：
+$$\begin{align}F(x) &amp;amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\f(x) &amp;amp;= F’(x) = \frac{e^">
 <meta property="og:type" content="article">
-<meta property="og:title" content="logistic-regression">
+<meta property="og:title" content="逻辑回归">
 <meta property="og:url" content="http://yoursite.com/2017/04/04/logistic-regression/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:updated_time" content="2017-04-04T14:21:58.000Z">
+<meta property="og:description" content="作用（要解决的问题）是什么？
+模型是什么样的？
+如何训练？
+为什么使用这种函数？
+
+
+可以通过概率的解释来解决问题
+
+极大似然法假设连续$X$满足Logistic Distribution，则分布概率和密度函数分别为：
+$$\begin{align}F(x) &amp;amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\f(x) &amp;amp;= F’(x) = \frac{e^">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/logistic-regression/1.png">
+<meta property="og:updated_time" content="2017-04-11T02:02:48.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="logistic-regression">
+<meta name="twitter:title" content="逻辑回归">
+<meta name="twitter:description" content="作用（要解决的问题）是什么？
+模型是什么样的？
+如何训练？
+为什么使用这种函数？
+
+
+可以通过概率的解释来解决问题
+
+极大似然法假设连续$X$满足Logistic Distribution，则分布概率和密度函数分别为：
+$$\begin{align}F(x) &amp;amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\f(x) &amp;amp;= F’(x) = \frac{e^">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/logistic-regression/1.png">
 
 
 
@@ -114,7 +146,7 @@
   <link rel="canonical" href="http://yoursite.com/2017/04/04/logistic-regression/"/>
 
 
-  <title> logistic-regression | wsztrush </title>
+  <title> 逻辑回归 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -254,7 +286,7 @@
             
             
               
-                logistic-regression
+                逻辑回归
               
             
           </h1>
@@ -271,6 +303,25 @@
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
@@ -301,7 +352,29 @@
       
 
       
-        
+        <ol>
+<li>作用（要解决的问题）是什么？</li>
+<li>模型是什么样的？</li>
+<li>如何训练？</li>
+<li>为什么使用这种函数？</li>
+</ol>
+<ul>
+<li>可以通过概率的解释来解决问题</li>
+</ul>
+<h1 id="极大似然法"><a href="#极大似然法" class="headerlink" title="极大似然法"></a>极大似然法</h1><p>假设连续$X$满足Logistic Distribution，则分布概率和密度函数分别为：</p>
+<p>$$<br>\begin{align}<br>F(x) &amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\<br>f(x) &amp;= F’(x) = \frac{e^{-(x-\mu)/\gamma}}{\gamma(1+e^{-(x-\mu)/\gamma})^2}<br>\end{align}<br>$$</p>
+<p>其中$\mu$为位置参数、$\gamma$为形状参数，如下图：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/logistic-regression/1.png" alt=""></p>
+<p>性质有：</p>
+<ol>
+<li>中心对称</li>
+<li>中心变化快、两端变化小</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://www.statisticshowto.com/logistic-distribution/" target="_blank" rel="external">http://www.statisticshowto.com/logistic-distribution/</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Logistic_distribution" target="_blank" rel="external">https://en.wikipedia.org/wiki/Logistic_distribution</a></li>
+</ul>
+
       
     </div>
 
@@ -320,6 +393,18 @@
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag">#算法</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/分类/" rel="tag">#分类</a>
+          
+            <a href="/tags/回归/" rel="tag">#回归</a>
+          
+        </div>
       
 
       
@@ -411,7 +496,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">17</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -457,7 +542,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#极大似然法"><span class="nav-number">1.</span> <span class="nav-text">极大似然法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
@@ -582,7 +667,7 @@
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
       var disqus_identifier = '2017/04/04/logistic-regression/';
-      var disqus_title = "logistic-regression";
+      var disqus_title = "逻辑回归";
       var disqus_url = 'http://yoursite.com/2017/04/04/logistic-regression/';
 
       function run_disqus_script(disqus_script){
