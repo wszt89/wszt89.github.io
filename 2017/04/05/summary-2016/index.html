@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="总结,工作," />
+  <meta name="keywords" content="总结,工作,学习," />
 
 
 
@@ -84,13 +84,58 @@
 
 
 
+<meta name="description" content="在菜鸟的第三个年头，有很多的不如意和更不如意，不管结果怎么样，都值得花一段时间认真地思考和总结。
+项目总结之前一直在做数据，从16年5月开始搞业务，不得不说菜鸟的业务还是重，而仓库里面的业务更重。
+退供这是第一个深入接触的业务，流程比较简单：
+
+接单
+下架
+质检
+出库
+
+但是等系统的实现捋了一遍之后，简直丧心病狂，没有出故障真是奇迹。还没消停几天就问题来了：
+
+单据状态出错
+单据数据出错
+
+这些都">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2016:求而不得">
+<meta property="og:title" content="2016总结">
 <meta property="og:url" content="http://yoursite.com/2017/04/05/summary-2016/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:updated_time" content="2017-04-05T13:11:06.000Z">
+<meta property="og:description" content="在菜鸟的第三个年头，有很多的不如意和更不如意，不管结果怎么样，都值得花一段时间认真地思考和总结。
+项目总结之前一直在做数据，从16年5月开始搞业务，不得不说菜鸟的业务还是重，而仓库里面的业务更重。
+退供这是第一个深入接触的业务，流程比较简单：
+
+接单
+下架
+质检
+出库
+
+但是等系统的实现捋了一遍之后，简直丧心病狂，没有出故障真是奇迹。还没消停几天就问题来了：
+
+单据状态出错
+单据数据出错
+
+这些都">
+<meta property="og:updated_time" content="2017-04-16T09:22:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2016:求而不得">
+<meta name="twitter:title" content="2016总结">
+<meta name="twitter:description" content="在菜鸟的第三个年头，有很多的不如意和更不如意，不管结果怎么样，都值得花一段时间认真地思考和总结。
+项目总结之前一直在做数据，从16年5月开始搞业务，不得不说菜鸟的业务还是重，而仓库里面的业务更重。
+退供这是第一个深入接触的业务，流程比较简单：
+
+接单
+下架
+质检
+出库
+
+但是等系统的实现捋了一遍之后，简直丧心病狂，没有出故障真是奇迹。还没消停几天就问题来了：
+
+单据状态出错
+单据数据出错
+
+这些都">
 
 
 
@@ -114,7 +159,7 @@
   <link rel="canonical" href="http://yoursite.com/2017/04/05/summary-2016/"/>
 
 
-  <title> 2016:求而不得 | wsztrush </title>
+  <title> 2016总结 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -254,7 +299,7 @@
             
             
               
-                2016:求而不得
+                2016总结
               
             
           </h1>
@@ -320,7 +365,29 @@
       
 
       
-        
+        <p>在菜鸟的第三个年头，有很多的不如意和更不如意，不管结果怎么样，都值得花一段时间认真地思考和总结。</p>
+<h2 id="项目总结"><a href="#项目总结" class="headerlink" title="项目总结"></a>项目总结</h2><p>之前一直在做数据，从16年5月开始搞业务，不得不说菜鸟的业务还是重，而仓库里面的业务更重。</p>
+<h3 id="退供"><a href="#退供" class="headerlink" title="退供"></a>退供</h3><p>这是第一个深入接触的业务，流程比较简单：</p>
+<ul>
+<li>接单</li>
+<li>下架</li>
+<li>质检</li>
+<li>出库</li>
+</ul>
+<p>但是等系统的实现捋了一遍之后，简直<strong>丧心病狂</strong>，没有出故障真是奇迹。还没消停几天就问题来了：</p>
+<ul>
+<li>单据状态出错</li>
+<li>单据数据出错</li>
+</ul>
+<p>这些都忍了，订正一下就完了。结果又来了一个：</p>
+<blockquote>
+<p>有个商品数几万的单子，被下架了两次，然后很多下架单都被作业了，问题是系统上看起来多出库了。</p>
+</blockquote>
+<p>于是整整一个礼拜都在想办法从所有的明细中找到出错的，功夫不负有心人，终于找到了，而根本的原因也是让人哭笑不得：</p>
+<blockquote>
+<p>整个系统的事务都是不生效的。</p>
+</blockquote>
+<h3 id="集货仓"><a href="#集货仓" class="headerlink" title="集货仓"></a>集货仓</h3><h3 id="双十一库存兜底"><a href="#双十一库存兜底" class="headerlink" title="双十一库存兜底"></a>双十一库存兜底</h3><h3 id="库存优化"><a href="#库存优化" class="headerlink" title="库存优化"></a>库存优化</h3><h3 id="库存分配"><a href="#库存分配" class="headerlink" title="库存分配"></a>库存分配</h3><h2 id="技术成长"><a href="#技术成长" class="headerlink" title="技术成长"></a>技术成长</h2><h2 id="人情世故"><a href="#人情世故" class="headerlink" title="人情世故"></a>人情世故</h2>
       
     </div>
 
@@ -345,6 +412,8 @@
             <a href="/tags/总结/" rel="tag">#总结</a>
           
             <a href="/tags/工作/" rel="tag">#工作</a>
+          
+            <a href="/tags/学习/" rel="tag">#学习</a>
           
         </div>
       
@@ -446,7 +515,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -455,7 +524,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -484,7 +553,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目总结"><span class="nav-number">1.</span> <span class="nav-text">项目总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#退供"><span class="nav-number">1.1.</span> <span class="nav-text">退供</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集货仓"><span class="nav-number">1.2.</span> <span class="nav-text">集货仓</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#双十一库存兜底"><span class="nav-number">1.3.</span> <span class="nav-text">双十一库存兜底</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#库存优化"><span class="nav-number">1.4.</span> <span class="nav-text">库存优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#库存分配"><span class="nav-number">1.5.</span> <span class="nav-text">库存分配</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术成长"><span class="nav-number">2.</span> <span class="nav-text">技术成长</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#人情世故"><span class="nav-number">3.</span> <span class="nav-text">人情世故</span></a></li></ol></div>
             
           </div>
         </section>
@@ -609,7 +678,7 @@
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
       var disqus_identifier = '2017/04/05/summary-2016/';
-      var disqus_title = "2016:求而不得";
+      var disqus_title = "2016总结";
       var disqus_url = 'http://yoursite.com/2017/04/05/summary-2016/';
 
       function run_disqus_script(disqus_script){

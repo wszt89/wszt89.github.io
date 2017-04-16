@@ -257,7 +257,7 @@
               
                 
                 <a class="post-title-link" href="/2017/04/11/sigmoid/" itemprop="url">
-                  sigmoid
+                  Sigmoid函数
                 </a>
               
             
@@ -275,6 +275,25 @@
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数学/" itemprop="url" rel="index">
+                    <span itemprop="name">数学</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
@@ -308,7 +327,14 @@
         
           
           
-          
+Sigmoid出场率相当高，函数定义为：
+$$S(x) = \frac{1}{1+e^{-x}}$$
+它的导数为：
+$$S’(x) = \frac{e^{-x}}{(1+e^{-x})^2} = S(x) \times (1-S(x))$$
+该函数具有良好的性质：
+
+输出范围天然在(0,1)，可以
+          ...
 
           <div class="post-more-link text-center">
             <a class="btn" href="/2017/04/11/sigmoid/#more" rel="contents">
@@ -491,7 +517,7 @@ https://zhuanlan.zhihu.com/p/2549
               
                 
                 <a class="post-title-link" href="/2017/04/05/summary-2016/" itemprop="url">
-                  2016:求而不得
+                  2016总结
                 </a>
               
             
@@ -560,8 +586,17 @@ https://zhuanlan.zhihu.com/p/2549
       
         
           
-          
-          
+          在菜鸟的第三个年头，有很多的不如意和更不如意，不管结果怎么样，都值得花一段时间认真地思考和总结。
+项目总结之前一直在做数据，从16年5月开始搞业务，不得不说菜鸟的业务还是重，而仓库里面的业务更重。
+退供这是第一个深入接触的业务，流程比较简单：
+
+接单
+下架
+质检
+出库
+
+但是等系统的实现捋了一遍之后
+          ...
 
           <div class="post-more-link text-center">
             <a class="btn" href="/2017/04/05/summary-2016/#more" rel="contents">
@@ -685,17 +720,9 @@ https://zhuanlan.zhihu.com/p/2549
       
         
           
-          
-作用（要解决的问题）是什么？
-模型是什么样的？
-如何训练？
-为什么使用这种函数？
-
-
-可以通过概率的解释来解决问题
-
-极大似然法假设连续$X$满足Logistic Distribution，则分布概率和密度函数分别为：
-$$\begin{align}F(x) &amp;= \frac{1}{1+e
+          虽然名字是“回归”，但Logistic Regression要解决的却是分类问题。
+比如在求解二分类问题时，对于$x$分别求条件概率：
+$$\begin{align}P(Y=1|X) &amp; = \frac{e^{w·x}}{1+e^{w·x}} \\P(Y=0|X) &amp; = \frac
           ...
 
           <div class="post-more-link text-center">
@@ -1562,7 +1589,7 @@ $$y = \arg \max_{c_j}
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1571,7 +1598,7 @@ $$y = \arg \max_{c_j}
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -84,44 +84,29 @@
 
 
 
-<meta name="description" content="作用（要解决的问题）是什么？
-模型是什么样的？
-如何训练？
-为什么使用这种函数？
-
-
-可以通过概率的解释来解决问题
-
-极大似然法假设连续$X$满足Logistic Distribution，则分布概率和密度函数分别为：
-$$\begin{align}F(x) &amp;amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\f(x) &amp;amp;= F’(x) = \frac{e^">
+<meta name="description" content="虽然名字是“回归”，但Logistic Regression要解决的却是分类问题。
+比如在求解二分类问题时，对于$x$分别求条件概率：
+$$\begin{align}P(Y=1|X) &amp;amp; = \frac{e^{w·x}}{1+e^{w·x}} \\P(Y=0|X) &amp;amp; = \frac{1}{1+e^{w·x}}\end{align}$$
+事件的几率$p/(1-p)$：
+$$$$">
 <meta property="og:type" content="article">
 <meta property="og:title" content="逻辑回归">
 <meta property="og:url" content="http://yoursite.com/2017/04/04/logistic-regression/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="作用（要解决的问题）是什么？
-模型是什么样的？
-如何训练？
-为什么使用这种函数？
-
-
-可以通过概率的解释来解决问题
-
-极大似然法假设连续$X$满足Logistic Distribution，则分布概率和密度函数分别为：
-$$\begin{align}F(x) &amp;amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\f(x) &amp;amp;= F’(x) = \frac{e^">
+<meta property="og:description" content="虽然名字是“回归”，但Logistic Regression要解决的却是分类问题。
+比如在求解二分类问题时，对于$x$分别求条件概率：
+$$\begin{align}P(Y=1|X) &amp;amp; = \frac{e^{w·x}}{1+e^{w·x}} \\P(Y=0|X) &amp;amp; = \frac{1}{1+e^{w·x}}\end{align}$$
+事件的几率$p/(1-p)$：
+$$$$">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/logistic-regression/1.png">
-<meta property="og:updated_time" content="2017-04-11T02:02:48.000Z">
+<meta property="og:updated_time" content="2017-04-11T14:33:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="逻辑回归">
-<meta name="twitter:description" content="作用（要解决的问题）是什么？
-模型是什么样的？
-如何训练？
-为什么使用这种函数？
-
-
-可以通过概率的解释来解决问题
-
-极大似然法假设连续$X$满足Logistic Distribution，则分布概率和密度函数分别为：
-$$\begin{align}F(x) &amp;amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\f(x) &amp;amp;= F’(x) = \frac{e^">
+<meta name="twitter:description" content="虽然名字是“回归”，但Logistic Regression要解决的却是分类问题。
+比如在求解二分类问题时，对于$x$分别求条件概率：
+$$\begin{align}P(Y=1|X) &amp;amp; = \frac{e^{w·x}}{1+e^{w·x}} \\P(Y=0|X) &amp;amp; = \frac{1}{1+e^{w·x}}\end{align}$$
+事件的几率$p/(1-p)$：
+$$$$">
 <meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/logistic-regression/1.png">
 
 
@@ -352,8 +337,12 @@ $$\begin{align}F(x) &amp;amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\f(x) &amp;amp;=
       
 
       
-        <ol>
-<li>作用（要解决的问题）是什么？</li>
+        <p>虽然名字是“回归”，但Logistic Regression要解决的却是分类问题。</p>
+<p>比如在求解二分类问题时，对于$x$分别求条件概率：</p>
+<p>$$<br>\begin{align}<br>P(Y=1|X) &amp; = \frac{e^{w·x}}{1+e^{w·x}} \\<br>P(Y=0|X) &amp; = \frac{1}{1+e^{w·x}}<br>\end{align}<br>$$</p>
+<p>事件的几率$p/(1-p)$：</p>
+<p>$$<br>$$</p>
+<ol>
 <li>模型是什么样的？</li>
 <li>如何训练？</li>
 <li>为什么使用这种函数？</li>
@@ -419,8 +408,8 @@ $$\begin{align}F(x) &amp;amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\f(x) &amp;amp;=
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/04/05/summary-2016/" rel="prev" title="2016:求而不得">
-                2016:求而不得 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/04/05/summary-2016/" rel="prev" title="2016总结">
+                2016总结 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -504,7 +493,7 @@ $$\begin{align}F(x) &amp;amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\f(x) &amp;amp;=
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -513,7 +502,7 @@ $$\begin{align}F(x) &amp;amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\f(x) &amp;amp;=
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
