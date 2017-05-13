@@ -1,0 +1,956 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数学,概率," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="生活中谈到概率，其实分为两种：
+
+主观概率
+客观概率
+
+主观概率是一个人的心态或倾向性（应该是心理学要讨论的），而客观概率则是去量化某个事件发生的可能性。在概率论中常见的概念如下：
+
+事件
+随机变量
+先验概率
+后验概率
+条件概率
+独立性
+密度
+分布
+期望、条件期望
+方差
+协方差
+相关系数
+总体、样本
+参数估计
+
+整体结构为：
+
+古典概率概率源自对“赌博”的思考，最初考虑的场景特点为：
+
+等概率
+有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率论基础">
+<meta property="og:url" content="http://yoursite.com/2017/04/18/basic-of-probability-theory/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="生活中谈到概率，其实分为两种：
+
+主观概率
+客观概率
+
+主观概率是一个人的心态或倾向性（应该是心理学要讨论的），而客观概率则是去量化某个事件发生的可能性。在概率论中常见的概念如下：
+
+事件
+随机变量
+先验概率
+后验概率
+条件概率
+独立性
+密度
+分布
+期望、条件期望
+方差
+协方差
+相关系数
+总体、样本
+参数估计
+
+整体结构为：
+
+古典概率概率源自对“赌博”的思考，最初考虑的场景特点为：
+
+等概率
+有">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/basic-of-probability-theory/0.png">
+<meta property="og:updated_time" content="2017-05-13T01:58:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="概率论基础">
+<meta name="twitter:description" content="生活中谈到概率，其实分为两种：
+
+主观概率
+客观概率
+
+主观概率是一个人的心态或倾向性（应该是心理学要讨论的），而客观概率则是去量化某个事件发生的可能性。在概率论中常见的概念如下：
+
+事件
+随机变量
+先验概率
+后验概率
+条件概率
+独立性
+密度
+分布
+期望、条件期望
+方差
+协方差
+相关系数
+总体、样本
+参数估计
+
+整体结构为：
+
+古典概率概率源自对“赌博”的思考，最初考虑的场景特点为：
+
+等概率
+有">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/basic-of-probability-theory/0.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/18/basic-of-probability-theory/"/>
+
+
+  <title> 概率论基础 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                概率论基础
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-18T11:21:00+08:00" content="2017-04-18">
+              2017-04-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/数学/" itemprop="url" rel="index">
+                    <span itemprop="name">数学</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/04/18/basic-of-probability-theory/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/04/18/basic-of-probability-theory/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>生活中谈到概率，其实分为两种：</p>
+<ul>
+<li>主观概率</li>
+<li>客观概率</li>
+</ul>
+<p>主观概率是一个人的心态或倾向性（应该是心理学要讨论的），而客观概率则是去<strong>量化</strong>某个事件发生的可能性。在概率论中常见的概念如下：</p>
+<ul>
+<li>事件</li>
+<li>随机变量</li>
+<li>先验概率</li>
+<li>后验概率</li>
+<li>条件概率</li>
+<li>独立性</li>
+<li>密度</li>
+<li>分布</li>
+<li>期望、条件期望</li>
+<li>方差</li>
+<li>协方差</li>
+<li>相关系数</li>
+<li>总体、样本</li>
+<li>参数估计</li>
+</ul>
+<p>整体结构为：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/basic-of-probability-theory/0.png" alt=""></p>
+<h2 id="古典概率"><a href="#古典概率" class="headerlink" title="古典概率"></a>古典概率</h2><p>概率源自对“赌博”的思考，最初考虑的场景特点为：</p>
+<ul>
+<li>等概率</li>
+<li>有限的结果集</li>
+</ul>
+<p>典型的场景就是<strong>丢色子</strong>。来个例子：</p>
+<blockquote>
+<p>甲、乙赌技相同，各出赌资500元，约定：<font color="red">谁先赢三局，则谁拿走全部的1000元</font>。现已赌了三局，甲二胜一负而因故要中止，问这1000元要如何分才公平？</p>
+</blockquote>
+<p>考虑如果不是中止，接下来连续两局对甲的情况是：</p>
+<ol>
+<li>胜胜</li>
+<li>胜负</li>
+<li>负胜</li>
+<li>负负</li>
+</ol>
+<p>每种情况出现的概率是相等的，而1、2、3最终甲胜，只有4是乙胜。所以甲胜的概率是0.75，应该得钱 $1000 \times 0.75 = 750$。</p>
+<p>对于更复杂的例子要求比较多排列组合的知识，这里就不纠结了。</p>
+<h2 id="事件关系"><a href="#事件关系" class="headerlink" title="事件关系"></a>事件关系</h2><p>从两个角度来考虑多个事件：</p>
+<ul>
+<li>事件间关系；</li>
+<li>复杂的事件可以由多个简单事件运算得到；</li>
+</ul>
+<p>关系有：</p>
+<ul>
+<li>包含、蕴含、相等；</li>
+<li>互斥、对立；</li>
+<li><font color="red">独立性</font>；</li>
+</ul>
+<p>运算有：</p>
+<ul>
+<li>和；</li>
+<li>交；</li>
+<li>差；</li>
+<li><font color="red">条件概率</font>；</li>
+</ul>
+<p>条件概率的含义为：</p>
+<blockquote>
+<p>设有两事件$A$、$B$且$P(B) &gt; 0$，则“在给定$B$发生的条件下$A$的条件概率”记为$P(A|B)$，定义为：<br>$$<br>P(A|B) = \frac{P(AB)}{P(B)}<br>$$</p>
+</blockquote>
+<p>如果$P(A|B) &gt; P(A)$的话说明$B$促进了$A$的发生，说明他们之间有一定的关联，并不<strong>独立</strong>，若相互独立则有：</p>
+<p>$$<br>P(A|B) = P(A) \quad \Rightarrow \quad P(AB) = P(A) \times P(B)<br>$$</p>
+<p>在先有条件概率的时，可以通过<font color="red">全概率公式</font>来求解无条件概率（没有复杂的推导，只是新视角）：</p>
+<blockquote>
+<p>设$B_1,B_2,…$为有限或无限个事件，它们两两互斥且每次试验中至少发生一个，于是有：<br>$$<br>P(A) = P(B_1) \times P(A|B_1) + P(B_2) \times P(A|B_2) + ···<br>$$</p>
+</blockquote>
+<p>相应的条件概率可以用<font color="red">贝叶斯公式</font>来计算：</p>
+<p>$$<br>P(B_i|A) = \frac{P(AB_i)}{P(A)} = \frac{P(A|B_i) \times P(B_i)}{\sum P(A|B_j) \times P(B_j)}<br>$$</p>
+<h2 id="概率分布"><a href="#概率分布" class="headerlink" title="概率分布"></a>概率分布</h2><p>描述概率的方式有：</p>
+<ul>
+<li>分布</li>
+<li>密度</li>
+</ul>
+<p>它们的定义为：</p>
+<blockquote>
+<p>设$X$为一维随机变量，则函数：<br>$$<br>P(X \leqslant x) = F(x)<br>$$<br>为$X$的分布函数，同时$F’(x)$为密度函数。</p>
+</blockquote>
+<h3 id="正态分布"><a href="#正态分布" class="headerlink" title="正态分布"></a>正态分布</h3><p>别名还有“常态分布”和“高斯分布”，其密度函数为：</p>
+<p>$$<br>f(x) = \frac{1}{\sqrt{2 \pi} \sigma} e ^ {-\frac{(x-\mu)^2}{2\sigma^2}}<br>$$</p>
+<p>记为$N(\mu, \sigma^2)$，其中$\mu$为期望、$\sigma^2$为方差。背后的故事很多，慢慢来看:)</p>
+<h4 id="二项分布的极限形式"><a href="#二项分布的极限形式" class="headerlink" title="二项分布的极限形式"></a>二项分布的极限形式</h4><p>公式最早由<strong>棣莫弗</strong>推导出来，<a href="http://www.baike.com/wiki/%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83" target="_blank" rel="external">二项分布</a>的密度函数为：</p>
+<p>$$<br>b(n, p, i) = \binom{n}{i} \times p^i \times (1-p)^{n-i}<br>$$</p>
+<p>组合数计算起来相当困难，需要找个近似估计的方法！于是结合<strong>【斯特林公式】</strong>：</p>
+<p>$$<br>n! \approx \sqrt{2 \pi n} \times \left ( \frac{n}{e} \right )^n<br>$$</p>
+<p>经过一通推导之后得到<strong>【棣莫弗-拉普拉斯中心极限定理】</strong>：</p>
+<blockquote>
+<p>设随机变量$X_n(n=1,2,…)$服从参数为$n,p$的二项分布，则对任意的$x$有：<br>$$<br>\lim_{n \rightarrow \infty} P \left ( \frac{X_n - np}{\sqrt{np(1-p)}} \leqslant x \right ) = \int^{x}_{-\infty} \frac{1}{\sqrt{2 \pi}} e^{- \frac{t^2}{2}} dt<br>$$</p>
+</blockquote>
+<p><strong>正态分布的密度函数出现了！</strong>然而，仅作为二项分布的极限形式远远不足以确定其江湖地位，可惜棣莫弗只能止步于此。</p>
+<h4 id="最小二乘法"><a href="#最小二乘法" class="headerlink" title="最小二乘法"></a>最小二乘法</h4><p>十八世纪微积分的发展和万有引力定律的建立，直接推动了天文学的迅猛发展。此时积累的大量的数据需要计算和分析，对于可以直接测量的：</p>
+<blockquote>
+<p>经验性地取算术平均值（一副不需要证明的样子~~~）。</p>
+</blockquote>
+<p>而对无法直接测量的$\beta_0,…,\beta_p$，它们与可测量的$x_1,…,x_p,y$存在线性关系：</p>
+<p>$$<br>y = \beta_0 + x_1 \times \beta_1 + … + x_p \times \beta_p<br>$$</p>
+<p>如果有$n$组观察值，那么存在三种情况：</p>
+<ul>
+<li>$n&gt;p+1$：矛盾导致无解；</li>
+<li>$n=p+1$：有解；</li>
+<li>$n&lt;p+1$：无法求解；</li>
+</ul>
+<p>现在看来简单的线性回归让当时的很多大师为难，<strong>勒让德</strong>在1805年提出最小二乘法，基本思想是求解导致累计误差最小的参数：</p>
+<p>$$<br>\begin{align}<br>\hat{\beta} &amp; = \arg \min_{\beta} \sum_{i=1}^{n} e_i^2 \\<br>&amp; = \arg \min_{\beta} \sum_{i=1}^{n} \left [ y_i - (\beta_0 + x_{i1} \times \beta_1 + … + x_{ip} \times \beta_p)  \right ]^2<br>\end{align}<br>$$</p>
+<p>可以看到算术平均是最小二乘法的一个特例！这种方法有很多良好的性质，虽然使用广泛但缺少扎实的理论基础，直到一次天文事件：</p>
+<blockquote>
+<p>1801年，天文学家<strong>朱塞普·皮亚齐</strong>发现一颗从未见过、光度8等的星（谷神星）在移动，在夜空中出现6个星期，扫过八度角后就在太阳的光芒下没了踪影。而留下的观测数据有限，难以计算出他的轨道，天文学家也因此无法确定这颗新星是彗星还是行星。<br><strong>高斯</strong>以其卓越的数学才能创立了一种崭新的行星轨道的计算方法，一个小时之内就计算出了谷神星的轨道，并预言了他在夜空中出现的时间和位置。<br>德国天文爱好者<strong>奥伯斯</strong>在预言的时间里，用望远镜对准了这片天空。果然不出所料，谷神星出现了！</p>
+</blockquote>
+<p>然而直到1809年高斯同学才公布计算轨道的方法：<strong>以正态误差分布为基础的最小二乘法</strong>，思路为：</p>
+<blockquote>
+<p>$\theta$为真值，$x_1,…,x_n$为独立的$n$次测量值，于是误差为$e_i = \theta - x_i$，假设误差密度函数$f(e)$，于是得到$n$个误差的联合概率为：<br>$$<br>\begin{align}<br>L(\theta) &amp; = f(e_1) \times … \times f(e_n) \\<br> &amp;= f(\theta - x_1) \times … \times f(\theta - x_n)<br>\end{align}<br>$$<br>取使得$L(\theta)$达到最大的$\hat{\theta}$为$\theta$的估计值：<br>$$<br>\hat{\theta} = \arg \max_{\theta} L(\theta)<br>$$<br>开始猜想上帝的意图：<font color="red">既然一直都用算术平均值来近似真值，那么$\hat{\theta}$就等于算术平均值！</font>唯一满足的函数为：<br>$$<br>f(x) = \frac{1}{\sqrt{2\pi\sigma}}e^{-\frac{x^2}{2\sigma^2}}<br>$$</p>
+</blockquote>
+<p>误差分布就这样被解出来了！不过进入了<strong>先有鸡还是先有蛋</strong>的逻辑圈。直到拉普拉斯将误差的正态分布理论和中心极限定理联系起来才尘埃落定。<strong>【中心极限定理】</strong>为：</p>
+<blockquote>
+<p>设$X_1,X_2,…,X_n,…$为独立同分布的随机变量，且$E(X_i)=a$,$Var(X_i)=\sigma^2$，则对任意的实数$x$有：<br>$$<br>\lim_{n \to \infty} P\left ( \frac{1}{\sqrt{n}\sigma} (X_1+…+X_n - na) \leqslant x \right ) = \Phi(x)<br>$$<br>其中$\Phi(x)$为标准正态分布$N(0,1)$的分布函数。</p>
+</blockquote>
+<p>形式非常简单、完美，但直到二十世纪初才被严格证明。接着在正态分布的基础上衍生出：</p>
+<ul>
+<li>$\chi^2$分布（卡方分布）</li>
+<li>$t$分布</li>
+<li>$F$分布</li>
+</ul>
+<p>也发挥着巨大作用。</p>
+<h3 id="泊松分布"><a href="#泊松分布" class="headerlink" title="泊松分布"></a>泊松分布</h3><p>含义是：</p>
+<blockquote>
+<p>单位时间内事件发生$k$次的概率。</p>
+</blockquote>
+<p>概率密度函数为：</p>
+<p>$$<br>P(X=k) = \frac{\lambda^k}{k!}e^{-\lambda}<br>$$</p>
+<p>其中$\lambda$为时间在单位时间内发生的概率，期望和方差均为$\lambda$。</p>
+<h3 id="指数分布"><a href="#指数分布" class="headerlink" title="指数分布"></a>指数分布</h3><p>含义与泊松分布有点关联：</p>
+<blockquote>
+<p>时间在时间$t$内发生的概率。</p>
+</blockquote>
+<p>函数为：</p>
+<p>$$<br>P(X \leqslant t) = 1 - e^{- \lambda t}<br>$$</p>
+<p>同样$\lambda$为时间在单位时间内发生的概率。</p>
+<h2 id="数字特征"><a href="#数字特征" class="headerlink" title="数字特征"></a>数字特征</h2><p>拿到概率分布函数，我们是无法有一个直观的感受的！于是搞几个指标来进行刻画：</p>
+<ul>
+<li><strong>期望/中位数</strong>：平均水平；</li>
+<li><strong>方差/标准差</strong>：分散程度；</li>
+</ul>
+<p>可以将它们统一成<strong>矩</strong>：</p>
+<blockquote>
+<p>设$X$为随机变量、$c$为常数、$k$为正整数，则将<br>$$<br>E[(X-c)]^k<br>$$<br>称为$X$关于$c$点的$k$阶矩。</p>
+</blockquote>
+<p>两种特殊情况：</p>
+<ul>
+<li>$c=0$，则称为$k$阶原点矩；</li>
+<li>$c=E(X)$，则称为$k$阶中心矩；</li>
+</ul>
+<p>经验上用多次试验的平均值来作为期望，这也就是<strong>【大数定律】</strong>：</p>
+<blockquote>
+<p>设$X_1、X_2、…、X_n、…$是独立同分布的随机变量，记他们的公共均值为$a$，又设他们的方差存在并记为$\sigma^2$，则对任意给定的$\varepsilon &gt; 0$有：<br>$$<br>\lim_{n \to \infty} P(|\overline{X_n} - a| \geqslant \varepsilon) = 0<br>$$</p>
+</blockquote>
+<p>相应的多变量间的关系（这里仅指线性关系）大小也可以衡量：</p>
+<blockquote>
+<p>称$E[(X-m_1)(Y-m_2)]$为$X$，$Y$的协方差，并记为$Cov(X，Y)$，称$Cov(X，Y)/\sigma_1\sigma_2$为$X、Y$的相关系数，记为$Corr(X,Y)$。</p>
+</blockquote>
+<p>变量无关时$Corr(X,Y) = 0$。</p>
+<h2 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h2><p>参数估计就是根据观察值计算“规律”中的参数（不可测量），比如高斯通过观察值计算轨道。</p>
+<h3 id="矩估计"><a href="#矩估计" class="headerlink" title="矩估计"></a>矩估计</h3><p>设总体分布为$f(x,\theta_1,…,\theta_k)$，则它的原点矩：</p>
+<p>$$<br>a_m = \int x^m f(x,\theta_1,…,\theta_k)\ dx<br>$$</p>
+<p>在样本数$n$较大时，$a_m$应接近于样本原点矩：</p>
+<p>$$<br>a_m = a_m(\theta_1,…,\theta_k) = \sum_{i=1}^n \frac{X_i^m}{n}<br>$$</p>
+<p>分别取$m$为$1,…,k$则可以得到一个方程组，求解便可得到$(\theta_1^\star,…,\theta_k^\star)$。</p>
+<h3 id="极大似然估计"><a href="#极大似然估计" class="headerlink" title="极大似然估计"></a>极大似然估计</h3><p>简单来说：<font color="red">存在即合理</font>。假设：</p>
+<p>$$<br>L(X_1,…,X_n;\theta_1,…,\theta_k) = f(X_1;\theta_1,…,\theta_k)…f(X_n;\theta_1,…,\theta_k)<br>$$</p>
+<p>于是有：</p>
+<p>$$<br>L(X_1,…,X_n;\theta_1^\star,…,\theta_k^\star) = \max_{\theta_1,…,\theta_k} L(X_1,…,X_n;\theta_1,…,\theta_k)<br>$$</p>
+<p>求解便可得到$(\theta_1^\star,…,\theta_k^\star)$。</p>
+<h3 id="贝叶斯估计"><a href="#贝叶斯估计" class="headerlink" title="贝叶斯估计"></a>贝叶斯估计</h3><p>其实就是计算后验概率！假设$\theta$符合概率密度函数$h(\theta)$，于是联合密度为：</p>
+<p>$$<br>p(X_1, …, X_n) = \int h(\theta)\ f(X_1,\theta)…f(X_1,\theta)<br>$$</p>
+<p>于是得到：</p>
+<p>$$<br>h(\theta|X_1,…,X_n) = \frac{h(\theta)\ f(X_1,\theta)…f(X_1,\theta)}{p(X_1,…,X_n)}<br>$$</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://cos.name/2013/01/story-of-normal-distribution-1/" target="_blank" rel="external">http://cos.name/2013/01/story-of-normal-distribution-1/</a></li>
+<li><a href="http://cos.name/2013/01/story-of-normal-distribution-2/" target="_blank" rel="external">http://cos.name/2013/01/story-of-normal-distribution-2/</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2015/06/poisson-distribution.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2015/06/poisson-distribution.html</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数学/" rel="tag">#数学</a>
+          
+            <a href="/tags/概率/" rel="tag">#概率</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/11/sigmoid/" rel="next" title="Sigmoid函数">
+                <i class="fa fa-chevron-left"></i> Sigmoid函数
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/21/fork-join/" rel="prev" title="Fork/Join模型">
+                Fork/Join模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#古典概率"><span class="nav-number">1.</span> <span class="nav-text">古典概率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件关系"><span class="nav-number">2.</span> <span class="nav-text">事件关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#概率分布"><span class="nav-number">3.</span> <span class="nav-text">概率分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#正态分布"><span class="nav-number">3.1.</span> <span class="nav-text">正态分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#二项分布的极限形式"><span class="nav-number">3.1.1.</span> <span class="nav-text">二项分布的极限形式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最小二乘法"><span class="nav-number">3.1.2.</span> <span class="nav-text">最小二乘法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#泊松分布"><span class="nav-number">3.2.</span> <span class="nav-text">泊松分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指数分布"><span class="nav-number">3.3.</span> <span class="nav-text">指数分布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数字特征"><span class="nav-number">4.</span> <span class="nav-text">数字特征</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参数估计"><span class="nav-number">5.</span> <span class="nav-text">参数估计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#矩估计"><span class="nav-number">5.1.</span> <span class="nav-text">矩估计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#极大似然估计"><span class="nav-number">5.2.</span> <span class="nav-text">极大似然估计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#贝叶斯估计"><span class="nav-number">5.3.</span> <span class="nav-text">贝叶斯估计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2017/04/18/basic-of-probability-theory/';
+      var disqus_title = "概率论基础";
+      var disqus_url = 'http://yoursite.com/2017/04/18/basic-of-probability-theory/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
