@@ -84,25 +84,33 @@
 
 
 
-<meta name="description" content="概率论中，条件概率定义为：
+<meta name="description" content="条件概率定义为：
 $$P(A|B) = \frac{P(AB)}{P(B)}$$
-表示$B$发生时$A$发生的概率，在条件概率上进行一步推导便得到贝叶斯定理：
-$$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}$$">
+表示$B$发生时$A$发生的概率，在条件概率上“走一步”便得到【贝叶斯定理】：
+$$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}$$
+这里涉">
 <meta property="og:type" content="article">
-<meta property="og:title" content="贝叶斯">
+<meta property="og:title" content="贝叶斯算法">
 <meta property="og:url" content="http://yoursite.com/2017/03/16/bayes/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="概率论中，条件概率定义为：
+<meta property="og:description" content="条件概率定义为：
 $$P(A|B) = \frac{P(AB)}{P(B)}$$
-表示$B$发生时$A$发生的概率，在条件概率上进行一步推导便得到贝叶斯定理：
-$$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}$$">
-<meta property="og:updated_time" content="2017-04-10T14:00:56.000Z">
+表示$B$发生时$A$发生的概率，在条件概率上“走一步”便得到【贝叶斯定理】：
+$$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}$$
+这里涉">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/bayes/3.jpg">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/bayes/1.jpg">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/bayes/2.jpg">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/bayes/0.jpg">
+<meta property="og:updated_time" content="2017-05-13T09:05:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="贝叶斯">
-<meta name="twitter:description" content="概率论中，条件概率定义为：
+<meta name="twitter:title" content="贝叶斯算法">
+<meta name="twitter:description" content="条件概率定义为：
 $$P(A|B) = \frac{P(AB)}{P(B)}$$
-表示$B$发生时$A$发生的概率，在条件概率上进行一步推导便得到贝叶斯定理：
-$$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}$$">
+表示$B$发生时$A$发生的概率，在条件概率上“走一步”便得到【贝叶斯定理】：
+$$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}$$
+这里涉">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/bayes/3.jpg">
 
 
 
@@ -126,7 +134,7 @@ $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A)
   <link rel="canonical" href="http://yoursite.com/2017/03/16/bayes/"/>
 
 
-  <title> 贝叶斯 | wsztrush </title>
+  <title> 贝叶斯算法 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -266,7 +274,7 @@ $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A)
             
             
               
-                贝叶斯
+                贝叶斯算法
               
             
           </h1>
@@ -332,18 +340,18 @@ $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A)
       
 
       
-        <p>概率论中，条件概率定义为：</p>
+        <p>条件概率定义为：</p>
 <p>$$<br>P(A|B) = \frac{P(AB)}{P(B)}<br>$$</p>
-<p>表示<strong>$B$发生时$A$发生的概率</strong>，在条件概率上进行一步推导便得到贝叶斯定理：</p>
+<p>表示$B$发生时$A$发生的概率，在条件概率上“走一步”便得到<strong>【贝叶斯定理】</strong>：</p>
 <p>$$<br>P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A) = \frac{P(A|B)\times P(B)}{P(A)}<br>$$</p>
 <p>这里涉及到两个概念：</p>
 <ul>
-<li><strong>先验概率</strong>：由因求果，事情还没有发生，求这件事情发生的可能性的大小；</li>
-<li><strong>后验概率</strong>：执果寻因，事情已经发生了，求这件事情是由某个因素引起的可能性的大小；</li>
+<li>先验概率：由因求果，事情还没有发生，求这件事情发生的可能性的大小；</li>
+<li>后验概率：执果寻因，事情已经发生了，求这件事情是由某个因素引起的可能性的大小；</li>
 </ul>
 <p>比较流行的一个例子（<a href="http://blog.csdn.net/passball/article/details/5859878" target="_blank" rel="external">对应的解释</a>）：</p>
 <blockquote>
-<p>有三个门，其中一个里有汽车，只要选对就可以得到。当应试者选择一个门之后，主持人打开了另外一个门，空的。<font color="red">假设主持人知道车所在的门</font>，问：<strong>应试者要不要换一个选择</strong>?</p>
+<p>有三个门，其中一个里有汽车，只要选对就可以得到。当应试者选择一个门之后，主持人打开了另外一个门，空的。<font color="red">假设主持人知道车所在的门</font>。问：“应试者要不要换一个选择？”</p>
 </blockquote>
 <p>贝叶斯典型应用场景是邮件反垃圾：</p>
 <ul>
@@ -354,7 +362,7 @@ $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A)
 <blockquote>
 <p>这是不可能的，总不能穷举所有垃圾邮件吧，而且很可能$A_1,A_2,A_3$同时出现的邮件样本中压根就没有。</p>
 </blockquote>
-<p>所以后验概率的路子更靠谱一些。</p>
+<p>所以后验概率的路子更有说服力。</p>
 <h1 id="朴素贝叶斯"><a href="#朴素贝叶斯" class="headerlink" title="朴素贝叶斯"></a>朴素贝叶斯</h1><p>假设各因素$X$<font color="red">相互独立</font>（朴素的由来）：</p>
 <p>$$<br>\begin{align}<br>P(X=x|Y=c_k) &amp; = P(X^{(1)}=x^{(1)},…,X^{(n)}=x^{(n)}|Y=c_k) \\<br> &amp; = \prod_j P(X^{(j)}=x^{(j)}|Y=c_k)<br>\end{align}<br>$$</p>
 <p>将其代入贝叶斯公式得到：</p>
@@ -362,14 +370,38 @@ $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A)
 <p>对于不同的分类（$Y=c_k$）来说分母都一样，于是进一步简化后得到分类方法为：</p>
 <p>$$<br>y = \arg \max_{c_k} P(Y=c_k)\prod_j P(X^{(j)}=x^{(j)}|Y=c_k)<br>$$</p>
 <p>实际计算过程中要注意0的处理。</p>
-<h1 id="贝叶斯网络"><a href="#贝叶斯网络" class="headerlink" title="贝叶斯网络"></a>贝叶斯网络</h1><font color="red">TODO</font>
-
+<h1 id="贝叶斯网络"><a href="#贝叶斯网络" class="headerlink" title="贝叶斯网络"></a>贝叶斯网络</h1><p>事实上，变量之间的关系错综复杂，不可能都互相独立，于是很多情况下朴素贝叶斯失效了！然而我们可以手工补漏洞：</p>
+<blockquote>
+<p>类似专家系统的策略，根据情况建立变量之间的关系（业务逻辑），构建DAG图。</p>
+</blockquote>
+<p>其中：</p>
 <ul>
-<li><a href="http://www.cnblogs.com/leoo2sk/archive/2010/09/18/bayes-network.html" target="_blank" rel="external">http://www.cnblogs.com/leoo2sk/archive/2010/09/18/bayes-network.html</a></li>
-<li><a href="https://www.zhihu.com/question/28006799" target="_blank" rel="external">https://www.zhihu.com/question/28006799</a></li>
+<li><strong>有向边</strong>表示随机变量之间的依赖关系；</li>
+<li><strong>节点</strong>表示随机变量，存储相对于父节点的条件概率；</li>
+<li>节点独立于非直接前驱节点；</li>
 </ul>
+<p>对于网络：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/bayes/3.jpg" alt=""></p>
+<p>计算$P(S_1 = T | U = T)$的方法如下：</p>
+<p>$$<br>\begin{align}<br>P(S_1 = T | U = T) &amp; = \frac{P(S_1 = T, U = T)}{P(U = T)} \\<br>&amp; = \frac{P(S_1 = T, S_2 = T, U = T) + P(S_1 = T, S_2 = F, U = T)}{P(S_1 = T, S_2 = T, U = T) + P(S_1 = T, S_2 = F, U = T) + P(S_1 = F, S_2 = T, U = T)} \\<br>&amp; = \frac{0.4 \times 0.7 \times 1 + 0.4 \times 0.3 \times 1}{0.4 \times 0.7 \times 1 + 0.4 \times 0.3 \times 1 + 0.6 \times 0.3 \times 1} \\<br>&amp; = 0.6896<br>\end{align}<br>$$</p>
+<p>看个使用的例子，根据经验和历史数据构建贝叶斯网络，用来根据病人的情况判断各种疾病的概率：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/bayes/1.jpg" alt=""></p>
+<p>在诊所看了一段时间病人之后，收集到相关的数据为：</p>
+<ul>
+<li>50%的病人吸烟；</li>
+<li>1%患有肺结核；</li>
+<li>5.5%患有肺癌；</li>
+<li>4.5%患有支气管炎；</li>
+</ul>
+<p>将数据输入后，贝叶斯网络变为：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/bayes/2.jpg" alt=""></p>
+<p>此时，一个患者进入诊所告诉我们她呼吸困难，将<u>Dyspnea = 100%</u>输入后发现<u>Bronchitis</u>的概率显著增加！网络变化为：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/bayes/0.jpg" alt=""></p>
+<p>接着可以继续做相应的检查，然后观察网络上各节点的变化，从而做出诊断！</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="http://www.norsys.com/tutorials/netica/secA/tut_A1.htm" target="_blank" rel="external">http://www.norsys.com/tutorials/netica/secA/tut_A1.htm</a></li>
+<li><a href="https://www.zhihu.com/question/28006799" target="_blank" rel="external">https://www.zhihu.com/question/28006799</a></li>
+<li><a href="http://blog.csdn.net/ROger__wonG/article/details/42063041" target="_blank" rel="external">http://blog.csdn.net/ROger__wonG/article/details/42063041</a></li>
 </ul>
 
       
@@ -664,7 +696,7 @@ $$P(AB) = P(A|B) \times P(B) = P(B|A) \times P(A) \quad \Rightarrow \quad P(B|A)
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
       var disqus_identifier = '2017/03/16/bayes/';
-      var disqus_title = "贝叶斯";
+      var disqus_title = "贝叶斯算法";
       var disqus_url = 'http://yoursite.com/2017/03/16/bayes/';
 
       function run_disqus_script(disqus_script){
