@@ -326,14 +326,13 @@
       
         
           
-          之前多线程基本用ThreadPoolExecutor，最近项目中误打误撞用了ForkJoinPool，所以赶紧补补这个“新”模型！编程套路一般是：
+          写在前面之前多线程基本用ThreadPoolExecutor，最近项目中误打误撞用了ForkJoinPool，所以赶紧补补这个“新”模型！编程套路一般是：
 
 submit/invoke：提交执行任务。
 fork：执行子任务。
 join：等待子任务执行完成。
 
-举个例子（不用循环统计1到100的总和）：
-12
+举个例子（不用循环统计1到100的总和）
           ...
 
           <div class="post-more-link text-center">
