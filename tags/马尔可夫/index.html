@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习,算法,分类,回归," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,30 +84,12 @@
 
 
 
-<meta name="description" content="虽然名字是“回归”，但Logistic Regression要解决的却是分类问题。
-比如在求解二分类问题时，对于$x$分别求条件概率：
-$$\begin{align}P(Y=1|X) &amp;amp; = \frac{e^{w·x}}{1+e^{w·x}} \\P(Y=0|X) &amp;amp; = \frac{1}{1+e^{w·x}}\end{align}$$
-事件的几率$p/(1-p)$：
-$$$$">
-<meta property="og:type" content="article">
-<meta property="og:title" content="逻辑回归">
-<meta property="og:url" content="http://yoursite.com/2017/04/04/logistic-regression/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="wsztrush">
+<meta property="og:url" content="http://yoursite.com/tags/马尔可夫/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="虽然名字是“回归”，但Logistic Regression要解决的却是分类问题。
-比如在求解二分类问题时，对于$x$分别求条件概率：
-$$\begin{align}P(Y=1|X) &amp;amp; = \frac{e^{w·x}}{1+e^{w·x}} \\P(Y=0|X) &amp;amp; = \frac{1}{1+e^{w·x}}\end{align}$$
-事件的几率$p/(1-p)$：
-$$$$">
-<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/logistic-regression/1.png">
-<meta property="og:updated_time" content="2017-04-11T14:33:54.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="逻辑回归">
-<meta name="twitter:description" content="虽然名字是“回归”，但Logistic Regression要解决的却是分类问题。
-比如在求解二分类问题时，对于$x$分别求条件概率：
-$$\begin{align}P(Y=1|X) &amp;amp; = \frac{e^{w·x}}{1+e^{w·x}} \\P(Y=0|X) &amp;amp; = \frac{1}{1+e^{w·x}}\end{align}$$
-事件的几率$p/(1-p)$：
-$$$$">
-<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/logistic-regression/1.png">
+<meta name="twitter:title" content="wsztrush">
 
 
 
@@ -128,10 +110,10 @@ $$$$">
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/04/logistic-regression/"/>
+  <link rel="canonical" href="http://yoursite.com/tags/马尔可夫/"/>
 
 
-  <title> 逻辑回归 | wsztrush </title>
+  <title> 标签: 马尔可夫 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -162,7 +144,7 @@ $$$$">
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -250,183 +232,46 @@ $$$$">
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                逻辑回归
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-04T22:21:58+08:00" content="2017-04-04">
-              2017-04-04
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/04/04/logistic-regression/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/04/04/logistic-regression/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>虽然名字是“回归”，但Logistic Regression要解决的却是分类问题。</p>
-<p>比如在求解二分类问题时，对于$x$分别求条件概率：</p>
-<p>$$<br>\begin{align}<br>P(Y=1|X) &amp; = \frac{e^{w·x}}{1+e^{w·x}} \\<br>P(Y=0|X) &amp; = \frac{1}{1+e^{w·x}}<br>\end{align}<br>$$</p>
-<p>事件的几率$p/(1-p)$：</p>
-<p>$$<br>$$</p>
-<ol>
-<li>模型是什么样的？</li>
-<li>如何训练？</li>
-<li>为什么使用这种函数？</li>
-</ol>
-<ul>
-<li>可以通过概率的解释来解决问题</li>
-</ul>
-<h1 id="极大似然法"><a href="#极大似然法" class="headerlink" title="极大似然法"></a>极大似然法</h1><p>假设连续$X$满足Logistic Distribution，则分布概率和密度函数分别为：</p>
-<p>$$<br>\begin{align}<br>F(x) &amp;= \frac{1}{1+e^{-(x-\mu)/\gamma}} \\<br>f(x) &amp;= F’(x) = \frac{e^{-(x-\mu)/\gamma}}{\gamma(1+e^{-(x-\mu)/\gamma})^2}<br>\end{align}<br>$$</p>
-<p>其中$\mu$为位置参数、$\gamma$为形状参数，如下图：</p>
-<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/logistic-regression/1.png" alt=""></p>
-<p>性质有：</p>
-<ol>
-<li>中心对称</li>
-<li>中心变化快、两端变化小</li>
-</ol>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="http://www.statisticshowto.com/logistic-distribution/" target="_blank" rel="external">http://www.statisticshowto.com/logistic-distribution/</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Logistic_distribution" target="_blank" rel="external">https://en.wikipedia.org/wiki/Logistic_distribution</a></li>
-</ul>
-
-      
+  <div id="posts" class="posts-collapse">
+    <div class="collection-title">
+      <h2 >
+        马尔可夫
+        <small>标签</small>
+      </h2>
     </div>
 
-    <div>
+    
       
+
+  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
         
-
-      
-    </div>
-
-    <div>
-      
+            <a class="post-title-link" href="/2017/05/14/markov/" itemprop="url">
+              
+                <span itemprop="name">马尔可夫链</span>
+              
+            </a>
         
+      </h1>
 
-      
-    </div>
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2017-05-14T21:03:18+08:00"
+              content="2017-05-14" >
+          05-14
+        </time>
+      </div>
 
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
-          
-            <a href="/tags/算法/" rel="tag">#算法</a>
-          
-            <a href="/tags/分类/" rel="tag">#分类</a>
-          
-            <a href="/tags/回归/" rel="tag">#回归</a>
-          
-        </div>
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/04/02/knapsack-problem/" rel="next" title="背包问题">
-                <i class="fa fa-chevron-left"></i> 背包问题
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/05/summary-2016/" rel="prev" title="总结：二零一六">
-                总结：二零一六 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
-      
-    </div>
+    
   </div>
+
+  
 
 
           </div>
@@ -434,17 +279,6 @@ $$$$">
 
 
           
-  <div class="comments" id="comments">
-    
-      <div id="disqus_thread">
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -464,17 +298,8 @@ $$$$">
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpeg"
@@ -524,17 +349,6 @@ $$$$">
 
       </section>
 
-      
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#极大似然法"><span class="nav-number">1.</span> <span class="nav-text">极大似然法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
-            
-          </div>
-        </section>
       
 
     </div>
@@ -635,10 +449,6 @@ $$$$">
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
-
-
 
   
 
@@ -655,9 +465,9 @@ $$$$">
 
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
-      var disqus_identifier = '2017/04/04/logistic-regression/';
-      var disqus_title = "逻辑回归";
-      var disqus_url = 'http://yoursite.com/2017/04/04/logistic-regression/';
+      var disqus_identifier = 'tags/马尔可夫/index.html';
+      var disqus_title = "";
+      var disqus_url = '';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -669,13 +479,6 @@ $$$$">
       }
 
       run_disqus_script('count.js');
-      
-        var disqus_config = function () {
-            this.page.url = disqus_url;
-            this.page.identifier = disqus_identifier;
-            this.page.title = disqus_title;
-        };
-        run_disqus_script('embed.js');
       
     </script>
   
