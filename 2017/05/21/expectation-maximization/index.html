@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="总结,工作,学习," />
+  <meta name="keywords" content="机器学习,期望,参数估计,隐藏变量," />
 
 
 
@@ -84,55 +84,42 @@
 
 
 
-<meta name="description" content="在菜鸟的第三个年头，有很多的不如意和更不如意，不管结果怎么样，都值得花一段时间认真地思考和总结。
-项目总结之前一直在做数据，从16年5月开始搞业务，不得不说菜鸟的业务还是重，而仓库里面的业务更重。
-退供这是第一个深入接触的业务，流程比较简单：
+<meta name="description" content="给定的样本中所有维度的数据都可观测时，直接使用：
 
-接单
-下架
-质检
-出库
+最大似然估计
+贝叶斯
+矩估计
 
-但是等系统的实现捋了一遍之后，简直丧心病狂，比较玩好的是之前：
+来估计模型参数就可以了。但偏偏有时候某些维度是不可观测的（例子可能并没有那么合适，凑合着来吧😌）:
 
-系统事务不生效，有问题的数据通过订正数据来解决。
-
-于是，接手">
+假设有三枚硬币$A,B,C$，他们出现证明的概率分别为$\pi,p,q$，规则是先丢$A$，接着正面丢$B$、反面丢$C$，重复多次产生一个序列（1：正面，0：反面）：$$1，1，0，1，0，0，1，0，1，1$">
 <meta property="og:type" content="article">
-<meta property="og:title" content="总结：二零一六">
-<meta property="og:url" content="http://yoursite.com/2017/04/05/summary-2016/index.html">
+<meta property="og:title" content="最大期望算法（EM）">
+<meta property="og:url" content="http://yoursite.com/2017/05/21/expectation-maximization/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="在菜鸟的第三个年头，有很多的不如意和更不如意，不管结果怎么样，都值得花一段时间认真地思考和总结。
-项目总结之前一直在做数据，从16年5月开始搞业务，不得不说菜鸟的业务还是重，而仓库里面的业务更重。
-退供这是第一个深入接触的业务，流程比较简单：
+<meta property="og:description" content="给定的样本中所有维度的数据都可观测时，直接使用：
 
-接单
-下架
-质检
-出库
+最大似然估计
+贝叶斯
+矩估计
 
-但是等系统的实现捋了一遍之后，简直丧心病狂，比较玩好的是之前：
+来估计模型参数就可以了。但偏偏有时候某些维度是不可观测的（例子可能并没有那么合适，凑合着来吧😌）:
 
-系统事务不生效，有问题的数据通过订正数据来解决。
-
-于是，接手">
-<meta property="og:updated_time" content="2017-04-18T03:10:27.000Z">
+假设有三枚硬币$A,B,C$，他们出现证明的概率分别为$\pi,p,q$，规则是先丢$A$，接着正面丢$B$、反面丢$C$，重复多次产生一个序列（1：正面，0：反面）：$$1，1，0，1，0，0，1，0，1，1$">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/expectation-maximization/0.png">
+<meta property="og:updated_time" content="2017-05-29T04:42:57.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="总结：二零一六">
-<meta name="twitter:description" content="在菜鸟的第三个年头，有很多的不如意和更不如意，不管结果怎么样，都值得花一段时间认真地思考和总结。
-项目总结之前一直在做数据，从16年5月开始搞业务，不得不说菜鸟的业务还是重，而仓库里面的业务更重。
-退供这是第一个深入接触的业务，流程比较简单：
+<meta name="twitter:title" content="最大期望算法（EM）">
+<meta name="twitter:description" content="给定的样本中所有维度的数据都可观测时，直接使用：
 
-接单
-下架
-质检
-出库
+最大似然估计
+贝叶斯
+矩估计
 
-但是等系统的实现捋了一遍之后，简直丧心病狂，比较玩好的是之前：
+来估计模型参数就可以了。但偏偏有时候某些维度是不可观测的（例子可能并没有那么合适，凑合着来吧😌）:
 
-系统事务不生效，有问题的数据通过订正数据来解决。
-
-于是，接手">
+假设有三枚硬币$A,B,C$，他们出现证明的概率分别为$\pi,p,q$，规则是先丢$A$，接着正面丢$B$、反面丢$C$，重复多次产生一个序列（1：正面，0：反面）：$$1，1，0，1，0，0，1，0，1，1$">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/expectation-maximization/0.png">
 
 
 
@@ -153,10 +140,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/05/summary-2016/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/05/21/expectation-maximization/"/>
 
 
-  <title> 总结：二零一六 | wsztrush </title>
+  <title> 最大期望算法（EM） | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -296,7 +283,7 @@
             
             
               
-                总结：二零一六
+                最大期望算法（EM）
               
             
           </h1>
@@ -308,8 +295,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-04-05T20:56:51+08:00" content="2017-04-05">
-              2017-04-05
+            <time itemprop="dateCreated" datetime="2017-05-21T18:16:37+08:00" content="2017-05-21">
+              2017-05-21
             </time>
           </span>
 
@@ -322,8 +309,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/总结/" itemprop="url" rel="index">
-                    <span itemprop="name">总结</span>
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
                   </a>
                 </span>
 
@@ -338,8 +325,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/04/05/summary-2016/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/04/05/summary-2016/" itemprop="commentsCount"></span>
+                <a href="/2017/05/21/expectation-maximization/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/05/21/expectation-maximization/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -349,7 +336,7 @@
 
           
           
-             <span id="/2017/04/05/summary-2016/" class="leancloud_visitors" data-flag-title="总结：二零一六">
+             <span id="/2017/05/21/expectation-maximization/" class="leancloud_visitors" data-flag-title="最大期望算法（EM）">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -371,100 +358,96 @@
       
 
       
-        <p>在菜鸟的第三个年头，有很多的不如意和更不如意，不管结果怎么样，都值得花一段时间认真地思考和总结。</p>
-<h2 id="项目总结"><a href="#项目总结" class="headerlink" title="项目总结"></a>项目总结</h2><p>之前一直在做数据，从16年5月开始搞业务，不得不说菜鸟的业务还是重，而仓库里面的业务更重。</p>
-<h3 id="退供"><a href="#退供" class="headerlink" title="退供"></a>退供</h3><p>这是第一个深入接触的业务，流程比较简单：</p>
+        <p>给定的样本中所有维度的数据都可观测时，直接使用：</p>
 <ul>
-<li>接单</li>
-<li>下架</li>
-<li>质检</li>
-<li>出库</li>
+<li>最大似然估计</li>
+<li>贝叶斯</li>
+<li>矩估计</li>
 </ul>
-<p>但是等系统的实现捋了一遍之后，简直丧心病狂，比较玩好的是之前：</p>
+<p>来估计模型参数就可以了。但偏偏有时候某些维度是不可观测的（<font color="lightgrey">例子可能并没有那么合适，凑合着来吧😌</font>）:</p>
 <blockquote>
-<p>系统事务不生效，有问题的数据通过订正数据来解决。</p>
+<p>假设有三枚硬币$A,B,C$，他们出现证明的概率分别为$\pi,p,q$，规则是先丢$A$，接着正面丢$B$、反面丢$C$，重复多次产生一个序列（1：正面，0：反面）：<br>$$<br>1，1，0，1，0，0，1，0，1，1<br>$$<br>此时，如果估计三枚硬币正面的概率分别是多少？</p>
 </blockquote>
-<p>于是，接手的一周迅速从开发工程师“成长”为数据订正工程师，尤其擅长大单据的问题排查。</p>
-<h3 id="集货二期"><a href="#集货二期" class="headerlink" title="集货二期"></a>集货二期</h3><p>很有意思的一个项目:</p>
+<p>设$y$表示观测值，$z$表示硬币$A$的结果，$\theta=(\pi,p,q)$为要估计的参数，于是有：</p>
+<p>$$<br>\begin{align}<br>P(y|\theta) &amp; = \sum_z P(y,z|\theta) \\<br>&amp; = \sum_z P(z|\theta) · P(y|z,\theta) \\<br>&amp; = \pi p^y (1-p)^{1-y} + (1-\pi) q^y (1-q)^{1-y}<br>\end{align}<br>$$</p>
+<p>此时如果暴力求解就“爆炸”了（<font color="lightgrey">隐藏变量带入的加法运算跟似然函数合不来</font>）。这类问题的模型为：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/expectation-maximization/0.png" alt=""></p>
+<p>其中$Z$不可观测、$Y$可观测，在得到一些观测序列后，估计参数（<font color="lightgrey">也就是各条连线的值</font>）。</p>
+<h2 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h2><p>设置初始值$\theta^{(0)}$后迭代：<font color="red">E步求期望</font>（<font color="lightgrey">根据参数计算隐藏变量的概率</font>）：</p>
+<p>$$<br>P(Z|Y,\theta^{(i)})<br>$$</p>
+<p><font color="red">M步极大化</font>（<font color="lightgrey">求偏导数</font>）：</p>
+<p>$$<br>\theta^{(i+1)} = \arg \max Q(\theta, \theta^{(i)}) = \arg \max \sum_Z P(Z|Y,\theta^{(i)}) \log P(Y,Z|\theta)<br>$$</p>
+<p>直到参数和$Q$变化很小（<font color="lightgrey">收敛</font>）。直观上理解：</p>
 <blockquote>
-<p>集货仓作为一个中心仓，为前置仓供货。</p>
+<p>通过后验概率消除隐藏事件，并对似然函数进行加权。</p>
 </blockquote>
-<p>通过不同功能的仓、把原来的点连成图，在供应链层面能玩的东西就很多了。项目过程并不顺利：</p>
-<ul>
-<li>业务方的复盘和调整；</li>
-<li>中途上游暂停，只有下游的我们在坚持，每周的周报看起来略显尴尬；</li>
-<li>系统问题多，修复和订正数据占用了大量的开发时间；</li>
-<li>每个人并行项目比较多；</li>
-</ul>
-<p>很重的业务，并且同时跟这么多人打交道：</p>
+<p>多猜测可以增加直觉，不过还是需要严格的推导（<font color="lightgrey">总体上是围绕似然函数</font>）~</p>
+<h2 id="公式由来"><a href="#公式由来" class="headerlink" title="公式由来"></a>公式由来</h2><p>对数似然函数如下（<font color="lightgrey">核心问题是对数函数里有和</font>）：</p>
+<p>$$<br>\begin{align}<br>L(\theta) &amp; = \log P(Y|\theta) \\<br>&amp; = \log \sum_Z P(Y,Z|\theta) \\<br>&amp; = \log \left ( \sum_Z P(Y|Z,\theta)·P(Z|\theta) \right )<br>\end{align}<br>$$</p>
+<p>设当前得到的参数值是$\theta^{(i)}$，希望找到新的参数使得似然函数增加，计算差值（<font color="lightgrey">惯用手法</font>）有：</p>
+<p>$$<br>\begin{align}<br>L(\theta) - L(\theta^{(i)}) &amp;= \log  \sum_Z P(Y,Z|\theta) - \log P(Y|\theta^{(i)}) \\<br>&amp; = \log \left [ \sum_Z \left ( P(Z|Y,\theta^{(i)}) \times \frac{P(Y,Z|\theta)}{P(Z|Y,\theta^{(i)})} \right ) \right ] - \log P(Y|\theta^{(i)}) \\<br>&amp; \geqslant \sum_Z \left [ P(Z|Y,\theta^{(i)}) \log \frac{P(Y,Z|\theta)}{P(Z|Y,\theta^{(i)})} \right ] - \log P(Y|\theta^{(i)})  &amp; \quad（琴生不等式）\\<br>&amp; = \sum_Z \left [ P(Z|Y,\theta^{(i)}) \log \frac{P(Y,Z|\theta)}{P(Z|Y,\theta^{(i)})·P(Y|\theta^{(i)})} \right ]  &amp; \quad（全概率公式）<br>\end{align}<br>$$</p>
+<p>令（<font color="lightgrey">对数中没有了求和，并且成功地将后验概率揉进了公式</font>）：</p>
+<p>$$<br>B(\theta, \theta^{(i)}) = L(\theta^{(i)}) + \sum_Z \left [ P(Z|Y,\theta^{(i)}) \log \frac{P(Y,Z|\theta)}{P(Z|Y,\theta^{(i)})·P(Y|\theta^{(i)})} \right ]<br>$$</p>
+<p>于是有（<font color="lightgrey">$B(\theta, \theta^{(i)})$是$L(\theta)$的下限</font>）：</p>
+<p>$$<br>L(\theta) \geqslant B(\theta, \theta^{(i)})<br>$$</p>
+<p>尽可能地增加$B(\theta, \theta^{(i)})$就可以帮助增加$L(\theta)$（<font color="lightgrey">忽略掉所有的常数</font>）：</p>
+<p>$$<br>\begin{align}<br>\theta^{(i+1)} &amp;= \arg \max_{\theta} \quad B(\theta, \theta^{(i)}) \\<br>&amp;= \arg \max_{\theta} \quad L(\theta^{(i)}) + \sum_Z \left [ P(Z|Y,\theta^{(i)}) \log \frac{P(Y,Z|\theta)}{P(Z|Y,\theta^{(i)})·P(Y|\theta^{(i)})} \right ] \\<br>&amp;= \arg \max_{\theta} \quad \sum_Z \left [ P(Z|Y,\theta^{(i)}) \log P(Y,Z|\theta) \right ] \\<br>&amp;= \arg \max_{\theta} \quad Q(\theta, \theta^{(i)})<br>\end{align}<br>$$</p>
+<p>总体思路是：</p>
 <blockquote>
-<p>每个人都需要为自己的绩效和利益考虑，况且还有这么多的山头和小团队。</p>
+<p>先出现后验概率，然后用琴生不等式得到似然函数的一个下限，同步迭代提升下限来倒逼似然函数增加（<font color="lightgrey">这个过程像是知道结果之后再找证明方法</font>）。</p>
 </blockquote>
-<p>在这样的团队生存，还是需要找一条靠谱的大腿的（一般情况下要找那条最粗的）。</p>
-<h3 id="双十一库存兜底及优化"><a href="#双十一库存兜底及优化" class="headerlink" title="双十一库存兜底及优化"></a>双十一库存兜底及优化</h3><p>被忽悠着擦了一次屁股，唯一的好处是了解了库存性能的难点，同时熟悉了库存的业务。</p>
-<h3 id="库存优化"><a href="#库存优化" class="headerlink" title="库存优化"></a>库存优化</h3><p>休完婚假无事一身轻的状态归队，思考后面搞什么，本希望以库存优化作为突破口：</p>
-<ul>
-<li>爆品优化</li>
-<li>滞销品优化</li>
-<li>碎片整理</li>
-</ul>
-<p>其中负责了整体的前期推进和前端开发，本希望半个月到一个月的时间可以落地，但是拖拖拉拉地搞了好几个月。另外：</p>
+<p>于是通过EM的迭代下限在提高，似然函数怎么样呢？</p>
+<h2 id="收敛性"><a href="#收敛性" class="headerlink" title="收敛性"></a>收敛性</h2><p>单调+有界就可以保证序列是收敛的，考虑似然函数显然是有上界的（<font color="lightgrey">小于一</font>），这里只需要搞定单调递增就行了！由：</p>
+<p>$$<br>P(Y|\theta) = \frac{P(Y,Z|\theta)}{P(Z|Y,\theta)}<br>$$</p>
+<p>得到对数似然函数：</p>
+<p>$$<br>\log P(Y|\theta) = \log P(Y,Z|\theta) - \log P(Z|Y,\theta)<br>$$</p>
+<p>假设：</p>
+<p>$$<br>\begin{align}<br>Q(\theta, \theta^{(i)}) &amp; = \sum_Z \log P(Y,Z|\theta) · P(Z|Y,\theta^{(i)})  \\<br>H(\theta, \theta^{(i)}) &amp; = \sum_Z \log P(Z|Y,\theta) · P(Z|Y,\theta^{(i)})<br>\end{align}<br>$$</p>
+<p>于是得到（<font color="lightgrey">等式两边都枚举$Z$，然后再加到一起后用全概率公式</font>）：</p>
+<p>$$<br>\log P(Y|\theta) = Q(\theta, \theta^{(i)}) - H(\theta, \theta^{(i)})<br>$$</p>
+<p>做差值得到：</p>
+<p>$$<br>\log P(Y|\theta^{(i+1)}) - \log P(Y|\theta^{(i)}) = [Q(\theta^{(i+1)}, \theta^{(i)}) - Q(\theta^{(i)}, \theta^{(i)})] - [H(\theta^{(i+1)}, \theta^{(i)}) - H(\theta^{(i)}, \theta^{(i)})]<br>$$</p>
+<p>在M步得到的是极大值，那么：</p>
+<p>$$<br>Q(\theta^{(i+1)}, \theta^{(i)}) - Q(\theta^{(i)}, \theta^{(i)}) \geqslant 0<br>$$</p>
+<p>接着计算：</p>
+<p>$$<br>\begin{align}<br>H(\theta^{(i+1)}, \theta^{(i)}) - H(\theta^{(i)}, \theta^{(i)}) = &amp; \sum \left [ \log \frac{P(Z|Y,\theta^{(i+1)})}{P(Z|Y,\theta^{(i)})} \right ] · P(Z|Y,\theta^{(i)}) \\<br>\leqslant &amp; \log \left [ \sum \frac{P(Z|Y,\theta^{(i+1)})}{P(Z|Y,\theta^{(i)})}· P(Z|Y,\theta^{(i)}) \right ] &amp; (琴生不等式) \\<br>= &amp; \log \left [ \sum P(Z|Y,\theta^{(i+1)}) \right ] &amp; (全概率公式)\\<br>= &amp; 0<br>\end{align}<br>$$</p>
+<p>于是得到$\log P(Y|\theta^{(i+1)}) - \log P(Y|\theta^{(i)}) \geqslant 0$，即得到似然函数也是递增。</p>
+<h2 id="高斯混合模型（GMM）"><a href="#高斯混合模型（GMM）" class="headerlink" title="高斯混合模型（GMM）"></a>高斯混合模型（GMM）</h2><p>高斯混合模型的概率分布模型为（<font color="lightgrey">不同的概率分布加权生成最终结果</font>）：</p>
+<p>$$<br>P(y|\theta) = \sum_{k} \alpha_{k} \phi(y|\theta_{k})<br>$$</p>
+<p>其中$a_{k} \geqslant 0$，$\sum_{k} a_k = 1$，$\phi(y|\theta_{k})$为高斯分布$\theta_{k} = (\mu_k, \sigma_k^2)$（<font color="lightgrey">可以用其他的概率分布替代高斯分布</font>），那么现在的问题是：</p>
 <blockquote>
-<p>之前想的长期方案是和算法团队深度合作，但是没想到刷存在感的版本变成了最终版。</p>
+<p>假设观测数据$y_1,y_2,…,y_N$是由高斯混合模型生成，如何求参数（$\alpha_i,\theta_i$）?</p>
 </blockquote>
-<p>结局是：然后就没有然后了。</p>
-<h3 id="库存分配"><a href="#库存分配" class="headerlink" title="库存分配"></a>库存分配</h3><p>如果库存只在性能优化的路上一直走，容易死掉：</p>
+<p>定义隐藏变量：</p>
+<p>$$<br>\gamma_{jk} = \left\{\begin{matrix}<br>1 &amp; 第j个观测值来自第k个模型 \\<br>0 &amp; 否则<br>\end{matrix}\right.<br>$$</p>
+<p>在E步根据当前参数计算：</p>
+<p>$$<br>\hat{\gamma_{jk}} = \frac{\alpha_k \phi(y|\theta_{k})}{\sum_{k}\alpha_k \phi(y|\theta_{k})}<br>$$</p>
+<p>在M步求导得到极大值：</p>
+<p>$$<br>\begin{align}<br>\hat{\mu_k} &amp; = \frac{\sum_j \hat{\gamma_{jk}} y_j}{\sum_j \hat{\gamma_{jk}}} \\<br>\hat{\sigma_k^2} &amp; = \frac{\sum_j \hat{\gamma_{jk}} (y_j - \mu_k)^2}{\sum_j \hat{\gamma_{jk}}} \\<br>\hat{\alpha_k} &amp; = \frac{\sum_j \hat{\gamma_{jk}}}{N}<br>\end{align}<br>$$</p>
+<p>重复直到收敛即可。</p>
+<h2 id="扩展（GEM）"><a href="#扩展（GEM）" class="headerlink" title="扩展（GEM）"></a>扩展（GEM）</h2><p>对EM算法进行一次抽象（<font color="lightgrey">以便得到更通用的能力？</font>）：假设隐变量$Z$的概率分布为$\tilde{P}(Z)$，定义分布$\tilde{P}$与$\theta$的<font color="red">$F$函数</font>：</p>
+<p>$$<br>F(\tilde{P},\theta) = E_{\tilde{P}}[\log P(Y,Z|\theta)] + H(\tilde{P})<br>$$</p>
+<p>其中$H(\tilde{P}) = -E_{\tilde{P}} \log \tilde{P}(Z)$是分布$\tilde{P}(Z)$的熵。固定参数$\theta$即可得到$F$函数极大时对应的分布$\tilde{P}$（<font color="lightgrey">存在且唯一</font>），且有（<font color="lightgrey">对照上面的E步</font>）：</p>
+<p>$$<br>\tilde{P}_{\theta}(Z) = P(Z|Y,\theta)<br>$$</p>
+<p>此时有（<font color="lightgrey">达到极值时刚好等于似然函数</font>）：</p>
+<p>$$<br>F(\tilde{P},\theta) = \log P(Y|\theta)<br>$$</p>
+<p>于是当$F(\tilde{P},\theta)$在$\tilde{P^{\star}},\theta^{\star}$处有极大值时，$L(\theta)$也得到极大值。于是重新描述EM算法：</p>
 <ul>
-<li>越来越薄、越来越简单</li>
-<li>背靠阿里强大的中间件，异步削峰以后的流量不是那么夸张</li>
+<li>E步：固定$\theta^{(i)}$，求解$\tilde{P}^{(i+1)}$使得$F(\tilde{P},\theta^{(i)})$极大化；</li>
+<li>M步：固定$\tilde{P}^{(i+1)}$，求解$\theta^{(i+1)}$使得$F(\tilde{P}^{(i+1)},\theta)$极大化；</li>
 </ul>
-<p>比较难并且需要长期思考的事情是：</p>
-<ul>
-<li>作业效率的提高</li>
-<li>不同作业之间的协调</li>
-</ul>
-<p>库存分配是单据数据和库存数据的深加工，在目前的系统中应该算是超智能化迈出的重要一步，认真搞搞还是蛮有前途的。落地上：</p>
-<ul>
-<li>2C部分路径优化部分调用算法VRP</li>
-<li>2B部分完全自己实现</li>
-</ul>
-<p>整体的感觉是：</p>
-<ul>
-<li>流程太长、业务太复杂，我还是比较想做VRP这种事情(ノへ￣、)</li>
-<li>以后算法要白盒</li>
-<li>项目有点混乱</li>
-</ul>
-<p>做的过程中，一直也在思考：</p>
+<p>对于$Q(\theta, \theta^{(i)})$很难极大化的情况，可以不那么完美，只要有增加就可以了，或者：</p>
 <blockquote>
-<p>库存分配后面要怎么做、达到什么样的效果？</p>
+<p>固定更多的参数，轮流通过单个参数达到极大化~</p>
 </blockquote>
-<p>对比一下MySQL和WMS，MySQL负责数据的存取、WMS负责货的进出，SQL语句有优化引擎，WMS的作业应该也需要这么一个智能中心。</p>
-<h2 id="技术成长"><a href="#技术成长" class="headerlink" title="技术成长"></a>技术成长</h2><p>工作中用到的基本都是Java基础：</p>
-<blockquote>
-<p>试了一把jdk8的Lambda表达式感觉还不错，尴尬的是出来这么久了，现在才开始用。有时候也在反思自己是不是有点老了，对新东西没那么大兴趣了。</p>
-</blockquote>
-<p>总体来说，入了业务的坑之后，技术能力稳定下滑中。机器学习参加了个比赛，结果被血虐，收获是：</p>
-<ul>
-<li>学会了用WEKA；</li>
-<li>明白了机器学习并不只是一个模型，而是清理、加工、训练、验证等一整套流程；</li>
+<p>这是两种常见的简化思路，应该还有更多的套路~</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>陆续看了一段时间才看懂，《统计学习方法》中的推导是故意的吧😤😤，算法的路数还是很棒的！</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://blog.csdn.net/zouxy09/article/details/8537620/" target="_blank" rel="external">http://blog.csdn.net/zouxy09/article/details/8537620/</a></li>
+<li><a href="http://www.cnblogs.com/jerrylead/archive/2011/04/06/2006936.html" target="_blank" rel="external">http://www.cnblogs.com/jerrylead/archive/2011/04/06/2006936.html</a></li>
+<li><a href="http://zhihaozhang.github.io/2016/03/17/EMalgorithm/" target="_blank" rel="external">http://zhihaozhang.github.io/2016/03/17/EMalgorithm/</a></li>
+<li><a href="http://open.163.com/movie/2008/1/2/N/M6SGF6VB4_M6SGKSC2N.html" target="_blank" rel="external">http://open.163.com/movie/2008/1/2/N/M6SGF6VB4_M6SGKSC2N.html</a></li>
 </ul>
-<p>本着知其然也要知其所以然的目标，学习了一些“传统”的机器学习算法，很多算法的年龄比我的年龄都大。过程中深刻体会到数学的重要性，尤其是：</p>
-<ul>
-<li>线性代数</li>
-<li>概率论</li>
-<li>运筹学</li>
-</ul>
-<p>多打打基础，深入思考工具和算法背后的原理，有时候“<strong>慢慢来，反而快</strong>”。</p>
-<h2 id="总结与规划"><a href="#总结与规划" class="headerlink" title="总结与规划"></a>总结与规划</h2><p>生活还是细水长流、平淡无奇地美好：</p>
-<blockquote>
-<p>很久没时间打DOTA，偶尔慢跑，羽毛球也渐渐生疏了。</p>
-</blockquote>
-<p>再过不久就要升级了，除了经济上的、最大的压力在于<strong>如何去做一个榜样或值得尊敬的人</strong>，最起码应该是：</p>
-<ul>
-<li>有理想与追求</li>
-<li>有底线和原则</li>
-</ul>
-<p>然后，像“疯狗”一样去追求自己的理想，像“疯狗”一样去守护自己的底线。</p>
 
       
     </div>
@@ -487,11 +470,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/总结/" rel="tag">#总结</a>
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
           
-            <a href="/tags/工作/" rel="tag">#工作</a>
+            <a href="/tags/期望/" rel="tag">#期望</a>
           
-            <a href="/tags/学习/" rel="tag">#学习</a>
+            <a href="/tags/参数估计/" rel="tag">#参数估计</a>
+          
+            <a href="/tags/隐藏变量/" rel="tag">#隐藏变量</a>
           
         </div>
       
@@ -500,17 +485,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/04/logistic-regression/" rel="next" title="逻辑回归">
-                <i class="fa fa-chevron-left"></i> 逻辑回归
+              <a href="/2017/05/14/markov/" rel="next" title="马尔科夫">
+                <i class="fa fa-chevron-left"></i> 马尔科夫
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/10/reinforcement-learning/" rel="prev" title="强化学习">
-                强化学习 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -631,7 +612,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目总结"><span class="nav-number">1.</span> <span class="nav-text">项目总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#退供"><span class="nav-number">1.1.</span> <span class="nav-text">退供</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集货二期"><span class="nav-number">1.2.</span> <span class="nav-text">集货二期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#双十一库存兜底及优化"><span class="nav-number">1.3.</span> <span class="nav-text">双十一库存兜底及优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#库存优化"><span class="nav-number">1.4.</span> <span class="nav-text">库存优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#库存分配"><span class="nav-number">1.5.</span> <span class="nav-text">库存分配</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术成长"><span class="nav-number">2.</span> <span class="nav-text">技术成长</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结与规划"><span class="nav-number">3.</span> <span class="nav-text">总结与规划</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#算法步骤"><span class="nav-number">1.</span> <span class="nav-text">算法步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#公式由来"><span class="nav-number">2.</span> <span class="nav-text">公式由来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#收敛性"><span class="nav-number">3.</span> <span class="nav-text">收敛性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高斯混合模型（GMM）"><span class="nav-number">4.</span> <span class="nav-text">高斯混合模型（GMM）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展（GEM）"><span class="nav-number">5.</span> <span class="nav-text">扩展（GEM）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
@@ -755,9 +736,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
-      var disqus_identifier = '2017/04/05/summary-2016/';
-      var disqus_title = "总结：二零一六";
-      var disqus_url = 'http://yoursite.com/2017/04/05/summary-2016/';
+      var disqus_identifier = '2017/05/21/expectation-maximization/';
+      var disqus_title = "最大期望算法（EM）";
+      var disqus_url = 'http://yoursite.com/2017/05/21/expectation-maximization/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
