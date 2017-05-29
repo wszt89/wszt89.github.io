@@ -88,36 +88,41 @@
 
 未来只与现状有关，与过去无关。
 
-隐马尔科夫模型（HMM）该模型描述的是：
+看起来很基础、很简单，但是这样假设之后让现象变得可描述。
+隐马尔科夫模型（HMM）模型含义为：
 
 由一个隐藏的马尔科夫链随机生成的状态序列（不可观察），再由状态序列生成观测序列的过程。
 
-设有状态集$Q = \{q_1, q_2, …, q_N \}$及状态序列$I = (i_1, i_2,">
+设有状态集$Q = \{q_1, q_2, …,">
 <meta property="og:type" content="article">
-<meta property="og:title" content="马尔科夫">
+<meta property="og:title" content="马尔科夫算法">
 <meta property="og:url" content="http://yoursite.com/2017/05/14/markov/index.html">
 <meta property="og:site_name" content="wsztrush">
 <meta property="og:description" content="俄国数学家安德雷·安德耶维齐·马尔可夫，他的研究开创了随机过程这个新的领域，他因提出马尔可夫链的概念而享有盛名！简单描述为：
 
 未来只与现状有关，与过去无关。
 
-隐马尔科夫模型（HMM）该模型描述的是：
+看起来很基础、很简单，但是这样假设之后让现象变得可描述。
+隐马尔科夫模型（HMM）模型含义为：
 
 由一个隐藏的马尔科夫链随机生成的状态序列（不可观察），再由状态序列生成观测序列的过程。
 
-设有状态集$Q = \{q_1, q_2, …, q_N \}$及状态序列$I = (i_1, i_2,">
-<meta property="og:updated_time" content="2017-05-21T10:11:33.000Z">
+设有状态集$Q = \{q_1, q_2, …,">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/markov/0.png">
+<meta property="og:updated_time" content="2017-05-29T13:13:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="马尔科夫">
+<meta name="twitter:title" content="马尔科夫算法">
 <meta name="twitter:description" content="俄国数学家安德雷·安德耶维齐·马尔可夫，他的研究开创了随机过程这个新的领域，他因提出马尔可夫链的概念而享有盛名！简单描述为：
 
 未来只与现状有关，与过去无关。
 
-隐马尔科夫模型（HMM）该模型描述的是：
+看起来很基础、很简单，但是这样假设之后让现象变得可描述。
+隐马尔科夫模型（HMM）模型含义为：
 
 由一个隐藏的马尔科夫链随机生成的状态序列（不可观察），再由状态序列生成观测序列的过程。
 
-设有状态集$Q = \{q_1, q_2, …, q_N \}$及状态序列$I = (i_1, i_2,">
+设有状态集$Q = \{q_1, q_2, …,">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/markov/0.png">
 
 
 
@@ -141,7 +146,7 @@
   <link rel="canonical" href="http://yoursite.com/2017/05/14/markov/"/>
 
 
-  <title> 马尔科夫 | wsztrush </title>
+  <title> 马尔科夫算法 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -281,7 +286,7 @@
             
             
               
-                马尔科夫
+                马尔科夫算法
               
             
           </h1>
@@ -334,7 +339,7 @@
 
           
           
-             <span id="/2017/05/14/markov/" class="leancloud_visitors" data-flag-title="马尔科夫">
+             <span id="/2017/05/14/markov/" class="leancloud_visitors" data-flag-title="马尔科夫算法">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -360,7 +365,8 @@
 <blockquote>
 <p>未来只与现状有关，与过去无关。</p>
 </blockquote>
-<h2 id="隐马尔科夫模型（HMM）"><a href="#隐马尔科夫模型（HMM）" class="headerlink" title="隐马尔科夫模型（HMM）"></a>隐马尔科夫模型（HMM）</h2><p>该模型描述的是：</p>
+<p>看起来很基础、很简单，但是这样假设之后让现象变得可描述。</p>
+<h2 id="隐马尔科夫模型（HMM）"><a href="#隐马尔科夫模型（HMM）" class="headerlink" title="隐马尔科夫模型（HMM）"></a>隐马尔科夫模型（HMM）</h2><p>模型含义为：</p>
 <blockquote>
 <p>由一个<font color="red">隐藏的马尔科夫链</font>随机生成的状态序列（不可观察），再由状态序列生成观测序列的过程。</p>
 </blockquote>
@@ -370,18 +376,17 @@
 <p>$$<br>B = \left [ b_j(k) = P(o_t = v_k | i_t = q_j) \right ]_{N \times M}<br>$$</p>
 <p>另有初始概率$\pi_{i} = P(i_1 = q_i)$，记为：</p>
 <p>$$<br>\lambda = (A, B, \pi)<br>$$</p>
-<font color="red">TODO</font>
-
+<p>来个简单的图（<font color="lightgrey">黄色是状态序列、靛色为观测序列</font>）：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/markov/0.png" alt=""></p>
+<p>将现实问题抽象成HMM模型后，接下来看常见的问题及其解法~</p>
 <h3 id="概率计算问题"><a href="#概率计算问题" class="headerlink" title="概率计算问题"></a>概率计算问题</h3><p>描述为：</p>
 <blockquote>
 <p>已知模型$\lambda$和观测序列$O$，求该序列出现的概率$P(O|\lambda)$。</p>
 </blockquote>
 <p>根据概率公式计算得到：</p>
-<p>$$<br>\begin{align}<br>P(O|\lambda) &amp; = \sum P(O|I, \lambda)·P(I|\lambda) \\<br>&amp; = \sum \pi_{i_1} b_{i_1}(o_{i_1}) a_{i_1i_2} ··· a_{i_{T-1}i_{T}} b_{i_T}(o_{i_T})<br>\end{align}<br>$$</p>
-<p>计算量巨大（<font color="lightgrey">显然有重复计算</font>），dp优化之：</p>
-<blockquote>
-<p>对于模型$\lambda$，定义到$t$时刻部分观测序列为$o_1, o_2, …, o_t$且状态为$q_i$的概率为：<br>$$<br>\alpha_t(i) = P(o_1, o_2, …, o_t,i_t = q_i|\lambda)<br>$$</p>
-</blockquote>
+<p>$$<br>\begin{align}<br>P(O|\lambda) &amp; = \sum P(O|I, \lambda)·P(I|\lambda) \\<br>&amp; = \sum \pi_{i_1} b_{i_1}(o_{i_1}) a_{i_1\ i_2} ··· a_{i_{T-1}\ \ i_{T}} b_{i_T}(o_{i_T})<br>\end{align}<br>$$</p>
+<p>计算量巨大（<font color="lightgrey">显然有重复计算，dp优化之</font>）：对于模型$\lambda$，定义到$t$时刻部分观测序列为$o_1, o_2, …, o_t$且状态为$q_i$的概率为：</p>
+<p>$$<br>\alpha_t(i) = P(o_1, o_2, …, o_t,i_t = q_i|\lambda)<br>$$</p>
 <p>初始化：</p>
 <p>$$<br>\alpha_1(i) = \pi_ib_i(o_1)<br>$$</p>
 <p>状态转移方程为：</p>
@@ -390,20 +395,25 @@
 <p>$$<br>P(O|\lambda) = \sum_i \alpha_T(i)<br>$$</p>
 <h3 id="学习问题"><a href="#学习问题" class="headerlink" title="学习问题"></a>学习问题</h3><p>描述为：</p>
 <blockquote>
-<p>已知观测序列$O$（状态序列可选），求模型$\lambda$中的参数。</p>
+<p>已知观测序列$O$（状态序列可选），估计模型中的参数。</p>
 </blockquote>
 <p>如果给了状态序列（<font color="lightgrey">这还算HMM么？</font>），可以直接根据状态$i$到$j$的数量$A_{ij}$和观测值出现的次数$B_{jk}$统计得到：</p>
 <p>$$<br>\begin{align}<br>\hat{a_{ij}} &amp; = \frac{A_{ij}}{\sum_j A_{ij}} \\<br>\hat{b_j(k)} &amp; = \frac{B_{jk}}{\sum_k B_{jk}}<br>\end{align}<br>$$</p>
-<p>如果没有状态序列，</p>
-<font color="red">TODO</font>
-
+<p>如果没有状态序列观测不到（<font color="lightgrey">这才是正儿八经的HMM好吧</font>），概率模型为：</p>
+<p>$$<br>P(O|\lambda) = \sum_i P(O|I,\lambda) · P(I|\lambda)<br>$$</p>
+<p>是不是似曾相识？没错，就是EM！得到迭代公式为（<font color="lightgrey">和之前的方式有点区别</font>）：</p>
+<p>$$<br>\begin{align}<br>a_{ij} &amp;= \frac{\sum_{t=1}^{T-1} P(O, i_t = i, i_{t+1} = j | \bar{\lambda}) }{\sum_{t=1}^{T-1} P(O, i_t = i | \bar{\lambda})} \\<br>b_j(k) &amp;= \frac{\sum_{t=1}^{T} P(O, i_t = j | \bar{\lambda}) · I(o_t = v_k)}{\sum_{t=1}^{T} P(O, i_t = j | \bar{\lambda})} \\<br>\pi_i &amp;= \frac{P(O, i_1 = i | \bar{\lambda})}{P(O | \bar{\lambda})}<br>\end{align}<br>$$</p>
+<p>也就是Baum-Welch算法！</p>
 <h3 id="预测问题"><a href="#预测问题" class="headerlink" title="预测问题"></a>预测问题</h3><p>描述为：</p>
 <blockquote>
 <p>已知模型$\lambda$和观测序列$O$，求状态序列$I$。</p>
 </blockquote>
-<font color="red">TODO</font>
-
-<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<p>简单的可以用贪心算法：</p>
+<blockquote>
+<p>每次选择最有可能的状态，从而生成一个完整的状态序列！</p>
+</blockquote>
+<p>但是这样求得的概率的总概率最大吗？显然不一定！我们可以用DP求解（<font color="lightgrey">这个废居然都可以单独命名？维特比算法？</font>）。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="http://open.163.com/movie/2008/1/2/N/M6SGF6VB4_M6SGKSC2N.html" target="_blank" rel="external">http://open.163.com/movie/2008/1/2/N/M6SGF6VB4_M6SGKSC2N.html</a></li>
 </ul>
 
@@ -570,7 +580,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#隐马尔科夫模型（HMM）"><span class="nav-number">1.</span> <span class="nav-text">隐马尔科夫模型（HMM）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概率计算问题"><span class="nav-number">1.1.</span> <span class="nav-text">概率计算问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#学习问题"><span class="nav-number">1.2.</span> <span class="nav-text">学习问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预测问题"><span class="nav-number">1.3.</span> <span class="nav-text">预测问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">2.</span> <span class="nav-text">应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#隐马尔科夫模型（HMM）"><span class="nav-number">1.</span> <span class="nav-text">隐马尔科夫模型（HMM）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概率计算问题"><span class="nav-number">1.1.</span> <span class="nav-text">概率计算问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#学习问题"><span class="nav-number">1.2.</span> <span class="nav-text">学习问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预测问题"><span class="nav-number">1.3.</span> <span class="nav-text">预测问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
@@ -695,7 +705,7 @@
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
       var disqus_identifier = '2017/05/14/markov/';
-      var disqus_title = "马尔科夫";
+      var disqus_title = "马尔科夫算法";
       var disqus_url = 'http://yoursite.com/2017/05/14/markov/';
 
       function run_disqus_script(disqus_script){
