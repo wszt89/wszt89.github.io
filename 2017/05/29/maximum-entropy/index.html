@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="算法,机器学习," />
 
 
 
@@ -84,12 +84,37 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="wsztrush">
-<meta property="og:url" content="http://yoursite.com/page/3/index.html">
+<meta name="description" content="离散随机变量$X$的概率分布为$P(X)$，则其熵为：
+$$H(P) = - \sum_{x} P(x) \times \log P(x)$$
+可以用来描述混乱程度！对于一个有约束条件的概率模型（已知的一些事实）：
+
+满足约束条件的情况下，不知道的部分应该是等可能的！
+
+此时，可以用“熵”的增加来描述“等可能”的程度的增加（在等可能时达到最大值），不大容易找到其他可以用来搞最优化的目标函数！
+这就">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最大熵模型">
+<meta property="og:url" content="http://yoursite.com/2017/05/29/maximum-entropy/index.html">
 <meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="离散随机变量$X$的概率分布为$P(X)$，则其熵为：
+$$H(P) = - \sum_{x} P(x) \times \log P(x)$$
+可以用来描述混乱程度！对于一个有约束条件的概率模型（已知的一些事实）：
+
+满足约束条件的情况下，不知道的部分应该是等可能的！
+
+此时，可以用“熵”的增加来描述“等可能”的程度的增加（在等可能时达到最大值），不大容易找到其他可以用来搞最优化的目标函数！
+这就">
+<meta property="og:updated_time" content="2017-05-30T08:06:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="wsztrush">
+<meta name="twitter:title" content="最大熵模型">
+<meta name="twitter:description" content="离散随机变量$X$的概率分布为$P(X)$，则其熵为：
+$$H(P) = - \sum_{x} P(x) \times \log P(x)$$
+可以用来描述混乱程度！对于一个有约束条件的概率模型（已知的一些事实）：
+
+满足约束条件的情况下，不知道的部分应该是等可能的！
+
+此时，可以用“熵”的增加来描述“等可能”的程度的增加（在等可能时达到最大值），不大容易找到其他可以用来搞最优化的目标函数！
+这就">
 
 
 
@@ -110,10 +135,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/page/3/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/05/29/maximum-entropy/"/>
 
 
-  <title> wsztrush </title>
+  <title> 最大熵模型 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -144,9 +169,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -233,9 +256,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -255,10 +278,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/11/23/simplex-method-1/" itemprop="url">
-                  单纯形法
-                </a>
+                最大熵模型
               
             
           </h1>
@@ -270,8 +290,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-23T20:53:00+08:00" content="2016-11-23">
-              2016-11-23
+            <time itemprop="dateCreated" datetime="2017-05-29T22:29:53+08:00" content="2017-05-29">
+              2017-05-29
             </time>
           </span>
 
@@ -300,8 +320,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/11/23/simplex-method-1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/23/simplex-method-1/" itemprop="commentsCount"></span>
+                <a href="/2017/05/29/maximum-entropy/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/05/29/maximum-entropy/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -311,7 +331,7 @@
 
           
           
-             <span id="/2016/11/23/simplex-method-1/" class="leancloud_visitors" data-flag-title="单纯形法">
+             <span id="/2017/05/29/maximum-entropy/" class="leancloud_visitors" data-flag-title="最大熵模型">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -333,334 +353,115 @@
       
 
       
-        
-          
-          问题描述某公司生产玻璃产品，包括各种窗和玻璃门，该公司有三个工厂，分别负责：
+        <p>离散随机变量$X$的概率分布为$P(X)$，则其熵为：</p>
+<p>$$<br>H(P) = - \sum_{x} P(x) \times \log P(x)<br>$$</p>
+<p>可以用来描述混乱程度！对于一个有约束条件的概率模型（<font color="lightgrey">已知的一些事实</font>）：</p>
+<blockquote>
+<p>满足约束条件的情况下，不知道的部分应该是等可能的！</p>
+</blockquote>
+<p>此时，可以用“熵”的增加来描述“等可能”的程度的增加（<font color="lightgrey">在等可能时达到最大值</font>），不大容易找到其他可以用来搞最优化的目标函数！</p>
+<p>这就是<font color="red">最大熵原理</font>！</p>
+<h1 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h1><p>先看我们有什么（<font color="lightgrey">从观测数据中统计得到经验概率</font>）：</p>
+<ul>
+<li>$\tilde{P}(X)$</li>
+<li>$\tilde{P}(X,Y)$</li>
+</ul>
+<p>要学习的是$P(Y|X)$，那么我们应该使用条件熵：</p>
+<p>$$<br>H(P) = - \sum_{x,y} \tilde{P}(x) P(y|x) \log P(y|x)<br>$$</p>
+<p>目标有了，那么约束条件怎么描述？将其抽象成特征函数（<font color="lightgrey">输入和输出之间的一些关系，管用手法</font>）：</p>
+<p>$$<br>f(x,y) = \left\{\begin{matrix}<br>1 &amp; x和y满足约束 \\<br>0 &amp; 否则<br>\end{matrix}\right.<br>$$</p>
+<p>模型算出来和实际中的一些特征值应该差不多才对，比如特征值：</p>
+<p>$$<br>\begin{align}<br>E_{\tilde{P}}(f) &amp; = \sum_{x, y} \tilde{P}(x, y) f(x, y) \\<br>E_{P}(f) &amp; = \sum_{x, y} \tilde{P}(x) P(y|x) f(x, y) \\<br>E_{\tilde{P}}(f) &amp; = E_{P}(f)<br>\end{align}<br>$$</p>
+<p>于是得到完整的<font color="red">最大熵模型</font>为：</p>
+<p>$$<br>\begin{align}<br>\max_P  &amp; \quad H(P) = - \sum_{x,y} \tilde{P}(x) P(y|x) \log P(y|x) \\<br>st. &amp; \quad E_{\tilde{P}}(f_i) = E_{P}(f_i) \\<br>&amp;  \quad \sum_{y} P(y|x) = 1<br>\end{align}<br>$$</p>
+<h1 id="参数估计"><a href="#参数估计" class="headerlink" title="参数估计"></a>参数估计</h1><p>转换为最小化问题：</p>
+<p>$$<br>\begin{align}<br>\min_P  &amp; \quad -H(P) = \sum_{x,y} \tilde{P}(x) P(y|x) \log P(y|x) \\<br>st. &amp; \quad E_{\tilde{P}}(f_i) - E_{P}(f_i) = 0 \\<br>&amp;  \quad 1 - \sum_{y} P(y|x) = 0<br>\end{align}<br>$$</p>
+<p>引入拉格朗日乘子$w_0,w_1,…,w_n$，得到拉格朗日函数：</p>
+<p>$$<br>\begin{align}<br>L(P, w) &amp; = -H(P) + w_0 \times \left ( 1 - \sum_y P(y|x) \right ) + \sum_{i}^{n} w_i \times (E_{\tilde{P}}(f_i) - E_{P}(f_i))<br>\end{align}<br>$$</p>
+<p>原始的最优化问题为：</p>
+<p>$$<br>\min_P \max_w L(P,w)<br>$$</p>
+<p>对偶问题为：</p>
+<p>$$<br>\max_w \min_P L(P,w)<br>$$</p>
+<p>加入我们求得了最优解，根据偏导$\frac{\partial L(P, w)}{\partial P(y|x)} = 0$得到：</p>
+<p>$$<br>P_w(y|x) = \frac{\exp \left ( \sum_i^n w_i f_i(x, y) \right )}{Z_w(x)}<br>$$</p>
+<p>其中：</p>
+<p>$$<br>Z_w(x) = \exp \left (\sum_i^n w_i f_i(x, y)\right)<br>$$</p>
+<p>接下来看如何得到最优解~</p>
+<h2 id="改进的迭代尺度法"><a href="#改进的迭代尺度法" class="headerlink" title="改进的迭代尺度法"></a>改进的迭代尺度法</h2><p>使用最大似然法求解（<font color="lightgrey">暴力破解的问题是什么？</font>）：</p>
+<p>$$<br>L(w) = \sum_{x,y} \tilde{P}(x,y) \sum_i^n w_i f_i(x, y) - \sum_{x} \tilde{P}(x) \log Z_w(x)<br>$$</p>
+<p>接着尝试寻找增量$\delta$使得似然函数增加，做差值（<font color="lightgrey">套路</font>）：</p>
+<p>$$<br>\begin{align}<br>L(w+\delta) - L(w) &amp; = \sum_{x,y} \tilde{P}(x,y) \sum_i^n \delta_i f_i(x, y) +  \sum_{x} \tilde{P}(x) \log \frac{Z_{w+\delta}(x)}{Z_w(x)} \\<br>&amp; \geqslant \sum_{x,y} \tilde{P}(x,y) \sum_i^n \delta_i f_i(x, y) + 1 - \sum_{x} \tilde{P}(x) \frac{Z_{w+\delta}(x)}{Z_w(x)} &amp; -\log \alpha \geqslant 1 - \alpha \\<br>&amp; = \sum_{x,y} \tilde{P}(x,y) \sum_i^n \delta_i f_i(x, y) + 1 - \sum_{x} \tilde{P}(x) \sum_y P_w(y|x) \exp \left ( f^\star(x,y) \sum_i^n \frac{\delta_if_i(x,y)}{f^\star(x,y)} \right ) &amp; f^\star(x,y) = \sum_i^n f_i(x,y) \\<br>&amp; \geqslant \sum_{x,y} \tilde{P}(x,y) \sum_i^n \delta_i f_i(x, y) + 1 - \sum_{x} \tilde{P}(x) \sum_y P_w(y|x) \sum_i^n \frac{f_i(x,y)}{f^\star(x,y)} \exp \left ( \delta_if^\star(x,y) \right ) &amp; 琴生不等式 \\<br>&amp; = B(\delta|w)<br>\end{align}<br>$$</p>
+<p>此时$B(\delta|w)$是似然函数变化量的一个下限，我们需要尽量让该变量最大化：</p>
+<p>$$<br>\frac{B(\delta|w)}{\delta_i} = \sum_{x,y} \tilde{P}(x,y) f_i(x, y) - \sum_{x} \tilde{P}(x) \sum_y P_w(y|x) f_i(x,y) \exp \left ( \delta_i f^\star(x,y)\right )<br>$$</p>
+<p>另偏导数$\frac{B(\delta|w)}{\delta_i} = 0$得到方程：</p>
+<p>$$<br>\sum_{x} \tilde{P}(x) \sum_y P_w(y|x) f_i(x,y) \exp \left ( \delta_i f^\star(x,y) \right ) = E_{\tilde{P}}(f_i)<br>$$</p>
+<p>依次求解方程得到$\delta$。</p>
+<h2 id="拟牛顿法"><a href="#拟牛顿法" class="headerlink" title="拟牛顿法"></a>拟牛顿法</h2><p>直接从目标入手，将</p>
+<p>$$<br>P_w(y|x) = \frac{\exp \left ( \sum_i^n w_i f_i(x, y) \right )}{Z_w(x)}<br>$$</p>
+<p>带入目标函数得到：</p>
+<p>$$<br>\min \quad f(w) = \sum_x \tilde{P}(x) \log \sum_y \exp \left ( \sum_i^n w_i f_i(x,y) \right ) - \sum_{x,y} \tilde{P}(x,y) \sum_i^n w_i f_i(x,y)<br>$$</p>
+<p>求偏导数得到：</p>
+<p>$$<br>\frac{\delta f(w)}{\delta w_i} = \sum_{x,y} \tilde{P}(x) P_w(y|x) f_i(x,y) - E_{\tilde{P}}(f_i)<br>$$</p>
+<p>接着通过<strong>BFGS</strong>算法求解（<font color="lightgrey">偷个懒</font>）。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://blog.csdn.net/itplus/article/details/21896453" target="_blank" rel="external">http://blog.csdn.net/itplus/article/details/21896453</a></li>
+</ul>
 
-铝框架和硬件（每天4小时）
-木质框架（每天12小时）
-玻璃和组装（每天18小时）
-
-高层决定将生产能力转移到有较大销售潜力的两种新产品：
-
-产品一每批需要工厂一1小时、工厂三3小时，每件利润3；
-产品二每批需要工厂二2小
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/23/simplex-method-1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
       
     </div>
 
     <div>
       
+        
+
+      
     </div>
 
     <div>
+      
+        
+
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/10/innodb-lock-1/" itemprop="url">
-                  InnoDB的锁机制
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-10T11:48:42+08:00" content="2016-11-10">
-              2016-11-10
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程/" itemprop="url" rel="index">
-                    <span itemprop="name">编程</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
+            <a href="/tags/算法/" rel="tag">#算法</a>
           
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/11/10/innodb-lock-1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/10/innodb-lock-1/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/11/10/innodb-lock-1/" class="leancloud_visitors" data-flag-title="InnoDB的锁机制">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
           
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-          写在前面使用数据库时，想要较高的吞吐、较低的延迟，但又想在高并发下可以一致地读写数据，因此需要高效的锁机制。
-InnoDB中的锁可以分为：
-
-latch：程序上的锁机制，用来锁定内部对象，没有死锁检测；
-lock：用来锁定数据库中的对象，比如表、页、行，有死锁检测机制；
-
-可以使用show engi
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/10/innodb-lock-1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/21/expectation-maximization/" rel="next" title="最大期望算法（EM）">
+                <i class="fa fa-chevron-left"></i> 最大期望算法（EM）
+              </a>
+            
           </div>
-        
-      
-    </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+          <div class="post-nav-prev post-nav-item">
             
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/09/transaction-1/" itemprop="url">
-                  事务问题（一）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-09T21:19:52+08:00" content="2016-11-09">
-              2016-11-09
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程/" itemprop="url" rel="index">
-                    <span itemprop="name">编程</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/11/09/transaction-1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/09/transaction-1/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/11/09/transaction-1/" class="leancloud_visitors" data-flag-title="事务问题（一）">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-          写在前面现在开发的系统对准确性要求非常高，而数据的一致性和准确性几乎完全依赖数据库的事务，如果事务跪了，结局是要多惨有多惨（经历过的都懂的）。
-当然MySQL本身也有一些BUG但并不多，大部分的出错都是业务代码写残了，下面来看遇到过的一些例子！
-常遇问题下面的场景都是Java操作MySQL/Inno
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/11/09/transaction-1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -668,6 +469,17 @@ lock：用来锁定数据库中的对象，比如表、页、行，有死锁检�
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -687,8 +499,17 @@ lock：用来锁定数据库中的对象，比如表、页、行，有死锁检�
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpeg"
@@ -738,6 +559,17 @@ lock：用来锁定数据库中的对象，比如表、页、行，有死锁检�
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模型"><span class="nav-number">1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数估计"><span class="nav-number">2.</span> <span class="nav-text">参数估计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#改进的迭代尺度法"><span class="nav-number">2.1.</span> <span class="nav-text">改进的迭代尺度法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拟牛顿法"><span class="nav-number">2.2.</span> <span class="nav-text">拟牛顿法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -838,6 +670,10 @@ lock：用来锁定数据库中的对象，比如表、页、行，有死锁检�
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
 
   
 
@@ -854,9 +690,9 @@ lock：用来锁定数据库中的对象，比如表、页、行，有死锁检�
 
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
-      var disqus_identifier = 'page/3/index.html';
-      var disqus_title = "";
-      var disqus_url = '';
+      var disqus_identifier = '2017/05/29/maximum-entropy/';
+      var disqus_title = "最大熵模型";
+      var disqus_url = 'http://yoursite.com/2017/05/29/maximum-entropy/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -868,6 +704,13 @@ lock：用来锁定数据库中的对象，比如表、页、行，有死锁检�
       }
 
       run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
       
     </script>
   
