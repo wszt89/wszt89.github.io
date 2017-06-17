@@ -1,0 +1,934 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编程,golang,语法," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="Golang也是有相当的一段历史了（学新东西总是慢人一步，好可怕🤔），特点是：
+
+跨平台
+垃圾回收（毕业后一直在用有GC的语言）
+编译快
+
+为工业开发量身定做，语法感觉并没有那么完备（复杂）。从传统入门程序来看它大概是这个样子：
+123456789package mainimport (	&quot;fmt&quot;)func main() &amp;#123;	fmt.Print(&quot;Hello World!&quot;)&amp;#12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang：语法">
+<meta property="og:url" content="http://yoursite.com/2017/06/14/golang-grammar/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="Golang也是有相当的一段历史了（学新东西总是慢人一步，好可怕🤔），特点是：
+
+跨平台
+垃圾回收（毕业后一直在用有GC的语言）
+编译快
+
+为工业开发量身定做，语法感觉并没有那么完备（复杂）。从传统入门程序来看它大概是这个样子：
+123456789package mainimport (	&quot;fmt&quot;)func main() &amp;#123;	fmt.Print(&quot;Hello World!&quot;)&amp;#12">
+<meta property="og:updated_time" content="2017-06-17T00:09:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Golang：语法">
+<meta name="twitter:description" content="Golang也是有相当的一段历史了（学新东西总是慢人一步，好可怕🤔），特点是：
+
+跨平台
+垃圾回收（毕业后一直在用有GC的语言）
+编译快
+
+为工业开发量身定做，语法感觉并没有那么完备（复杂）。从传统入门程序来看它大概是这个样子：
+123456789package mainimport (	&quot;fmt&quot;)func main() &amp;#123;	fmt.Print(&quot;Hello World!&quot;)&amp;#12">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/14/golang-grammar/"/>
+
+
+  <title> Golang：语法 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Golang：语法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-14T08:18:40+08:00" content="2017-06-14">
+              2017-06-14
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/06/14/golang-grammar/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/06/14/golang-grammar/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/06/14/golang-grammar/" class="leancloud_visitors" data-flag-title="Golang：语法">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Golang也是有相当的一段历史了（<font color="lightgrey">学新东西总是慢人一步，好可怕🤔</font>），特点是：</p>
+<ul>
+<li>跨平台</li>
+<li>垃圾回收（<font color="lightgrey">毕业后一直在用有GC的语言</font>）</li>
+<li>编译快</li>
+</ul>
+<p>为工业开发量身定做，语法感觉并没有那么完备（<font color="lightgrey">复杂</font>）。从传统入门程序来看它大概是这个样子：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> main</div><div class="line"></div><div class="line"><span class="keyword">import</span> (</div><div class="line">	<span class="string">"fmt"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	fmt.Print(<span class="string">"Hello World!"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面来看一些细节，跟其他语言对比着学会快些。</p>
+<h1 id="基础类型"><a href="#基础类型" class="headerlink" title="基础类型"></a>基础类型</h1><p>变量创建的第一种方式为（<font color="lightgrey">不知道学的哪门子编程语言的套路</font>）：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> a <span class="keyword">int</span></div><div class="line">	fmt.Println(a) <span class="comment">// 0</span></div><div class="line">	a = <span class="number">1</span></div><div class="line">	fmt.Println(a) <span class="comment">// 1</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>多个变量可以省一些var，合并起来一起声明：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> (</div><div class="line">		a <span class="keyword">int</span></div><div class="line">		b <span class="keyword">int</span></div><div class="line">	)</div><div class="line">	fmt.Println(a, b) <span class="comment">// 0 0</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>多个同类型的则可以更简单一些，包括赋值：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> a, b <span class="keyword">int</span></div><div class="line">	fmt.Println(a, b) <span class="comment">// 0 0</span></div><div class="line">	a, b = <span class="number">3</span>, <span class="number">4</span></div><div class="line">	fmt.Println(a, b) <span class="comment">// 3 4</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>常量的玩法和变量差不多，比较有意思和特别的自增，感觉为了省代码已经伤心病狂：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">const</span> (</div><div class="line">		a = <span class="literal">iota</span> <span class="comment">// 自增</span></div><div class="line">		b</div><div class="line">		c</div><div class="line">	)</div><div class="line">	fmt.Println(a, b, c) <span class="comment">// 0 1 2</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不一样的地方：</p>
+<ul>
+<li>弱化了<font color="red">常量</font></li>
+<li>从程序员的角度来看整数类型：<font color="red">int8、int16、int32</font>等</li>
+<li>不同长度的整数混用时会报错（<font color="lightgrey">在Java中会自动提升</font>）</li>
+<li>字符串的比较貌似和<font color="red">equals</font>差不多了，会比较内容</li>
+</ul>
+<h1 id="高级类型"><a href="#高级类型" class="headerlink" title="高级类型"></a>高级类型</h1><p>数组和C里面的有点像，声明之后就有内存了，而且大小不能再变：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> a [<span class="number">10</span>]<span class="keyword">int</span></div><div class="line">	fmt.Println(a) <span class="comment">// [0 0 0 0 0 0 0 0 0 0]</span></div><div class="line"></div><div class="line">	b := [<span class="number">2</span>][<span class="number">2</span>]<span class="keyword">int</span>&#123;[<span class="number">2</span>]<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>&#125;, [<span class="number">2</span>]<span class="keyword">int</span>&#123;<span class="number">3</span>, <span class="number">4</span>&#125;&#125;</div><div class="line">	fmt.Println(b) <span class="comment">// [[1 2] [3 4]]</span></div><div class="line"></div><div class="line">	c := [...]<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</div><div class="line">	fmt.Println(c) <span class="comment">// [1 2 3]</span></div><div class="line"></div><div class="line">	d := [<span class="number">2</span>][<span class="number">2</span>]<span class="keyword">int</span>&#123;&#123;<span class="number">1</span>, <span class="number">2</span>&#125;, &#123;<span class="number">3</span>, <span class="number">4</span>&#125;&#125;</div><div class="line">	fmt.Println(d) <span class="comment">// [[1 2] [3 4]]</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>大小不确定的可以使用<font color="red">slice</font>（<font color="lightgrey">跟Python有点像</font>😂）：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	a := [<span class="number">100</span>]<span class="keyword">int</span>&#123;&#125;</div><div class="line"></div><div class="line">	fmt.Println(<span class="built_in">len</span>(a[<span class="number">10</span>:<span class="number">80</span>])) <span class="comment">// 70</span></div><div class="line">	fmt.Println(<span class="built_in">cap</span>(a[<span class="number">10</span>:<span class="number">80</span>])) <span class="comment">// 90</span></div><div class="line"></div><div class="line">	<span class="comment">// 追加</span></div><div class="line">	b := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>)</div><div class="line">	b1 := <span class="built_in">append</span>(b, <span class="number">10</span>)</div><div class="line">	fmt.Println(b1) <span class="comment">// [10]</span></div><div class="line">	b2 := <span class="built_in">append</span>(b1, <span class="number">20</span>, <span class="number">30</span>)</div><div class="line">	fmt.Println(b2) <span class="comment">// [10 20 30]</span></div><div class="line">	b3 := <span class="built_in">append</span>(b2, b2...)</div><div class="line">	fmt.Println(b3) <span class="comment">// [10 20 30 10 20 30]</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另一种超高频结构是<font color="red">map</font>：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	a := <span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">int</span>&#123;</div><div class="line">		<span class="number">1</span>: <span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">int</span>&#123;<span class="number">2</span>: <span class="number">3</span>&#125;,</div><div class="line">	&#125;</div><div class="line">	fmt.Println(a) <span class="comment">// map[1:map[2:3]]</span></div><div class="line">	fmt.Println(a[<span class="number">1</span>]) <span class="comment">// map[2:3]</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不一样的地方：</p>
+<ul>
+<li>在用数组赋值时，会进行拷贝，而不是设置指针（<font color="lightgrey">值传递</font>）</li>
+<li>多维数组的长度必须一致</li>
+</ul>
+<h1 id="自定义类型"><a href="#自定义类型" class="headerlink" title="自定义类型"></a>自定义类型</h1><p>没有了<font color="red">class、enum</font>，只能用<font color="red">struct</font>来搞定一切：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 定义结构体</span></div><div class="line"><span class="keyword">type</span> Mutex <span class="keyword">struct</span> &#123;</div><div class="line">	a <span class="keyword">string</span></div><div class="line">	b <span class="keyword">int</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 定义类型上的方法</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Mutex)</span> <span class="title">Lock</span><span class="params">()</span></span> &#123;&#125;</div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Mutex)</span> <span class="title">Unlock</span><span class="params">()</span></span> &#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">// 定义新类型</span></div><div class="line"><span class="keyword">type</span> MyMutex1 Mutex           <span class="comment">// 别名，不会集成方法</span></div><div class="line"><span class="keyword">type</span> MyMutex2 <span class="keyword">struct</span>&#123; Mutex &#125; <span class="comment">// 会继承方法</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	b := <span class="built_in">new</span>(MyMutex2)</div><div class="line">	b.Mutex.Lock()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不一样的地方：</p>
+<ul>
+<li>通过<font color="red">首字母大小写来</font>控制权限</li>
+<li>方法的声明和实现都放到结构体外面</li>
+</ul>
+<h1 id="控制与方法"><a href="#控制与方法" class="headerlink" title="控制与方法"></a>控制与方法</h1><p>控制语句变得更加灵活和“随意”，尝试将多行代码合并成一行：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="comment">// 可以赋值，注意变量的作用域</span></div><div class="line">	<span class="keyword">if</span> a, b := <span class="number">1</span>, <span class="number">2</span>; a &lt; b &#123;</div><div class="line">		fmt.Println(a, b) <span class="comment">// 1 2</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 大名鼎鼎的GOTO回来了</span></div><div class="line">	<span class="keyword">var</span> a <span class="keyword">int</span> = <span class="number">1</span></div><div class="line">	Label:</div><div class="line">	<span class="keyword">if</span> a &lt; <span class="number">10</span> &#123;</div><div class="line">		a += <span class="number">1</span></div><div class="line">		<span class="keyword">goto</span> Label</div><div class="line">	&#125;</div><div class="line">	fmt.Println(a) <span class="comment">// 10</span></div><div class="line"></div><div class="line">	<span class="comment">// 三种循环形式</span></div><div class="line">	<span class="keyword">for</span> a := <span class="number">1</span>; a &lt; <span class="number">10</span>; a += <span class="number">1</span> &#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">for</span> a &lt; <span class="number">9</span> &#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">for</span> &#123;</div><div class="line">		<span class="keyword">break</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// SWITCH的两种形式</span></div><div class="line">	<span class="keyword">switch</span> &#123;</div><div class="line">	<span class="keyword">case</span> a &lt; <span class="number">1</span>:</div><div class="line">	<span class="keyword">case</span> a &lt; <span class="number">2</span>:</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">switch</span> <span class="string">"123"</span> &#123;</div><div class="line">	<span class="keyword">case</span> <span class="string">"123"</span>:</div><div class="line">		fmt.Println(<span class="string">"123"</span>) <span class="comment">// 123</span></div><div class="line">		<span class="keyword">break</span></div><div class="line">	<span class="keyword">case</span> <span class="string">"23"</span>:</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>比较新的Java也在变得随意，一些不一样的地方：</p>
+<ul>
+<li><font color="red">while、do-while</font>不见了</li>
+<li><font color="red">goto</font>回来了</li>
+<li>省略了一些括号（<font color="lightgrey">感觉多一些括号会结构更清晰些</font>）</li>
+</ul>
+<p>一直把<font color="red">函数</font>也当做了结构控制的一种方式，定义形式和多值返回都跟Python像：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span><span class="params">(i1 <span class="keyword">int</span>, i2 []<span class="keyword">string</span>)</span> <span class="params">(o1 <span class="keyword">int</span>, o2 <span class="keyword">string</span>)</span></span> &#123;</div><div class="line">	i2[<span class="number">0</span>] = <span class="string">"a"</span></div><div class="line">	<span class="keyword">return</span> <span class="number">1</span>, <span class="string">"2"</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	fmt.Println(test(<span class="number">1</span>, []<span class="keyword">string</span>&#123;<span class="string">"abc"</span>&#125;)) <span class="comment">// 1 2</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在方法中使用关键字<font color="red">defer</font>来处理函数退出前的操作，按照LIFO的顺序执行（<font color="lightgrey">有点像finally的替代</font>）：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">5</span>; i++ &#123;</div><div class="line">		<span class="keyword">defer</span> fmt.Printf(<span class="string">"%d "</span>, i)</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	test() <span class="comment">// 4 3 2 1 0</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>相对复杂一些的逻辑可以用函数封装，有没有看到些JavaScript中闭包的影子：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</div><div class="line">		fmt.Println(<span class="string">"finish!"</span>)</div><div class="line">	&#125;()</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	test() <span class="comment">// finish!</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>同时也可以将函数搞成个变量，当做参数、返回值什么的，跟普通的变量没啥区别了：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	add := <span class="function"><span class="keyword">func</span><span class="params">(a <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</div><div class="line">		<span class="keyword">return</span> a + <span class="number">1</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	fmt.Println(add(<span class="number">1</span>))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不一样的地方：</p>
+<ul>
+<li>多值返回</li>
+<li>没有了异常机制</li>
+</ul>
+<h1 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h1><p>在Golang中使用“恐慌”机制代替了异常机制：</p>
+<ul>
+<li><font color="red">panic</font>：中断执行，不影响defer的处理，如果没有在本函数中没有恢复，会在调用方产生“恐慌”</li>
+<li><font color="red">recover</font>：“恐慌”修复，必须在defer中调用</li>
+</ul>
+<p>举个栗子：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</div><div class="line">		<span class="keyword">if</span> x := <span class="built_in">recover</span>(); x != <span class="literal">nil</span> &#123;</div><div class="line">			fmt.Println(x) <span class="comment">// 出错</span></div><div class="line">		&#125;</div><div class="line">	&#125;()</div><div class="line"></div><div class="line">	<span class="built_in">panic</span>(<span class="string">"出错"</span>)</div><div class="line"></div><div class="line">	fmt.Println(<span class="string">"继续执行"</span>) <span class="comment">// 不会执行</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	test()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>由于支持多值返回，所以错误的信息也经常可以顺带返回（<font color="lightgrey">而不是在方法结尾加个throws，感觉方便太多了，有点C的处理风格</font>）：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> (</div><div class="line">	<span class="string">"fmt"</span></div><div class="line">	<span class="string">"errors"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span><span class="params">()</span> <span class="params">(<span class="keyword">int</span>, error)</span></span> &#123;</div><div class="line">	<span class="keyword">return</span> <span class="number">1</span>, errors.New(<span class="string">"abc"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	ret, err := test()</div><div class="line"></div><div class="line">	fmt.Println(ret, err)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不一样的地方：</p>
+<ul>
+<li>“错误”与“异常”分开两种方式进行处理，不用再管运行时异常什么的了</li>
+</ul>
+<h1 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h1><p>接口的作用是定义函数的集合：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> MyInterface <span class="keyword">interface</span> &#123;</div><div class="line">	Get() <span class="keyword">int</span></div><div class="line">	Put(<span class="keyword">int</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>具体实现不用显式地<font color="red">implements、entend</font>相应的接口（<font color="lightgrey">原理是什么样的？</font>）：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> MyImpl <span class="keyword">struct</span> &#123;</div><div class="line">	value <span class="keyword">int</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *MyImpl)</span> <span class="title">Get</span><span class="params">()</span> <span class="title">int</span></span> &#123;</div><div class="line">	<span class="keyword">return</span> self.value</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *MyImpl)</span> <span class="title">Put</span><span class="params">(value <span class="keyword">int</span>)</span></span> &#123;</div><div class="line">	self.value = value</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span><span class="params">(i MyInterface)</span></span> &#123;</div><div class="line">	i.Put(<span class="number">1</span>)</div><div class="line">	<span class="built_in">println</span>(i.Get()) <span class="comment">// 1</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> i MyInterface = <span class="built_in">new</span>(MyImpl)</div><div class="line"></div><div class="line">	test(i)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>要想获取接口具体是什么，可以在switch中使用<font color="red">type</font>进行判断（<font color="lightgrey">只能在switch中用，比较奇怪的语法</font>）：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> i MyInterface = <span class="built_in">new</span>(MyImpl)</div><div class="line"></div><div class="line">	<span class="keyword">switch</span> i.(<span class="keyword">type</span>) &#123;</div><div class="line">	<span class="keyword">case</span> MyInterface:</div><div class="line">		<span class="built_in">println</span>(<span class="string">"got MyInterface!"</span>)</div><div class="line">		<span class="keyword">break</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另外一种可以在switch外面判断的方法：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> i <span class="keyword">interface</span>&#123;&#125; = <span class="built_in">new</span>(MyImpl)</div><div class="line">	t, ok := i.(MyInterface)</div><div class="line"></div><div class="line">	fmt.Println(t, ok) <span class="comment">// &amp;&#123;0&#125; true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不一样的地方：</p>
+<ul>
+<li>不需要显式地实现接口，但是这样会不会容易漏掉实现一些方法</li>
+</ul>
+<h1 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h1><p>拿到一个空接口时我们是比较懵逼的，因为压根不知道它里面有什么东西，用Java的同学会想到<font color="red">reflect</font>，Go也有而且用法也差不多：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> i <span class="keyword">interface</span>&#123;&#125; = <span class="built_in">new</span>(MyImpl)</div><div class="line"></div><div class="line">	t := reflect.TypeOf(i)</div><div class="line"></div><div class="line">	fmt.Println(t)                             <span class="comment">// *main.MyImpl</span></div><div class="line">	fmt.Println(t.Kind())                      <span class="comment">// ptr</span></div><div class="line">	fmt.Println(t.Elem())                      <span class="comment">// main.MyImpl</span></div><div class="line">	fmt.Println(t.Elem().FieldByName(<span class="string">"value"</span>)) <span class="comment">// &#123;value main int  0 [0] false&#125; true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>类似的可以通过反射来调用方法！</p>
+<h1 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h1><p>对文件的读写跟Java比较像，打开文件后直接读取字节：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">"os"</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)</div><div class="line">	f, _ := os.Open(<span class="string">"/etc/passwd"</span>)</div><div class="line"></div><div class="line">	<span class="keyword">defer</span> f.Close()</div><div class="line"></div><div class="line">	<span class="keyword">for</span> &#123;</div><div class="line">		n, _ := f.Read(buf)</div><div class="line">		<span class="keyword">if</span> n == <span class="number">0</span> &#123;</div><div class="line">			<span class="keyword">break</span></div><div class="line">		&#125;</div><div class="line">		os.Stdout.Write(buf[<span class="number">0</span>:n])</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>带有缓存的读写像是搞了一层装饰：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> (</div><div class="line">	<span class="string">"bufio"</span></div><div class="line">	<span class="string">"os"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)</div><div class="line"></div><div class="line">	f, _ := os.Open(<span class="string">"/etc/passwd"</span>)</div><div class="line">	<span class="keyword">defer</span> f.Close()</div><div class="line"></div><div class="line">	r := bufio.NewReader(f)</div><div class="line">	w := bufio.NewWriter(os.Stdout)</div><div class="line">	<span class="keyword">defer</span> w.Flush()</div><div class="line"></div><div class="line">	<span class="keyword">for</span> &#123;</div><div class="line">		n, _ := r.Read(buf)</div><div class="line">		r.R</div><div class="line">		<span class="keyword">if</span> n == <span class="number">0</span> &#123;</div><div class="line">			<span class="keyword">break</span></div><div class="line">		&#125;</div><div class="line">		w.Write(buf[<span class="number">0</span>:n])</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其他的关于网络的，并没有涉及到什么新语法，后面再专门仔细看吧。</p>
+<h1 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h1><p>并行所使用的不是线程、进程、协程，这里不纠结底层的原理，想并行处理用<font color="red">go</font>即可，跟调用方法没多少区别：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span><span class="params">(w <span class="keyword">string</span>, sec <span class="keyword">int</span>)</span></span> &#123;</div><div class="line">	time.Sleep(time.Duration(sec) * time.Second)</div><div class="line">	fmt.Println(w, <span class="string">" is ready!"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">go</span> test(<span class="string">"a"</span>, <span class="number">2</span>)</div><div class="line">	<span class="keyword">go</span> test(<span class="string">"b"</span>, <span class="number">1</span>)</div><div class="line">	fmt.Println(<span class="string">"main"</span>)</div><div class="line">	time.Sleep(time.Duration(<span class="number">5</span>) * time.Second)</div><div class="line">	</div><div class="line">	<span class="comment">// main</span></div><div class="line">	<span class="comment">// b  is ready!</span></div><div class="line">	<span class="comment">// a  is ready!</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在并发编程领域有一个观点是<font color="red">用消息传递代替共享内存</font>，于是便有了<font color="red">chan</font>（<font color="lightgrey">消息的管道</font>）：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> c <span class="keyword">chan</span> <span class="keyword">int</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span><span class="params">(w <span class="keyword">string</span>, sec <span class="keyword">int</span>)</span></span> &#123;</div><div class="line">	time.Sleep(time.Duration(sec) * time.Second)</div><div class="line"></div><div class="line">	c &lt;- sec <span class="comment">// 向 c 中写入数据</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	c = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</div><div class="line"></div><div class="line">	<span class="keyword">go</span> test(<span class="string">"a"</span>, <span class="number">2</span>)</div><div class="line">	<span class="keyword">go</span> test(<span class="string">"b"</span>, <span class="number">1</span>)</div><div class="line"></div><div class="line">	fmt.Println(&lt;-c) <span class="comment">// 1 从c中读取数据</span></div><div class="line">	fmt.Println(&lt;-c) <span class="comment">// 2 从c中读取数据</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>默认的情况下管道是没有缓存的，也就是说：</p>
+<blockquote>
+<p>在数据没有被读走时，写会被阻塞；在没有写入数据时，读会被阻塞；</p>
+</blockquote>
+<p>创建带缓冲的管道的方法是：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">c = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">4</span>)</div></pre></td></tr></table></figure>
+<p>管道不用了可以使用<font color="red">close</font>关闭管道，于是读取时判断是否关闭的方法为：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> a, ok := &lt;-c; ok &#123;</div><div class="line">	fmt.Println(a)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当需要从多个管道中读取数据时可以使用<font color="red">select</font>（<font color="lightgrey">有点像I/O中的玩法</font>）:</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> c <span class="keyword">chan</span> <span class="keyword">int</span></div><div class="line"><span class="keyword">var</span> d <span class="keyword">chan</span> <span class="keyword">int</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	c = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">4</span>)</div><div class="line">	d = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">4</span>)</div><div class="line"></div><div class="line">	<span class="keyword">var</span> i <span class="keyword">int</span></div><div class="line">	<span class="keyword">for</span> &#123;</div><div class="line">		<span class="keyword">select</span> &#123;</div><div class="line">		<span class="keyword">case</span> i = &lt;-c:</div><div class="line">			<span class="keyword">break</span></div><div class="line">		<span class="keyword">case</span> i = &lt;-d:</div><div class="line">			<span class="keyword">break</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编程/" rel="tag">#编程</a>
+          
+            <a href="/tags/golang/" rel="tag">#golang</a>
+          
+            <a href="/tags/语法/" rel="tag">#语法</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/01/newton-method/" rel="next" title="牛顿法">
+                <i class="fa fa-chevron-left"></i> 牛顿法
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础类型"><span class="nav-number">1.</span> <span class="nav-text">基础类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高级类型"><span class="nav-number">2.</span> <span class="nav-text">高级类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义类型"><span class="nav-number">3.</span> <span class="nav-text">自定义类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#控制与方法"><span class="nav-number">4.</span> <span class="nav-text">控制与方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#错误处理"><span class="nav-number">5.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口"><span class="nav-number">6.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#反射"><span class="nav-number">7.</span> <span class="nav-text">反射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#I-O"><span class="nav-number">8.</span> <span class="nav-text">I/O</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#并发编程"><span class="nav-number">9.</span> <span class="nav-text">并发编程</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2017/06/14/golang-grammar/';
+      var disqus_title = "Golang：语法";
+      var disqus_url = 'http://yoursite.com/2017/06/14/golang-grammar/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
