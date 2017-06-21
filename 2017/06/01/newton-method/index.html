@@ -84,22 +84,31 @@
 
 
 
-<meta name="description" content="牛顿法及其衍生方法，在非线性优化问题上表现快速、可靠，在20世纪50年代开始蓬勃发展（又是一个古老的算法）
-原始牛顿法参考
-https://www.zhihu.com/question/19723347">
+<meta name="description" content="牛顿法及其衍生方法，在解决非线性优化问题表现快速、可靠：
+$$\min_{x} \quad f(x)$$
+将$f(x)$在$x_k$处做泰勒二级展开：
+$$\varphi(x) = f(x_k) + f’(x_k)(x - x_k) + \frac{1}{2}f’’(x_k)(x - x_k) ^ 2$$
+由于在极值处有$\varphi’(x) = 0$，于是有：
+$$\varphi’(x) =">
 <meta property="og:type" content="article">
 <meta property="og:title" content="牛顿法">
 <meta property="og:url" content="http://yoursite.com/2017/06/01/newton-method/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="牛顿法及其衍生方法，在非线性优化问题上表现快速、可靠，在20世纪50年代开始蓬勃发展（又是一个古老的算法）
-原始牛顿法参考
-https://www.zhihu.com/question/19723347">
-<meta property="og:updated_time" content="2017-06-04T06:54:47.000Z">
+<meta property="og:description" content="牛顿法及其衍生方法，在解决非线性优化问题表现快速、可靠：
+$$\min_{x} \quad f(x)$$
+将$f(x)$在$x_k$处做泰勒二级展开：
+$$\varphi(x) = f(x_k) + f’(x_k)(x - x_k) + \frac{1}{2}f’’(x_k)(x - x_k) ^ 2$$
+由于在极值处有$\varphi’(x) = 0$，于是有：
+$$\varphi’(x) =">
+<meta property="og:updated_time" content="2017-06-17T04:35:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="牛顿法">
-<meta name="twitter:description" content="牛顿法及其衍生方法，在非线性优化问题上表现快速、可靠，在20世纪50年代开始蓬勃发展（又是一个古老的算法）
-原始牛顿法参考
-https://www.zhihu.com/question/19723347">
+<meta name="twitter:description" content="牛顿法及其衍生方法，在解决非线性优化问题表现快速、可靠：
+$$\min_{x} \quad f(x)$$
+将$f(x)$在$x_k$处做泰勒二级展开：
+$$\varphi(x) = f(x_k) + f’(x_k)(x - x_k) + \frac{1}{2}f’’(x_k)(x - x_k) ^ 2$$
+由于在极值处有$\varphi’(x) = 0$，于是有：
+$$\varphi’(x) =">
 
 
 
@@ -338,9 +347,29 @@ https://www.zhihu.com/question/19723347">
       
 
       
-        <p>牛顿法及其衍生方法，在<strong>非线性优化问题</strong>上表现快速、可靠，在20世纪50年代开始蓬勃发展（<font color="lightcolor">又是一个古老的算法</font>）</p>
-<h1 id="原始牛顿法"><a href="#原始牛顿法" class="headerlink" title="原始牛顿法"></a>原始牛顿法</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+        <p>牛顿法及其衍生方法，在解决<font color="red">非线性优化问题</font>表现快速、可靠：</p>
+<p>$$<br>\min_{x} \quad f(x)<br>$$</p>
+<p>将$f(x)$在$x_k$处做<font color="red">泰勒二级展开</font>：</p>
+<p>$$<br>\varphi(x) = f(x_k) + f’(x_k)(x - x_k) + \frac{1}{2}f’’(x_k)(x - x_k) ^ 2<br>$$</p>
+<p>由于在极值处有$\varphi’(x) = 0$，于是有：</p>
+<p>$$<br>\varphi’(x) = f’(x_k) + f’’(x_k)(x - x_k) = 0<br>$$</p>
+<p>得到：</p>
+<p>$$<br>x_{k+1} = x = x_k - \frac{f’(x_k)}{f’’(x_k)}<br>$$</p>
+<p>于是便能通过迭代来逼近极值！对于维度大于1的情况有<font color="red">梯度向量</font>（记为$g_k$）：</p>
+<p>$$<br>g_k = f’ = \begin{bmatrix}<br>\frac{\partial f}{\partial x_1} \\<br>\frac{\partial f}{\partial x_2} \\<br>.\\<br>\frac{\partial f}{\partial x_n}<br>\end{bmatrix}<br>$$</p>
+<p><font color="red">Hessian矩阵</font>（记为$H_k$）：</p>
+<p>$$<br>H_k = f’’ = \begin{bmatrix}<br>\frac{\partial f}{\partial x_1 \partial x_1} &amp; \frac{\partial f}{\partial x_1 \partial x_2} &amp; \cdots &amp; \frac{\partial f}{\partial x_1 \partial x_n} \\<br>\frac{\partial f}{\partial x_2 \partial x_1} &amp; \frac{\partial f}{\partial x_2 \partial x_2} &amp; \cdots &amp; \frac{\partial f}{\partial x_2 \partial x_n}\\<br>\vdots &amp;  &amp; \ddots &amp; \vdots\\<br>\frac{\partial f}{\partial x_n \partial x_1} &amp; \frac{\partial f}{\partial x_n \partial x_2} &amp; \cdots &amp; \frac{\partial f}{\partial x_n \partial x_n}<br>\end{bmatrix}<br>$$</p>
+<p>同上可得到迭代格式为：</p>
+<p>$$<br>x_{k+1} = x_k - H_k^{-1}·g_k<br>$$</p>
+<p>需要注意，此时的$f(x)$需要满足的条件是：</p>
+<blockquote>
+<p>f(x)为凸函数，且二阶连续可微。</p>
+</blockquote>
+<p>迭代过程可能不收敛（<font color="lightgrey">步子太大可能扯到蛋</font>），可以考虑在正确的方向上找个最合适的步长：</p>
+<p>$$<br>\lambda_k = \arg \min f(x_k + \lambda_k)<br>$$</p>
+<h1 id="拟牛顿法"><a href="#拟牛顿法" class="headerlink" title="拟牛顿法"></a>拟牛顿法</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://www.zhihu.com/question/19723347" target="_blank" rel="external">https://www.zhihu.com/question/19723347</a></li>
+<li><a href="http://blog.csdn.net/itplus/article/details/21896453" target="_blank" rel="external">http://blog.csdn.net/itplus/article/details/21896453</a></li>
 </ul>
 
       
@@ -460,7 +489,7 @@ https://www.zhihu.com/question/19723347">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-count">27</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -477,7 +506,7 @@ https://www.zhihu.com/question/19723347">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -506,7 +535,7 @@ https://www.zhihu.com/question/19723347">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#原始牛顿法"><span class="nav-number">1.</span> <span class="nav-text">原始牛顿法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#拟牛顿法"><span class="nav-number">1.</span> <span class="nav-text">拟牛顿法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>

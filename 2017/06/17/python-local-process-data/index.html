@@ -1,0 +1,976 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="工具,Python,数据,pandas," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="大数据一般是在“云”上玩的，但“云”都是要钱的，而且数据上上下下的也比较麻烦。所以，在本地电脑上快速处理数据的技能还是要的。
+pandas在比赛中学到的一个工具，本地可以在亿级别的数据上进行聚合等操作。内部的数据包括：
+
+Series：一维数组，每个元素有一个标签
+DataFrame：二维表格，可以看做Series的集合
+Panel：三维数据
+
+数据的初始化我们可以通过构造函数来初始化，从下面的代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Python在本地处理数据">
+<meta property="og:url" content="http://yoursite.com/2017/06/17/python-local-process-data/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="大数据一般是在“云”上玩的，但“云”都是要钱的，而且数据上上下下的也比较麻烦。所以，在本地电脑上快速处理数据的技能还是要的。
+pandas在比赛中学到的一个工具，本地可以在亿级别的数据上进行聚合等操作。内部的数据包括：
+
+Series：一维数组，每个元素有一个标签
+DataFrame：二维表格，可以看做Series的集合
+Panel：三维数据
+
+数据的初始化我们可以通过构造函数来初始化，从下面的代">
+<meta property="og:updated_time" content="2017-06-21T13:23:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Python在本地处理数据">
+<meta name="twitter:description" content="大数据一般是在“云”上玩的，但“云”都是要钱的，而且数据上上下下的也比较麻烦。所以，在本地电脑上快速处理数据的技能还是要的。
+pandas在比赛中学到的一个工具，本地可以在亿级别的数据上进行聚合等操作。内部的数据包括：
+
+Series：一维数组，每个元素有一个标签
+DataFrame：二维表格，可以看做Series的集合
+Panel：三维数据
+
+数据的初始化我们可以通过构造函数来初始化，从下面的代">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/17/python-local-process-data/"/>
+
+
+  <title> 使用Python在本地处理数据 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用Python在本地处理数据
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-17T18:56:34+08:00" content="2017-06-17">
+              2017-06-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/06/17/python-local-process-data/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/06/17/python-local-process-data/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/06/17/python-local-process-data/" class="leancloud_visitors" data-flag-title="使用Python在本地处理数据">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>大数据一般是在“云”上玩的，但“云”都是要钱的，而且数据上上下下的也比较麻烦。所以，在本地电脑上快速处理数据的技能还是要的。</p>
+<h1 id="pandas"><a href="#pandas" class="headerlink" title="pandas"></a>pandas</h1><p>在比赛中学到的一个工具，本地可以在亿级别的数据上进行聚合等操作。内部的数据包括：</p>
+<ul>
+<li><font color="red">Series</font>：一维数组，每个元素有一个标签</li>
+<li><font color="red">DataFrame</font>：二维表格，可以看做Series的集合</li>
+<li><font color="red">Panel</font>：三维数据</li>
+</ul>
+<h2 id="数据的初始化"><a href="#数据的初始化" class="headerlink" title="数据的初始化"></a>数据的初始化</h2><p>我们可以通过构造函数来初始化，从下面的代码中可以想象得到数据是样子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> pandas <span class="keyword">import</span> Series, DataFrame</div><div class="line"></div><div class="line">s = Series(data=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], index=[<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>])</div><div class="line"></div><div class="line">df = DataFrame(</div><div class="line">    data=[</div><div class="line">        [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</div><div class="line">        [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>],</div><div class="line">        [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>]</div><div class="line">    ],</div><div class="line">    index=[<span class="string">'i1'</span>, <span class="string">'i2'</span>, <span class="string">'i3'</span>],</div><div class="line">    columns=[<span class="string">'c1'</span>, <span class="string">'c2'</span>, <span class="string">'c3'</span>]</div><div class="line">)</div></pre></td></tr></table></figure>
+<p>如果源数据是格式比较好的CSV（<font color="lightgrey">或者是自己加工生成的中间数据</font>），可以直接读取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">df = pandas.read_csv(<span class="string">"../volume.csv"</span>, header=<span class="number">0</span>)</div></pre></td></tr></table></figure>
+<h2 id="数据的更新"><a href="#数据的更新" class="headerlink" title="数据的更新"></a>数据的更新</h2><h3 id="更新结构"><a href="#更新结构" class="headerlink" title="更新结构"></a>更新结构</h3><p>在定义完成之后可以对行、列进行增减（<font color="lightgrey">增减数据、修改结构</font>）：</p>
+<ul>
+<li>增加列：<ul>
+<li><code>df.insert(3, &#39;new_column&#39;, [4, 7, 10])</code></li>
+<li><code>df[&#39;c4&#39;] = [4, 7, 10]</code></li>
+</ul>
+</li>
+<li>删除列<ul>
+<li><code>df.pop(&#39;c1&#39;)</code></li>
+<li><code>df = df.drop(&#39;c1&#39;, axis=1)</code></li>
+</ul>
+</li>
+<li>增加行：<font color="lightgrey">一般不要动态的增加行，据说新能不高</font><ul>
+<li><code>df.loc[&#39;i4&#39;] = [10, 11, 12]</code></li>
+<li><code>df.loc[&#39;i4&#39;] = {&#39;c1&#39;: 10, &#39;c2&#39;: 11, &#39;c3&#39;: 12}</code></li>
+</ul>
+</li>
+<li>删除行：<ul>
+<li><code>df = df.drop(&#39;i1&#39;, axis=0)</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h3><p>我们可以精确修改单个位置的值：</p>
+<ul>
+<li><code>df[&#39;c1&#39;][&#39;i1&#39;] = 77</code></li>
+<li><code>df.ix[1, 2] = 66</code></li>
+</ul>
+<h3 id="合并数据"><a href="#合并数据" class="headerlink" title="合并数据"></a>合并数据</h3><p>数据很多时候分布在不同的DataFrame中，要使用需要将他们进行合并，第一种方式是<font color="color">concat</font>（<font color="lightgrey">基础方法</font>）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"></div><div class="line">df1 = pd.DataFrame(&#123;<span class="string">'A'</span>: [<span class="string">'A0'</span>, <span class="string">'A1'</span>, <span class="string">'A2'</span>, <span class="string">'A3'</span>],</div><div class="line">                    <span class="string">'B'</span>: [<span class="string">'B0'</span>, <span class="string">'B1'</span>, <span class="string">'B2'</span>, <span class="string">'B3'</span>],</div><div class="line">                    <span class="string">'C'</span>: [<span class="string">'C0'</span>, <span class="string">'C1'</span>, <span class="string">'C2'</span>, <span class="string">'C3'</span>],</div><div class="line">                    <span class="string">'D'</span>: [<span class="string">'D0'</span>, <span class="string">'D1'</span>, <span class="string">'D2'</span>, <span class="string">'D3'</span>]&#125;,</div><div class="line">                   index=[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</div><div class="line"></div><div class="line">df2 = pd.DataFrame(&#123;<span class="string">'A'</span>: [<span class="string">'A4'</span>, <span class="string">'A5'</span>, <span class="string">'A6'</span>, <span class="string">'A7'</span>],</div><div class="line">                    <span class="string">'B'</span>: [<span class="string">'B4'</span>, <span class="string">'B5'</span>, <span class="string">'B6'</span>, <span class="string">'B7'</span>],</div><div class="line">                    <span class="string">'C'</span>: [<span class="string">'C4'</span>, <span class="string">'C5'</span>, <span class="string">'C6'</span>, <span class="string">'C7'</span>],</div><div class="line">                    <span class="string">'D'</span>: [<span class="string">'D4'</span>, <span class="string">'D5'</span>, <span class="string">'D6'</span>, <span class="string">'D7'</span>]&#125;,</div><div class="line">                   index=[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>])</div><div class="line"></div><div class="line">result = pd.concat([df1, df2])</div></pre></td></tr></table></figure>
+<p>合并完的结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">    A   B   C   D</div><div class="line">0  A0  B0  C0  D0</div><div class="line">1  A1  B1  C1  D1</div><div class="line">2  A2  B2  C2  D2</div><div class="line">3  A3  B3  C3  D3</div><div class="line">4  A4  B4  C4  D4</div><div class="line">5  A5  B5  C5  D5</div><div class="line">6  A6  B6  C6  D6</div><div class="line">7  A7  B7  C7  D7</div></pre></td></tr></table></figure>
+<p>其参数含义如下：</p>
+<ul>
+<li><strong>objs</strong>：合并的数据（Series、DataFrame）</li>
+<li><strong>axis</strong>：合并轴方向，行(0)、列(1)</li>
+<li><strong>join</strong>：关联类型（inner、outer）</li>
+<li><strong>join_axes</strong>：结果行，eg:<code>pd.concat([df1, df2], axis=1, join_axes=[pd.Int64Index([1, 2, 3])])</code></li>
+<li><strong>ignore_index</strong>：是否忽略objs中传入的索引</li>
+<li><strong>keys</strong>：来自不同表的index，每个表一个（ignore_index=True时不管用）</li>
+<li><strong>levels</strong>：不同层次的索引</li>
+<li><strong>names</strong>：不同层次的索引的名字</li>
+<li><strong>verify_integrity</strong>：检查是否包含重复项（有一定的代价）</li>
+<li><strong>copy</strong>：是否赋值数据</li>
+</ul>
+<p>另一个相对简化点的操作是<font color="red">append</font>（<font color="lightgrey">简化版，好像没啥特别的</font>）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">result = df1.append(df2)</div></pre></td></tr></table></figure>
+<p>接着来看重点方法<font color="red">merge</font>（<font color="lightgrey">将两个表的数据进行融合</font>）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"></div><div class="line">left = pd.DataFrame(&#123;<span class="string">'key'</span>: [<span class="string">'K0'</span>, <span class="string">'K1'</span>, <span class="string">'K2'</span>, <span class="string">'K3'</span>],</div><div class="line">                     <span class="string">'A'</span>: [<span class="string">'A0'</span>, <span class="string">'A1'</span>, <span class="string">'A2'</span>, <span class="string">'A3'</span>],</div><div class="line">                     <span class="string">'B'</span>: [<span class="string">'B0'</span>, <span class="string">'B1'</span>, <span class="string">'B2'</span>, <span class="string">'B3'</span>]&#125;)</div><div class="line"></div><div class="line">right = pd.DataFrame(&#123;<span class="string">'key'</span>: [<span class="string">'K0'</span>, <span class="string">'K1'</span>, <span class="string">'K2'</span>, <span class="string">'K3'</span>],</div><div class="line">                      <span class="string">'C'</span>: [<span class="string">'C0'</span>, <span class="string">'C1'</span>, <span class="string">'C2'</span>, <span class="string">'C3'</span>],</div><div class="line">                      <span class="string">'D'</span>: [<span class="string">'D0'</span>, <span class="string">'D1'</span>, <span class="string">'D2'</span>, <span class="string">'D3'</span>]&#125;)</div><div class="line"></div><div class="line">result = pd.merge(left, right, on=<span class="string">'key'</span>)</div><div class="line"></div><div class="line">print(result)</div></pre></td></tr></table></figure>
+<p>结果为（<font color="lightgrey">注意观察与concat不一样的地方</font>）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">    A   B key   C   D</div><div class="line">0  A0  B0  K0  C0  D0</div><div class="line">1  A1  B1  K1  C1  D1</div><div class="line">2  A2  B2  K2  C2  D2</div><div class="line">3  A3  B3  K3  C3  D3</div></pre></td></tr></table></figure>
+<p>方法的参数有：</p>
+<ul>
+<li><strong>left、right</strong>：将要进行关联的两个表</li>
+<li><strong>how</strong>：关联方式（left、right、inner、outer）</li>
+<li><strong>on</strong>：实现关联的列，不传应该是找相同列名</li>
+<li><strong>left_on、right_on</strong>：分别为left、right的关联列，在列名不同时使用</li>
+<li><strong>left_index、right_index</strong>：是否用索引来关联</li>
+<li><strong>sort</strong>：排序</li>
+<li><strong>suffixes</strong>：后缀</li>
+<li><strong>copy</strong>：是否复制数据</li>
+</ul>
+<p>对应的简化版本为<font color="red">join</font>方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"></div><div class="line">left = pd.DataFrame(&#123;<span class="string">'A'</span>: [<span class="string">'A0'</span>, <span class="string">'A1'</span>, <span class="string">'A2'</span>, <span class="string">'A3'</span>],</div><div class="line">                     <span class="string">'B'</span>: [<span class="string">'B0'</span>, <span class="string">'B1'</span>, <span class="string">'B2'</span>, <span class="string">'B3'</span>]&#125;,</div><div class="line">                    index=[<span class="string">'K0'</span>, <span class="string">'K1'</span>, <span class="string">'K2'</span>, <span class="string">'K3'</span>])</div><div class="line"></div><div class="line">right = pd.DataFrame(&#123;<span class="string">'C'</span>: [<span class="string">'C0'</span>, <span class="string">'C1'</span>, <span class="string">'C2'</span>, <span class="string">'C3'</span>],</div><div class="line">                      <span class="string">'D'</span>: [<span class="string">'D0'</span>, <span class="string">'D1'</span>, <span class="string">'D2'</span>, <span class="string">'D3'</span>]&#125;,</div><div class="line">                     index=[<span class="string">'K0'</span>, <span class="string">'K1'</span>, <span class="string">'K2'</span>, <span class="string">'K3'</span>])</div><div class="line"></div><div class="line">result = left.join(right)</div><div class="line"></div><div class="line">print(result)</div></pre></td></tr></table></figure>
+<p>输出为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">     A   B   C   D</div><div class="line">K0  A0  B0  C0  D0</div><div class="line">K1  A1  B1  C1  D1</div><div class="line">K2  A2  B2  C2  D2</div><div class="line">K3  A3  B3  C3  D3</div></pre></td></tr></table></figure>
+<h2 id="数据的查询和分析"><a href="#数据的查询和分析" class="headerlink" title="数据的查询和分析"></a>数据的查询和分析</h2><h3 id="基本查询"><a href="#基本查询" class="headerlink" title="基本查询"></a>基本查询</h3><p>精确查看单个位置数据的方法：</p>
+<ul>
+<li><code>df[&#39;c1&#39;][&#39;i1&#39;]</code></li>
+<li><code>df.loc[&#39;i1&#39;][&#39;c1&#39;]</code>（<font color="lightgrey">先行后列</font>）</li>
+<li><code>df.iloc[1]</code>（<font color="lightgrey">下标操作</font>）</li>
+<li><code>df.ix[&#39;i1&#39;][1]</code>或<code>df.ix[0, 2]</code>（<font color="lightgrey">随意使用下标或名称</font>）</li>
+</ul>
+<p>通过切片的操作批量取出数据：</p>
+<ul>
+<li><code>df.loc[&#39;i1&#39;:&#39;i2&#39;, [&#39;c1&#39;, &#39;c2&#39;]]</code></li>
+<li><code>df.iloc[1:3, [1, 2]]</code></li>
+<li><code>df.ix[1:3, 0:2]</code></li>
+</ul>
+<p>查看某行或某列：</p>
+<ul>
+<li>行：<code>df.loc[&#39;i1&#39;]</code></li>
+<li>列：<code>df[&#39;c1&#39;]</code></li>
+</ul>
+<h3 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h3><p>分组（<font color="lightgrey">GroupBy</font>）是最最基本的一个分析手段，看个例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line">df = pd.DataFrame(&#123;<span class="string">'A'</span>: [<span class="string">'foo'</span>, <span class="string">'bar'</span>, <span class="string">'foo'</span>, <span class="string">'bar'</span>, <span class="string">'foo'</span>, <span class="string">'bar'</span>, <span class="string">'foo'</span>, <span class="string">'foo'</span>],</div><div class="line">                   <span class="string">'B'</span>: [<span class="string">'one'</span>, <span class="string">'one'</span>, <span class="string">'two'</span>, <span class="string">'three'</span>, <span class="string">'two'</span>, <span class="string">'two'</span>, <span class="string">'one'</span>, <span class="string">'three'</span>],</div><div class="line">                   <span class="string">'C'</span>: np.random.randn(<span class="number">8</span>),</div><div class="line">                   <span class="string">'D'</span>: np.random.randn(<span class="number">8</span>)&#125;)</div><div class="line"></div><div class="line">result = df.groupby([<span class="string">'A'</span>])</div><div class="line"></div><div class="line">print(result.get_group(<span class="string">'foo'</span>))</div></pre></td></tr></table></figure>
+<p>其他分组形式：</p>
+<ul>
+<li><code>df.groupby(&#39;A&#39;)</code></li>
+<li><code>df.groupby([&#39;A&#39;, &#39;B&#39;])</code></li>
+<li><code>df.groupby(group_func, axis=1)</code></li>
+<li><code>df.groupby(level=0)</code></li>
+<li><code>df.groupby([pd.Grouper(level=0), &#39;A&#39;])</code></li>
+</ul>
+<p>可以对各组进行遍历：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> name, group <span class="keyword">in</span> result:</div><div class="line">    print(name)</div><div class="line">    print(group)</div></pre></td></tr></table></figure>
+<p>对分组的结果可以过滤：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">df.groupby(<span class="string">'A'</span>).B.filter(<span class="keyword">lambda</span> x : len(x) &gt; <span class="number">1</span>)</div></pre></td></tr></table></figure>
+<p>进一步对各个分组进行计算（<font color="lightgrey">结果太直观，就不写了</font>）：</p>
+<ul>
+<li><code>df.groupby([&#39;A&#39;, &#39;B&#39;]).sum()</code></li>
+<li><code>df.groupby([&#39;A&#39;, &#39;B&#39;]).sum().reset_index()</code></li>
+<li><code>df.groupby([&#39;A&#39;, &#39;B&#39;]).aggregate(np.sum)</code></li>
+<li><code>df.groupby([&#39;A&#39;, &#39;B&#39;]).agg(np.sum)</code></li>
+<li><code>df.groupby([&#39;A&#39;, &#39;B&#39;]).agg([np.sum, np.mean])</code></li>
+<li><code>df.groupby([&#39;A&#39;, &#39;B&#39;]).agg([np.sum, np.mean]).rename(columns={&#39;sum&#39;: &#39;s&#39;, &#39;mean&#39;: &#39;m&#39;})</code></li>
+<li><code>df.groupby([&#39;A&#39;, &#39;B&#39;]).agg({&#39;C&#39;: np.sum, &#39;D&#39;: np.mean})</code></li>
+<li><code>df.groupby([&#39;A&#39;, &#39;B&#39;]).agg({&#39;C&#39;: &#39;sum&#39;, &#39;D&#39;: &#39;mean&#39;})</code></li>
+</ul>
+<p>利用<font color="red">transform</font>（<font color="lightgrey">类似的还有apply</font>）可以对各个分组分别计算：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line">df = pd.DataFrame(data=&#123;</div><div class="line">    <span class="string">'A'</span>: [<span class="number">1</span>, <span class="number">1</span>, <span class="number">3</span>],</div><div class="line">    <span class="string">'B'</span>: [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>],</div><div class="line">    <span class="string">'C'</span>: [<span class="number">7</span>, np.nan, <span class="number">9</span>]&#125;)</div><div class="line"></div><div class="line">print(df.groupby(<span class="string">'A'</span>)[<span class="string">'B'</span>].transform(<span class="keyword">lambda</span> x : x - x.mean()))</div></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">0   -0.5</div><div class="line">1    0.5</div><div class="line">2    0.0</div><div class="line">Name: B, dtype: float64</div></pre></td></tr></table></figure>
+<p>类似的，可以在分组上使用窗口函数：</p>
+<ul>
+<li><a href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.rolling.html" target="_blank" rel="external">rolling</a></li>
+<li><a href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.resample.html" target="_blank" rel="external">resample</a></li>
+<li><a href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.expanding.html" target="_blank" rel="external">expanding</a></li>
+</ul>
+<h3 id="条件过滤"><a href="#条件过滤" class="headerlink" title="条件过滤"></a>条件过滤</h3><p>用一些常用的构造方式，可以有类似SQL的开发效率🤗：</p>
+<ul>
+<li><code>tips[tips[&#39;time&#39;] == &#39;Dinner&#39;].head(5)</code></li>
+<li><code>tips[(tips[&#39;time&#39;] == &#39;Dinner&#39;) &amp; (tips[&#39;tip&#39;] &gt; 5.00)]</code></li>
+<li><code>tips[(tips[&#39;size&#39;] &gt;= 5) | (tips[&#39;total_bill&#39;] &gt; 45)]</code></li>
+<li><code>frame[frame[&#39;col2&#39;].isnull()]</code></li>
+<li><code>frame[frame[&#39;col1&#39;].notnull()]</code></li>
+</ul>
+<p>最后，如果想图形化看在PyCharm里面需要搞个<code>plt.show()</code>（<font color="lightgrey">其他的IDE并不清楚</font>）。</p>
+<h1 id="numpy"><a href="#numpy" class="headerlink" title="numpy"></a>numpy</h1><p>比较早接触的numpy，总体上来看处理数据比自带类型方便些：</p>
+<ul>
+<li><code>np.array([[1, 2, 3, 4],[4, 5, 6, 7], [7, 8, 9, 10]])</code></li>
+<li><code>np.array((5, 6, 7, 8))</code></li>
+</ul>
+<p>主要集中在数组、矩阵的处理上！是很多工具的基础。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://pandas.pydata.org/pandas-docs/stable/" target="_blank" rel="external">http://pandas.pydata.org/pandas-docs/stable/</a></li>
+<li><a href="http://www.numpy.org/" target="_blank" rel="external">http://www.numpy.org/</a></li>
+<li><a href="http://old.sebug.net/paper/books/scipydoc/numpy_intro.html#id9" target="_blank" rel="external">http://old.sebug.net/paper/books/scipydoc/numpy_intro.html#id9</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/工具/" rel="tag">#工具</a>
+          
+            <a href="/tags/Python/" rel="tag">#Python</a>
+          
+            <a href="/tags/数据/" rel="tag">#数据</a>
+          
+            <a href="/tags/pandas/" rel="tag">#pandas</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/14/golang-grammar/" rel="next" title="Golang：语法">
+                <i class="fa fa-chevron-left"></i> Golang：语法
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#pandas"><span class="nav-number">1.</span> <span class="nav-text">pandas</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据的初始化"><span class="nav-number">1.1.</span> <span class="nav-text">数据的初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据的更新"><span class="nav-number">1.2.</span> <span class="nav-text">数据的更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#更新结构"><span class="nav-number">1.2.1.</span> <span class="nav-text">更新结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新数据"><span class="nav-number">1.2.2.</span> <span class="nav-text">更新数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#合并数据"><span class="nav-number">1.2.3.</span> <span class="nav-text">合并数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据的查询和分析"><span class="nav-number">1.3.</span> <span class="nav-text">数据的查询和分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本查询"><span class="nav-number">1.3.1.</span> <span class="nav-text">基本查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分组"><span class="nav-number">1.3.2.</span> <span class="nav-text">分组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#条件过滤"><span class="nav-number">1.3.3.</span> <span class="nav-text">条件过滤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#numpy"><span class="nav-number">2.</span> <span class="nav-text">numpy</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2017/06/17/python-local-process-data/';
+      var disqus_title = "使用Python在本地处理数据";
+      var disqus_url = 'http://yoursite.com/2017/06/17/python-local-process-data/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
