@@ -100,7 +100,7 @@ $$\min_{x} \quad f(x)$$
 $$\varphi(x) = f(x_k) + f’(x_k)(x - x_k) + \frac{1}{2}f’’(x_k)(x - x_k) ^ 2$$
 由于在极值处有$\varphi’(x) = 0$，于是有：
 $$\varphi’(x) =">
-<meta property="og:updated_time" content="2017-06-17T04:35:25.000Z">
+<meta property="og:updated_time" content="2017-06-24T14:23:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="牛顿法">
 <meta name="twitter:description" content="牛顿法及其衍生方法，在解决非线性优化问题表现快速、可靠：
@@ -363,11 +363,93 @@ $$\varphi’(x) =">
 <p>$$<br>x_{k+1} = x_k - H_k^{-1}·g_k<br>$$</p>
 <p>需要注意，此时的$f(x)$需要满足的条件是：</p>
 <blockquote>
-<p>f(x)为凸函数，且二阶连续可微。</p>
+<p>f(x)为凸函数，且二阶连续可微（<font color="red">限制太严格</font>）。</p>
 </blockquote>
 <p>迭代过程可能不收敛（<font color="lightgrey">步子太大可能扯到蛋</font>），可以考虑在正确的方向上找个最合适的步长：</p>
 <p>$$<br>\lambda_k = \arg \min f(x_k + \lambda_k)<br>$$</p>
-<h1 id="拟牛顿法"><a href="#拟牛顿法" class="headerlink" title="拟牛顿法"></a>拟牛顿法</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<p>整体的算法步骤为：</p>
+<ol>
+<li>给定初始值$x_0$和精度阈值$\epsilon$，设$k=0$</li>
+<li>计算$g_k$和$H_k$（<font color="red">计算量较大</font>）</li>
+<li>若$\|g_k\| &lt; = \epsilon$则停止迭代，否则确定搜索方向$d_k = -H_k^{-1}·g_k$（<font color="red">计算逆阵计算量也比较大</font>）</li>
+<li>计算最优步长$\lambda_k$，得到$x_{k+1} = x_k + \lambda_k d_k$</li>
+<li>令$k=k+1$，转2</li>
+</ol>
+<h1 id="拟牛顿法"><a href="#拟牛顿法" class="headerlink" title="拟牛顿法"></a>拟牛顿法</h1><p>精确地计算比较耗时，也许用不那么精确的计算可能就减少耗时，这就是“拟牛顿法”的思路。但是也<font color="red">不能太不精确</font>，将$f(x)$在$x_{k+1}$处二级泰勒展开：</p>
+<p>$$<br>f(x) \approx f(x_{k+1}) + f’(x_{k+1}) · (x-x_{k+1}) + \frac{1}{2} · (x - x_{k+1})^T · f’’(x_{k+1}) · (x - x_{k+1})<br>$$</p>
+<p>得到：</p>
+<p>$$<br>f’(x) \approx f’(x_{k+1}) + H_{k+1} · (x - x_{k+1})<br>$$</p>
+<p>带入$x = x_{k}$得到：</p>
+<p>$$<br>g_{k+1} - g_{k} \approx H_{k+1} · (x_{k+1} -  x_{k})<br>$$</p>
+<p>假设：</p>
+<p>$$<br>s_k = x_{k+1} - x_{k}，y_k = g_{k+1} - g_{k}<br>$$</p>
+<p>得到拟牛顿条件（<font color="red">想办法构造一个矩阵能满足条件即可</font>）：</p>
+<p>$$<br>s_k \approx H_{k+1}^{-1} · y_k，y_k \approx H_{k+1} · s_k<br>$$</p>
+<p>接下来看如何构造。</p>
+<h1 id="DFP"><a href="#DFP" class="headerlink" title="DFP"></a>DFP</h1><p>该算法由William C.<font color="red">D</font>avidon、Roger <font color="red">F</font>letcher、Michael J.D.<font color="red">P</font>owell发明，设$D_k = H_k^{-1}$，设法通过迭代计算：</p>
+<p>$$<br>D_{k+1} = D_{k} + \Delta D_{k}<br>$$</p>
+<p>假设（<font color="lightgrey">这TM怎么想到的？考虑对称性？</font>）：</p>
+<p>$$<br>\Delta D_{k} = \alpha u u^T + \beta v v^T<br>$$</p>
+<p>将其代入“拟牛顿条件”得到：</p>
+<p>$$<br>\begin{align}<br>s_k &amp; = D_k · y_k + \alpha u u^T y_k + \beta v v^T y_k \\<br>&amp; = D_k · y_k + u (\alpha u^T y_k) + v (\beta v^T y_k) \\<br>&amp; = D_k · y_k + (\alpha u^T y_k) · u + (\beta v^T y_k) · v<br>\end{align}<br>$$</p>
+<p>开始减少参数，令$\alpha u^T y_k = \beta v^T y_k = 1$得到：</p>
+<p>$$<br>u - v = s_k - D_k · y_k<br>$$</p>
+<p>直接取：</p>
+<p>$$<br>u = s_k，v = D_k · y_k<br>$$</p>
+<p>得到：</p>
+<p>$$<br>\alpha = \frac{1}{s_k^T y_k}，\beta = - \frac{1}{y_k^T D_k y_k}<br>$$</p>
+<p>于是：</p>
+<p>$$<br>\Delta D_{k} = \frac{s_k s_k^T}{s_k^T y_k} - \frac{D_k y_k y_k^T D_k}{y_k^T D_k y_k}<br>$$</p>
+<p>算法步骤：</p>
+<ol>
+<li>给定初始值$x_0$和精度阈值$\epsilon$，设$D_0 = I, k=0$</li>
+<li>确定搜索方向$d_k = -D_k · g_k$</li>
+<li>计算步长$\lambda_k$，令$s_k=\lambda_k d_k, x_{k+1} = x_k + s_k$</li>
+<li>若$\|g_{k+1}\| &lt; \epsilon$，则算法结束</li>
+<li>计算$y_k = g_{k+1} - g_{k}$</li>
+<li>计算$D_{k+1} = D_{k} + \Delta D_{k}$</li>
+<li>令$k = k + 1$，转2</li>
+</ol>
+<h1 id="BFGS"><a href="#BFGS" class="headerlink" title="BFGS"></a>BFGS</h1><p>该算法由<font color="red">B</font>royden、<font color="red">F</font>letcher、<font color="red">G</font>oldfarb、<font color="red">S</font>hanno发明，设迭代式为：</p>
+<p>$$<br>H_{k+1} = H_{k} + \Delta H_{k}<br>$$</p>
+<p>设：</p>
+<p>$$<br>\Delta H_{k} = \alpha u u^T + \beta v v^T<br>$$</p>
+<p>于是得到：</p>
+<p>$$<br>y_k = H_k s_k + (\alpha u^T s_k) · u + (\beta v^T s_k) · v<br>$$</p>
+<p>令$\alpha u^T s_k = 1,\beta v^T s_k = -1, u = y_k, v = H_k s_k$：</p>
+<p>$$<br>\Delta H_k = \frac{y_k y_k^T}{y_k^T s_k} - \frac{H_k s_k s_k^T H_k}{s_k^T H_k s_k}<br>$$</p>
+<p>算法步骤为：</p>
+<ol>
+<li>给定初值$x_0$和精度阈值$\epsilon$，令$H_0 = I,k=0$</li>
+<li>确定搜索方向$d_k = - B^{-1}_k · g_k$</li>
+<li>计算步长$\lambda_k$，令$s_k = \lambda_k d_k,x_{k+1} = x_k + s_k$</li>
+<li>若$\|g_k\| &lt; \epsilon$，则算法结束</li>
+<li>计算$y_k = g_{k+1} - g_{k}$</li>
+<li>计算$H_{k+1} = H_{k} + \Delta H_{k}$</li>
+<li>令$k = k + 1$，转2</li>
+</ol>
+<p>根据<font color="red">Sherman-Morrison</font>公式：</p>
+<blockquote>
+<p>设$A \in \mathbb{R}^N$为非奇异方阵，$u,v \in \mathbb{R}^n$，若$1 + v^T A^{-1} u \neq 0$，则：<br>$$<br>(A + u v^T)^{-1} = A^{-1} + \frac{A^{-1} u v^T A^{-1}}{1 + v^T A^{-1} u}<br>$$</p>
+</blockquote>
+<p>于是得到新的算法步骤为（<font color="lightgrey">与DFP唯一不同的就是迭代公式</font>）：</p>
+<ol>
+<li>给定初值$x_0$和精度阈值$\epsilon$，令$D_0 = I,k=0$</li>
+<li>确定搜索方向$d_k = - D_k · g_k$</li>
+<li>计算步长$\lambda_k$，令$s_k = \lambda_k d_k,x_{k+1} = x_k + s_k$</li>
+<li>若$\|g_k\| &lt; \epsilon$，则算法结束</li>
+<li>计算$y_k = g_{k+1} - g_{k}$</li>
+<li>计算$D_{k+1} =\left ( I - \frac{s_k\ s_k^T}{y_k^T\ s_k} \right ) · D_{k} · \left (I - \frac{y_k\ s_k^T}{y_k^T\ s_k} \right ) + \frac{s_k\ s_k^T}{y_k^T\ s_k}$</li>
+<li>令$k = k + 1$，转2</li>
+</ol>
+<h1 id="L-BFGS"><a href="#L-BFGS" class="headerlink" title="L-BFGS"></a>L-BFGS</h1><p>维度比较多时，存储矩阵等很耗内存，考虑迭代公式：</p>
+<p>$$<br>D_{k+1} =\left ( I - \frac{s_k\ s_k^T}{y_k^T\ s_k} \right ) · D_{k} · \left (I - \frac{y_k\ s_k^T}{y_k^T\ s_k} \right ) + \frac{s_k\ s_k^T}{y_k^T\ s_k}<br>$$</p>
+<p>令$\rho_k = \frac{1}{y_k^T\ s_k},V_k = I - \rho_k y_k s_k^T$：</p>
+<p>$$<br>D_{k+1} = V_k^T D_k V_k + \rho_k s_k s_k^T<br>$$</p>
+<p>于是有：</p>
+<p>$$<br>\begin{align}<br>D_k &amp; = \quad (V_{k}^T V_{k-1}^T … V_{1}^T V_{0}^T)\times D_0 \times (V_0 V_1 … V_{k-1} V_k) \\<br>&amp; + \quad (V_{k}^T V_{k-1}^T … V_{2}^T V_{1}^T) \times (\rho_0 s_0 s_0^T) \times (V_1 V_2 … V_{k-1} V_k) \\<br>&amp; + \quad (V_{k}^T V_{k-1}^T … V_{3}^T V_{2}^T) \times (\rho_1 s_1 s_1^T) \times (V_2 V_3 … V_{k-1} V_k) \\<br>&amp; + \quad … \\<br>&amp; + \quad \rho_k s_k s_k^T<br>\end{align}<br>$$</p>
+<p>这样通过保存$s_i,y_i$就能动态地获取到$D_k$了。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://www.zhihu.com/question/19723347" target="_blank" rel="external">https://www.zhihu.com/question/19723347</a></li>
 <li><a href="http://blog.csdn.net/itplus/article/details/21896453" target="_blank" rel="external">http://blog.csdn.net/itplus/article/details/21896453</a></li>
 </ul>
@@ -535,7 +617,7 @@ $$\varphi’(x) =">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#拟牛顿法"><span class="nav-number">1.</span> <span class="nav-text">拟牛顿法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#拟牛顿法"><span class="nav-number">1.</span> <span class="nav-text">拟牛顿法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DFP"><span class="nav-number">2.</span> <span class="nav-text">DFP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BFGS"><span class="nav-number">3.</span> <span class="nav-text">BFGS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#L-BFGS"><span class="nav-number">4.</span> <span class="nav-text">L-BFGS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
