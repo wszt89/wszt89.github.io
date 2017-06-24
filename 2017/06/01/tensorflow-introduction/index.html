@@ -99,7 +99,7 @@
 12345import tensorflow as tfhello = tf.constant(&apos;Hello, TensorFlow!&apos;)sess = tf.Session()print(sess.run(hello))
 运行OK，但是会有警告信息（一些电脑上有">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/tensorflow-introduction/0.png">
-<meta property="og:updated_time" content="2017-06-13T15:13:55.000Z">
+<meta property="og:updated_time" content="2017-06-24T09:15:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TensorFlow入门">
 <meta name="twitter:description" content="安装在MAC上用的是Python3，直接用pip3安装：
@@ -381,16 +381,34 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"><span class="comment"># 构造一个维度的线性回归模型</span></div><div class="line">features = [tf.contrib.layers.real_valued_column(<span class="string">"x"</span>, dimension=<span class="number">1</span>)]</div><div class="line">estimator = tf.contrib.learn.LinearRegressor(feature_columns=features)</div><div class="line"></div><div class="line"><span class="comment"># 训练数据（每次4个，给1000次）</span></div><div class="line">x = np.array([<span class="number">1.</span>, <span class="number">2.</span>, <span class="number">3.</span>, <span class="number">4.</span>])</div><div class="line">y = np.array([<span class="number">0.</span>, <span class="number">-1.</span>, <span class="number">-2.</span>, <span class="number">-3.</span>])</div><div class="line">input_fn = tf.contrib.learn.io.numpy_input_fn(&#123;<span class="string">"x"</span>: x&#125;, y, batch_size=<span class="number">4</span>, num_epochs=<span class="number">1000</span>)</div><div class="line"></div><div class="line"><span class="comment"># 优化1000次</span></div><div class="line">estimator.fit(input_fn=input_fn, steps=<span class="number">1000</span>)</div><div class="line"></div><div class="line"><span class="comment"># 计算在数据上的误差</span></div><div class="line">print(estimator.evaluate(input_fn=input_fn)) <span class="comment"># &#123;'loss': 5.1855992e-08, 'global_step': 1000&#125;</span></div></pre></td></tr></table></figure>
 <p>如果已有的模型不能满足需求，我们也可以利用这套框架来训练自定义的模型（<font color="lightgrey">仅仅是需要自己定义一个模型，其他的都差不多</font>）：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># 自定义模型</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">model</span><span class="params">(features, labels, mode)</span>:</span></div><div class="line">    <span class="comment"># 根据特征构建模型</span></div><div class="line">    W = tf.get_variable(<span class="string">"W"</span>, [<span class="number">1</span>], dtype=tf.float64)</div><div class="line">    b = tf.get_variable(<span class="string">"b"</span>, [<span class="number">1</span>], dtype=tf.float64)</div><div class="line">    y = W * features[<span class="string">'x'</span>] + b</div><div class="line"></div><div class="line">    <span class="comment"># 损失函数</span></div><div class="line">    loss = tf.reduce_sum(tf.square(y - labels))</div><div class="line">    global_step = tf.train.get_global_step()</div><div class="line">    optimizer = tf.train.GradientDescentOptimizer(<span class="number">0.01</span>)</div><div class="line"></div><div class="line">    <span class="comment"># 最小化的同时增加步数</span></div><div class="line">    train = tf.group(optimizer.minimize(loss), tf.assign_add(global_step, <span class="number">1</span>))</div><div class="line"></div><div class="line">    <span class="comment"># 返回模型结构</span></div><div class="line">    <span class="keyword">return</span> tf.contrib.learn.ModelFnOps(mode=mode, predictions=y, loss=loss, train_op=train)</div><div class="line"></div><div class="line"><span class="comment"># 使用自定义的模型</span></div><div class="line">estimator = tf.contrib.learn.Estimator(model_fn=model)</div><div class="line"></div><div class="line">x = np.array([<span class="number">1.</span>, <span class="number">2.</span>, <span class="number">3.</span>, <span class="number">4.</span>])</div><div class="line">y = np.array([<span class="number">0.</span>, <span class="number">-1.</span>, <span class="number">-2.</span>, <span class="number">-3.</span>])</div><div class="line">input_fn = tf.contrib.learn.io.numpy_input_fn(&#123;<span class="string">"x"</span>: x&#125;, y, <span class="number">4</span>, num_epochs=<span class="number">1000</span>)</div><div class="line"></div><div class="line">estimator.fit(input_fn=input_fn, steps=<span class="number">1000</span>)</div><div class="line"></div><div class="line">print(estimator.evaluate(input_fn=input_fn, steps=<span class="number">10</span>)) <span class="comment"># &#123;'loss': 5.3041564e-12, 'global_step': 1000&#125;</span></div></pre></td></tr></table></figure>
-<h1 id="识别手写"><a href="#识别手写" class="headerlink" title="识别手写"></a>识别手写</h1><p>每张图片有28 * 28 = 784个像素，并且会标注对应的数字（<font color="lightgrey">0到9</font>），相应的模型为：</p>
-<p>$$<br>y = \mathrm{SoftMax} (W · x + b)<br>$$</p>
-<p>而训练的目的是<strong>交叉熵</strong>最小化：</p>
-<pre><code class="python">
-</code></pre>
-<p>其中：</p>
-<h1 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="http://playground.tensorflow.org" target="_blank" rel="external">http://playground.tensorflow.org</a></li>
+<h1 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h1><p>通常需要直观地看到训练的过程，此时就需要用到TensorBoard，分三步：</p>
+<ul>
+<li>代码中收集数据：<ul>
+<li><code>tf.summary.histogram</code></li>
+<li><code>tf.summary.scalar</code></li>
 </ul>
-<p>TODO：<a href="https://www.tensorflow.org/get_started/get_started" target="_blank" rel="external">https://www.tensorflow.org/get_started/get_started</a></p>
+</li>
+<li>写入文件<ul>
+<li><code>merged = tf.summary.merge_all()</code></li>
+<li><code>writer = tf.summary.FileWriter(&quot;/tmp/board/&quot;, sess.graph)</code></li>
+<li><code>result = sess.run(merged, feed_dict={xs: x_data, ys: y_data})</code></li>
+<li><code>writer.add_summary(result, i)</code></li>
+</ul>
+</li>
+<li>在浏览器上查看<ul>
+<li><code>tensorboard --logdir=&quot;/tmp/board/&quot;</code></li>
+</ul>
+</li>
+</ul>
+<p>需要注意：</p>
+<blockquote>
+<p>在不同的版本中，接口的定义变化很大，为啥要这么暴力地升级，太任性了吧。</p>
+</blockquote>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://playground.tensorflow.org" target="_blank" rel="external">http://playground.tensorflow.org</a></li>
+<li><a href="http://www.tensorfly.cn/tfdoc/tutorials/overview.html" target="_blank" rel="external">http://www.tensorfly.cn/tfdoc/tutorials/overview.html</a></li>
+<li><a href="http://blog.csdn.net/jerry81333/article/details/53004903" target="_blank" rel="external">http://blog.csdn.net/jerry81333/article/details/53004903</a></li>
+</ul>
 
       
     </div>
@@ -434,8 +452,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/01/theano-demo/" rel="prev" title="theano-demo">
-                theano-demo <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/01/newton-method/" rel="prev" title="牛顿法">
+                牛顿法 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -511,7 +529,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">26</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -557,7 +575,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">2.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph"><span class="nav-number">2.1.</span> <span class="nav-text">Graph</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session"><span class="nav-number">2.2.</span> <span class="nav-text">Session</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#学习框架"><span class="nav-number">3.</span> <span class="nav-text">学习框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#识别手写"><span class="nav-number">4.</span> <span class="nav-text">识别手写</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可视化"><span class="nav-number">5.</span> <span class="nav-text">可视化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">2.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph"><span class="nav-number">2.1.</span> <span class="nav-text">Graph</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session"><span class="nav-number">2.2.</span> <span class="nav-text">Session</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#学习框架"><span class="nav-number">3.</span> <span class="nav-text">学习框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可视化"><span class="nav-number">4.</span> <span class="nav-text">可视化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
