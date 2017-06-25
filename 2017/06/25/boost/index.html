@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Boost,机器学习," />
 
 
 
@@ -84,12 +84,31 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="wsztrush">
-<meta property="og:url" content="http://yoursite.com/tags/机器学习/index.html">
+<meta name="description" content="越好的分类算法越难，那能不能用一些“差”点的、简单的分类算法线性组合得到好的分类器？也就是：
+
+三个臭皮匠，顶个诸葛亮。
+
+AdaBoost对于训练数据$T=\{(x_1, y_1),…,(x_N, y_N)\},y_i \in \{-1,+1\}$以及弱分类算法，初始化训练数据的权值：
+$$D_1 = (w_{1i}, …, w_{1N}), \quad w_{1i} = \frac{1}{N}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Boost">
+<meta property="og:url" content="http://yoursite.com/2017/06/25/boost/index.html">
 <meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="越好的分类算法越难，那能不能用一些“差”点的、简单的分类算法线性组合得到好的分类器？也就是：
+
+三个臭皮匠，顶个诸葛亮。
+
+AdaBoost对于训练数据$T=\{(x_1, y_1),…,(x_N, y_N)\},y_i \in \{-1,+1\}$以及弱分类算法，初始化训练数据的权值：
+$$D_1 = (w_{1i}, …, w_{1N}), \quad w_{1i} = \frac{1}{N}">
+<meta property="og:updated_time" content="2017-06-25T03:04:04.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="wsztrush">
+<meta name="twitter:title" content="Boost">
+<meta name="twitter:description" content="越好的分类算法越难，那能不能用一些“差”点的、简单的分类算法线性组合得到好的分类器？也就是：
+
+三个臭皮匠，顶个诸葛亮。
+
+AdaBoost对于训练数据$T=\{(x_1, y_1),…,(x_N, y_N)\},y_i \in \{-1,+1\}$以及弱分类算法，初始化训练数据的权值：
+$$D_1 = (w_{1i}, …, w_{1N}), \quad w_{1i} = \frac{1}{N}">
 
 
 
@@ -110,10 +129,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/机器学习/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/25/boost/"/>
 
 
-  <title> 标签: 机器学习 | wsztrush </title>
+  <title> Boost | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -144,7 +163,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -232,302 +251,181 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        机器学习
-        <small>标签</small>
-      </h2>
-    </div>
-
+  <div id="posts" class="posts-expand">
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/06/25/boost/" itemprop="url">
-              
-                <span itemprop="name">Boost</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-25T09:52:33+08:00"
-              content="2017-06-25" >
-          06-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/06/01/newton-method/" itemprop="url">
-              
-                <span itemprop="name">牛顿法</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-01T08:04:42+08:00"
-              content="2017-06-01" >
-          06-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/06/01/tensorflow-introduction/" itemprop="url">
-              
-                <span itemprop="name">TensorFlow入门</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-01T07:37:24+08:00"
-              content="2017-06-01" >
-          06-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/05/29/maximum-entropy/" itemprop="url">
-              
-                <span itemprop="name">最大熵模型</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-05-29T22:29:53+08:00"
-              content="2017-05-29" >
-          05-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/05/21/expectation-maximization/" itemprop="url">
-              
-                <span itemprop="name">最大期望算法（EM）</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-05-21T18:16:37+08:00"
-              content="2017-05-21" >
-          05-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/05/14/markov/" itemprop="url">
-              
-                <span itemprop="name">马尔科夫算法</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-05-14T21:03:18+08:00"
-              content="2017-05-14" >
-          05-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/04/10/reinforcement-learning/" itemprop="url">
-              
-                <span itemprop="name">强化学习</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-04-10T23:23:48+08:00"
-              content="2017-04-10" >
-          04-10
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/04/04/logistic-regression/" itemprop="url">
-              
-                <span itemprop="name">逻辑回归</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-04-04T22:21:58+08:00"
-              content="2017-04-04" >
-          04-04
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/03/16/bayes/" itemprop="url">
-              
-                <span itemprop="name">贝叶斯算法</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-03-16T14:52:46+08:00"
-              content="2017-03-16" >
-          03-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/03/16/svm/" itemprop="url">
-              
-                <span itemprop="name">支持向量机</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-03-16T14:52:05+08:00"
-              content="2017-03-16" >
-          03-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-  </div>
 
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/tags/机器学习/page/2/">2</a><a class="extend next" rel="next" href="/tags/机器学习/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Boost
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-25T09:52:33+08:00" content="2017-06-25">
+              2017-06-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/06/25/boost/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/06/25/boost/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/06/25/boost/" class="leancloud_visitors" data-flag-title="Boost">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>越好的分类算法越难，那能不能用一些“差”点的、简单的分类算法线性组合得到好的分类器？也就是：</p>
+<blockquote>
+<p>三个臭皮匠，顶个诸葛亮。</p>
+</blockquote>
+<h1 id="AdaBoost"><a href="#AdaBoost" class="headerlink" title="AdaBoost"></a>AdaBoost</h1><p>对于训练数据$T=\{(x_1, y_1),…,(x_N, y_N)\},y_i \in \{-1,+1\}$以及弱分类算法，初始化训练数据的权值：</p>
+<p>$$<br>D_1 = (w_{1i}, …, w_{1N}), \quad w_{1i} = \frac{1}{N}<br>$$</p>
+<p>接下来开始迭代计算$m=1,2,…,M$，使用$D_m$得到分类器$G_m(x)$，误差率为：</p>
+<p>$$<br>e_m = P(G_m(x_i) \neq y_i) = \sum w_{mi} I(G_m(x_i) \neq y_i)<br>$$</p>
+<p>则该<font color="red">该分类器</font>的系数为：</p>
+<p>$$<br>\alpha_m = \frac{1}{2} \log \frac{1 - e_m}{e_m}<br>$$</p>
+<p>接着<font color="red">更新训练量数据的权重</font>，令$Z_m = \sum w_{m,j} \exp (-\alpha_m y_j G_m(x_j))$：</p>
+<p>$$<br>w_{m+1,i} = \frac{w_{m,i}}{Z_m} \exp (-\alpha_m y_i G_m(x_i)) = \begin{cases}<br>\frac{w_{m,i}}{Z_m} e^{-\alpha_m} &amp; G_m(x_i) = y_i \\\\<br>\frac{w_{m,i}}{Z_m} e^{\alpha_m} &amp; G_m(x_i) \neq y_i<br>\end{cases}<br>$$</p>
+<p>于是组合得到最终的分类器为：</p>
+<p>$$<br>G(x) = sign \left( \sum \alpha_m G_m(x) \right)<br>$$</p>
+<p>其误差：</p>
+<p>$$<br>\frac{1}{N} \sum I(G(x_i) \neq y_i) \leqslant \prod Z_m$$</p>
+<p>注意到：</p>
+<ol>
+<li>$\alpha_m$表示对应的分类器$G_m$的重要性</li>
+<li>当$e_m &lt; 0.5$时有$\alpha_m &lt; 0$，那么此时把这个分类器反过来用</li>
+<li>$\alpha_m$随着$e_m$的减小而增大，也就是准确率越高的分类器作用越大</li>
+<li>分类正确的样本权重降低，分类错误的样本权重增加</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Boost/" rel="tag">#Boost</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/17/python-local-process-data/" rel="next" title="使用Python在本地处理数据">
+                <i class="fa fa-chevron-left"></i> 使用Python在本地处理数据
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -535,6 +433,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -554,8 +463,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpeg"
@@ -605,6 +523,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#AdaBoost"><span class="nav-number">1.</span> <span class="nav-text">AdaBoost</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -705,6 +634,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
 
   
 
@@ -721,9 +654,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
-      var disqus_identifier = 'tags/机器学习/index.html';
-      var disqus_title = "";
-      var disqus_url = '';
+      var disqus_identifier = '2017/06/25/boost/';
+      var disqus_title = "Boost";
+      var disqus_url = 'http://yoursite.com/2017/06/25/boost/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -735,6 +668,13 @@
       }
 
       run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
       
     </script>
   
