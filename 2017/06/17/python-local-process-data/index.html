@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Python,工具,数据,pandas," />
+  <meta name="keywords" content="工具,Python,数据,pandas," />
 
 
 
@@ -104,7 +104,8 @@ DataFrame：二维表格，可以看做Series的集合
 Panel：三维数据
 
 数据的初始化我们可以通过构造函数来初始化，从下面的代">
-<meta property="og:updated_time" content="2017-06-21T13:23:12.000Z">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/python-local-process-data/0.png">
+<meta property="og:updated_time" content="2017-07-07T01:06:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Python在本地处理数据">
 <meta name="twitter:description" content="大数据一般是在“云”上玩的，但“云”都是要钱的，而且数据上上下下的也比较麻烦。所以，在本地电脑上快速处理数据的技能还是要的。
@@ -115,6 +116,7 @@ DataFrame：二维表格，可以看做Series的集合
 Panel：三维数据
 
 数据的初始化我们可以通过构造函数来初始化，从下面的代">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/python-local-process-data/0.png">
 
 
 
@@ -491,16 +493,47 @@ Panel：三维数据
 <li><code>frame[frame[&#39;col1&#39;].notnull()]</code></li>
 </ul>
 <p>最后，如果想图形化看在PyCharm里面需要搞个<code>plt.show()</code>（<font color="lightgrey">其他的IDE并不清楚</font>）。</p>
-<h1 id="numpy"><a href="#numpy" class="headerlink" title="numpy"></a>numpy</h1><p>比较早接触的numpy，总体上来看处理数据比自带类型方便些：</p>
+<h1 id="numpy"><a href="#numpy" class="headerlink" title="numpy"></a>numpy</h1><p>比较早接触的是Numpy，可以用来处理单一类型的数组，优势是：</p>
 <ul>
-<li><code>np.array([[1, 2, 3, 4],[4, 5, 6, 7], [7, 8, 9, 10]])</code></li>
-<li><code>np.array((5, 6, 7, 8))</code></li>
+<li>高效</li>
+<li>丰富的函数库</li>
 </ul>
-<p>主要集中在数组、矩阵的处理上！是很多工具的基础。</p>
+<p>号称<font color="red">免费的MATLAB</font>，数组的内存布局如下：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/python-local-process-data/0.png" alt=""></p>
+<p>初始化方法有：</p>
+<ul>
+<li><code>np.array([1, 2, 3, 4])</code></li>
+<li><code>np.array((5, 6, 7, 8))</code></li>
+<li><code>np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]])</code></li>
+<li><code>np.arange(0,1,0.1)</code></li>
+<li><code>np.linspace(0, 1, 12)</code>（<font color="lightgrey">等差</font>）</li>
+<li><code>np.logspace(0, 2, 20)</code>（<font color="lightgrey">等比例</font>）</li>
+<li><code>np.fromfunction(lambda x: x % 5, (10,))</code></li>
+</ul>
+<p>数据读取与Python自带的数组差不多，不同之处是：</p>
+<blockquote>
+<p>并不会拷贝、产生新的数据，而是共享一份数组。</p>
+</blockquote>
+<p>存储好数据之后，<font color="red">ufunc运算</font>允许我们队数组中的每个元素进行计算：</p>
+<ul>
+<li><code>np.sin(x)</code></li>
+<li><code>np.add(a,b)</code></li>
+<li><code>np.array([(lambda t: t + 1)(t) for t in x])</code></li>
+<li><code>np.frompyfunc(lambda i: i + 1, 1, 1)(x)</code></li>
+</ul>
+<p>聚合方法：</p>
+<ul>
+<li><code>np.add.reduce([1,2,3])</code></li>
+<li><code>np.add.reduce([[1,2,3],[4,5,6]], axis=1)</code></li>
+<li><code>np.add.accumulate([1,2,3])</code></li>
+<li><code>np.add.accumulate([[1,2,3],[4,5,6]], axis=1)</code></li>
+<li><code>np.add.reduceat(np.array([1,2,3,4]),indices=[0,1,0,2,0,3,0])</code>（<font color="lightgrey">这货用在什么场景？</font>）</li>
+</ul>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="http://pandas.pydata.org/pandas-docs/stable/" target="_blank" rel="external">http://pandas.pydata.org/pandas-docs/stable/</a></li>
 <li><a href="http://www.numpy.org/" target="_blank" rel="external">http://www.numpy.org/</a></li>
-<li><a href="http://old.sebug.net/paper/books/scipydoc/numpy_intro.html#id9" target="_blank" rel="external">http://old.sebug.net/paper/books/scipydoc/numpy_intro.html#id9</a></li>
+<li><a href="http://old.sebug.net/paper/books/scipydoc/numpy_intro.html" target="_blank" rel="external">http://old.sebug.net/paper/books/scipydoc/numpy_intro.html</a></li>
+<li><a href="https://docs.scipy.org/doc/numpy-dev/user/quickstart.html" target="_blank" rel="external">https://docs.scipy.org/doc/numpy-dev/user/quickstart.html</a></li>
 </ul>
 
       
@@ -524,9 +557,9 @@ Panel：三维数据
       
         <div class="post-tags">
           
-            <a href="/tags/Python/" rel="tag">#Python</a>
-          
             <a href="/tags/工具/" rel="tag">#工具</a>
+          
+            <a href="/tags/Python/" rel="tag">#Python</a>
           
             <a href="/tags/数据/" rel="tag">#数据</a>
           

@@ -86,7 +86,7 @@
 
 <meta name="description" content="在MAC电脑上启动TOMCAT时，无法绑定80端口，解决办法为，修改/etc/pf.conf文件，在rdr-anchor “com.apple/*”后添加内容：
 1rdr on lo0 inet proto tcp from any to 127.0.0.1 port 80 -&amp;gt; 127.0.0.1 port 8080
-使得配置剩下：
+使得配置生效：
 12sudo pfctl -f /etc/pf.conf">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mac下的80端口问题">
@@ -94,14 +94,14 @@
 <meta property="og:site_name" content="wsztrush">
 <meta property="og:description" content="在MAC电脑上启动TOMCAT时，无法绑定80端口，解决办法为，修改/etc/pf.conf文件，在rdr-anchor “com.apple/*”后添加内容：
 1rdr on lo0 inet proto tcp from any to 127.0.0.1 port 80 -&amp;gt; 127.0.0.1 port 8080
-使得配置剩下：
+使得配置生效：
 12sudo pfctl -f /etc/pf.conf">
-<meta property="og:updated_time" content="2017-07-04T12:39:19.000Z">
+<meta property="og:updated_time" content="2017-07-05T02:51:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mac下的80端口问题">
 <meta name="twitter:description" content="在MAC电脑上启动TOMCAT时，无法绑定80端口，解决办法为，修改/etc/pf.conf文件，在rdr-anchor “com.apple/*”后添加内容：
 1rdr on lo0 inet proto tcp from any to 127.0.0.1 port 80 -&amp;gt; 127.0.0.1 port 8080
-使得配置剩下：
+使得配置生效：
 12sudo pfctl -f /etc/pf.conf">
 
 
@@ -343,7 +343,7 @@
       
         <p>在MAC电脑上启动TOMCAT时，无法绑定80端口，解决办法为，修改<font color="red">/etc/pf.conf</font>文件，在<font color="red">rdr-anchor “com.apple/*”后</font>添加内容：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rdr on lo0 inet proto tcp from any to 127.0.0.1 port 80 -&gt; 127.0.0.1 port 8080</div></pre></td></tr></table></figure>
-<p>使得配置剩下：</p>
+<p>使得配置生效：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo pfctl -f /etc/pf.conf</div><div class="line">sudo pfctl -e</div></pre></td></tr></table></figure>
 <p>最后，在启动TOMCAT的时候，绑定8080端口即可。</p>
 
