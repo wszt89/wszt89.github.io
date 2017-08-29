@@ -99,7 +99,7 @@
 12345import tensorflow as tfhello = tf.constant(&apos;Hello, TensorFlow!&apos;)sess = tf.Session()print(sess.run(hello))
 运行OK，但是会有警告信息（一些电脑上有">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/tensorflow-introduction/0.png">
-<meta property="og:updated_time" content="2017-06-24T09:15:55.000Z">
+<meta property="og:updated_time" content="2017-08-29T06:45:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TensorFlow入门">
 <meta name="twitter:description" content="安装在MAC上用的是Python3，直接用pip3安装：
@@ -404,6 +404,85 @@
 <blockquote>
 <p>在不同的版本中，接口的定义变化很大，为啥要这么暴力地升级，太任性了吧。</p>
 </blockquote>
+<h1 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h1><p>常用的一些个性方法（<font color="lightgrey">下面这些我也不知道该怎么归类</font>）：</p>
+<ul>
+<li><font color="red">tf.nn.conv2d：卷积</font><ul>
+<li><code>input</code>：图像Tensor，格式为[batch, in_height, in_width, in_channels]<ul>
+<li>batch：训练时一个batch的数量</li>
+<li>in_height：高度</li>
+<li>in_width：宽度</li>
+<li>in_channels：通道数</li>
+</ul>
+</li>
+<li><code>filter</code>：卷积核，格式为[filter_height, filter_width, in_channels, out_channels]<ul>
+<li>filter_height：卷积核的高度</li>
+<li>filter_width：卷积核的宽度</li>
+<li>in_channels：通道数</li>
+<li>out_channels：卷积核个数</li>
+</ul>
+</li>
+<li><code>strides</code>：步长（<font color="lightgrey">需要指定每个维度的步长</font>）</li>
+<li><code>padding</code>：卷积方式<ul>
+<li>SAME：</li>
+<li>VALID：</li>
+</ul>
+</li>
+<li><code>use_cudnn_on_gpu</code>：是否加速</li>
+</ul>
+</li>
+<li><font color="red">tf.nn.max_pool：最大值池化</font><br>  - <code>value</code>：需要池化的输入，通常是【卷积】+【激活】处理后的维度<br>  - <code>ksize</code>：窗口，一般为[1, height, width, 1]<br>  - <code>strides</code>：<font color="lightgrey">同上</font><br>  - <code>padding</code>：<font color="lightgrey">同上</font></li>
+<li><font color="red">tf.nn.dropout：防止过拟合，一般用在全连接层</font><ul>
+<li><code>x</code>：输入</li>
+<li><code>keep_prob</code>：神经元被选中的概率</li>
+<li><code>noise_shape</code>：一维Tensor，代表随机产生的“保留/丢弃”标志的Shape</li>
+<li><code>seed</code>：随机数种子</li>
+</ul>
+</li>
+<li><font color="red">tf.truncated_normal：输出正太分布随机值</font><ul>
+<li><code>shape</code>：输出的样子</li>
+<li><code>mean</code>：均值</li>
+<li><code>stddev</code>：标准差</li>
+<li><code>dtype</code>：类型</li>
+<li><code>seed</code>：随机种子</li>
+</ul>
+</li>
+<li><font color="red">tf.matmul：矩阵乘法，常用来创建全连接</font>
+
+</li>
+</ul>
+<p>经常见到的激活函数包括（<font color="lightgrey">输入和输出维度相同</font>）：</p>
+<ul>
+<li><code>tf.nn.relu</code>：max(features, 0)</li>
+<li><code>tf.nn.relu6</code>：min(max(features, 0), 6)</li>
+<li><code>tf.nn.elu</code></li>
+<li><code>tf.nn.sigmoid</code>：y = 1 / (1 + exp(-x))</li>
+<li><code>tf.nn.tanh</code></li>
+<li><code>tf.nn.crelu</code></li>
+<li><code>tf.nn.softplus</code>：log(exp(features) + 1)</li>
+<li><code>tf.nn.softsign</code></li>
+<li><code>tf.nn.softmax</code>：exp(logits) / reduce_sum(exp(logits), dim)</li>
+</ul>
+<p>压缩函数系列（<font color="lightgrey">输出的维度会减少</font>）：</p>
+<ul>
+<li><code>tf.reduce_mean</code></li>
+<li><code>tf.reduce_max</code></li>
+<li><code>tf.reduce_sum</code></li>
+</ul>
+<p>作用如下图：</p>
+<p><img src="" alt=""></p>
+<p>优化器（<font color="lightgrey">实现了不同算法的优化器，原理后面慢慢补吧</font>）：</p>
+<ul>
+<li><code>tf.train.AdamOptimizer</code></li>
+<li><code>tf.train.GradientDescentOptimizer</code></li>
+<li><code>tf.train.AdagradOptimizer</code></li>
+<li><code>tf.train.MomentumOptimizer</code></li>
+<li><code>tf.train.AdamOptimizer</code></li>
+</ul>
+<p>使用套路是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train_op = tf.train.GradientDescentOptimizer(0.01).minimize(loss)</div></pre></td></tr></table></figure>
+<h1 id="模型的保存和提取"><a href="#模型的保存和提取" class="headerlink" title="模型的保存和提取"></a>模型的保存和提取</h1><ul>
+<li><a href="http://blog.csdn.net/marsjhao/article/details/72829635" target="_blank" rel="external">http://blog.csdn.net/marsjhao/article/details/72829635</a></li>
+</ul>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="http://playground.tensorflow.org" target="_blank" rel="external">http://playground.tensorflow.org</a></li>
 <li><a href="http://www.tensorfly.cn/tfdoc/tutorials/overview.html" target="_blank" rel="external">http://www.tensorfly.cn/tfdoc/tutorials/overview.html</a></li>
@@ -529,7 +608,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -546,7 +625,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -575,7 +654,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">2.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph"><span class="nav-number">2.1.</span> <span class="nav-text">Graph</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session"><span class="nav-number">2.2.</span> <span class="nav-text">Session</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#学习框架"><span class="nav-number">3.</span> <span class="nav-text">学习框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可视化"><span class="nav-number">4.</span> <span class="nav-text">可视化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">2.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph"><span class="nav-number">2.1.</span> <span class="nav-text">Graph</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session"><span class="nav-number">2.2.</span> <span class="nav-text">Session</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#学习框架"><span class="nav-number">3.</span> <span class="nav-text">学习框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可视化"><span class="nav-number">4.</span> <span class="nav-text">可视化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常用方法"><span class="nav-number">5.</span> <span class="nav-text">常用方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型的保存和提取"><span class="nav-number">6.</span> <span class="nav-text">模型的保存和提取</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>

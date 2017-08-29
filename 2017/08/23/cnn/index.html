@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="机器学习,深度学习,神经网络,工具," />
 
 
 
@@ -84,13 +84,46 @@
 
 
 
+<meta name="description" content="CNN在视觉方面火的不要不要的，与其他NN的区别点，要从卷积说起。
+卷积抛开各种“含义”不谈，从形式上看卷积是：
+
+给每个维度设置一个权重，然后相加得到一个实数。
+
+也就是：
+$$\begin{bmatrix}3 &amp;amp; 2 &amp;amp; 1\end{bmatrix} \times \\begin{bmatrix}1 \\2 \\3\end{bmatrix} = 10$$
+于是，在通过卷积核
+$">
 <meta property="og:type" content="article">
-<meta property="og:title" content="theano-demo">
-<meta property="og:url" content="http://yoursite.com/2017/06/01/theano-demo/index.html">
+<meta property="og:title" content="卷积神经网络">
+<meta property="og:url" content="http://yoursite.com/2017/08/23/cnn/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:updated_time" content="2017-05-31T23:53:50.000Z">
+<meta property="og:description" content="CNN在视觉方面火的不要不要的，与其他NN的区别点，要从卷积说起。
+卷积抛开各种“含义”不谈，从形式上看卷积是：
+
+给每个维度设置一个权重，然后相加得到一个实数。
+
+也就是：
+$$\begin{bmatrix}3 &amp;amp; 2 &amp;amp; 1\end{bmatrix} \times \\begin{bmatrix}1 \\2 \\3\end{bmatrix} = 10$$
+于是，在通过卷积核
+$">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/cnn/1.gif">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/cnn/2.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/cnn/5.jpg">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/cnn/3.jpg">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/cnn/4.jpg">
+<meta property="og:updated_time" content="2017-08-29T15:56:01.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="theano-demo">
+<meta name="twitter:title" content="卷积神经网络">
+<meta name="twitter:description" content="CNN在视觉方面火的不要不要的，与其他NN的区别点，要从卷积说起。
+卷积抛开各种“含义”不谈，从形式上看卷积是：
+
+给每个维度设置一个权重，然后相加得到一个实数。
+
+也就是：
+$$\begin{bmatrix}3 &amp;amp; 2 &amp;amp; 1\end{bmatrix} \times \\begin{bmatrix}1 \\2 \\3\end{bmatrix} = 10$$
+于是，在通过卷积核
+$">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/cnn/1.gif">
 
 
 
@@ -111,10 +144,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/06/01/theano-demo/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/08/23/cnn/"/>
 
 
-  <title> theano-demo | wsztrush </title>
+  <title> 卷积神经网络 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -254,7 +287,7 @@
             
             
               
-                theano-demo
+                卷积神经网络
               
             
           </h1>
@@ -266,19 +299,38 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-01T07:53:50+08:00" content="2017-06-01">
-              2017-06-01
+            <time itemprop="dateCreated" datetime="2017-08-23T17:48:21+08:00" content="2017-08-23">
+              2017-08-23
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/06/01/theano-demo/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/06/01/theano-demo/" itemprop="commentsCount"></span>
+                <a href="/2017/08/23/cnn/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/08/23/cnn/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -288,7 +340,7 @@
 
           
           
-             <span id="/2017/06/01/theano-demo/" class="leancloud_visitors" data-flag-title="theano-demo">
+             <span id="/2017/08/23/cnn/" class="leancloud_visitors" data-flag-title="卷积神经网络">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -310,7 +362,39 @@
       
 
       
-        
+        <p>CNN在视觉方面火的不要不要的，与其他NN的区别点，要从卷积说起。</p>
+<h1 id="卷积"><a href="#卷积" class="headerlink" title="卷积"></a>卷积</h1><p>抛开各种“含义”不谈，从形式上看卷积是：</p>
+<blockquote>
+<p>给每个维度设置一个权重，然后相加得到一个实数。</p>
+</blockquote>
+<p>也就是：</p>
+<p>$$<br>\begin{bmatrix}<br>3 &amp; 2 &amp; 1<br>\end{bmatrix} \times \<br>\begin{bmatrix}<br>1 \\<br>2 \\<br>3<br>\end{bmatrix} = 10<br>$$</p>
+<p>于是，在通过卷积核</p>
+<p>$$<br>\begin{bmatrix}<br>1 &amp; 0 &amp; 1 \\<br>0 &amp; 1 &amp; 0 \\<br>1 &amp; 0 &amp; 1<br>\end{bmatrix}<br>$$</p>
+<p>进行处理的过程如下图：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/cnn/1.gif" alt=""></p>
+<p>从一个空间映射到了另一个空间。卷积的意义在于：</p>
+<blockquote>
+<p>方便从局部提取信息。</p>
+</blockquote>
+<h1 id="参数共享"><a href="#参数共享" class="headerlink" title="参数共享"></a>参数共享</h1><p>对图像不同的位置处理时，会共享卷积核（<font color="lightgrey">网络中可能有多个卷积核</font>）：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/cnn/2.png" alt=""></p>
+<p>直观的来看，如果每个区域都有不同的卷积核（<font color="lightgrey">对应不同的参数</font>），那整个网络的参数也将非常可观，另一方面考虑：</p>
+<blockquote>
+<p>可以从图片全局，找到通用的信息提取方式。</p>
+</blockquote>
+<p>仅用一个卷积核提取很可能不够充分，所以一般操作时会用多个卷积核：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/cnn/5.jpg" alt=""></p>
+<h1 id="池化"><a href="#池化" class="headerlink" title="池化"></a>池化</h1><p>最大值池化的操作如下：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/cnn/3.jpg" alt=""></p>
+<p>通过池化，可以更好地从局部提取到主要信息（<font color="lightgrey">降低维度的核心就是抓主要矛盾</font>）。多层的神经网络搞起来以后差不多这个样子：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/cnn/4.jpg" alt=""></p>
+<h1 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h1><h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://www.cnblogs.com/nsnow/p/4562308.html" target="_blank" rel="external">http://www.cnblogs.com/nsnow/p/4562308.html</a></li>
+<li><a href="http://blog.csdn.net/u014114990/article/details/50767786" target="_blank" rel="external">http://blog.csdn.net/u014114990/article/details/50767786</a></li>
+<li><a href="http://www.cnblogs.com/neopenx/p/4453161.html" target="_blank" rel="external">http://www.cnblogs.com/neopenx/p/4453161.html</a></li>
+</ul>
+
       
     </div>
 
@@ -330,21 +414,33 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/深度学习/" rel="tag">#深度学习</a>
+          
+            <a href="/tags/神经网络/" rel="tag">#神经网络</a>
+          
+            <a href="/tags/工具/" rel="tag">#工具</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/01/tensorflow-introduction/" rel="next" title="TensorFlow入门">
-                <i class="fa fa-chevron-left"></i> TensorFlow入门
+              <a href="/2017/07/04/mac-80/" rel="next" title="Mac下的80端口问题">
+                <i class="fa fa-chevron-left"></i> Mac下的80端口问题
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/01/newton-method/" rel="prev" title="牛顿法">
-                牛顿法 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/08/25/rbm/" rel="prev" title="受限玻尔兹曼机">
+                受限玻尔兹曼机 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -420,7 +516,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -437,7 +533,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -466,7 +562,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#卷积"><span class="nav-number">1.</span> <span class="nav-text">卷积</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数共享"><span class="nav-number">2.</span> <span class="nav-text">参数共享</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#池化"><span class="nav-number">3.</span> <span class="nav-text">池化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练"><span class="nav-number">4.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现"><span class="nav-number">5.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
@@ -590,9 +686,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
-      var disqus_identifier = '2017/06/01/theano-demo/';
-      var disqus_title = "theano-demo";
-      var disqus_url = 'http://yoursite.com/2017/06/01/theano-demo/';
+      var disqus_identifier = '2017/08/23/cnn/';
+      var disqus_title = "卷积神经网络";
+      var disqus_url = 'http://yoursite.com/2017/08/23/cnn/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

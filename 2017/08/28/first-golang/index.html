@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习,决策树," />
+  <meta name="keywords" content="编程,Golang," />
 
 
 
@@ -84,57 +84,37 @@
 
 
 
-<meta name="description" content="针对ID3算法的缺点：
+<meta name="description" content="当初Java的跨平台的卖点非常地吸引人，但是用起来还是不够顺滑，尤其是运行程序的机器不固定的时候：
 
-不能处理连续数据
-倾向于选择可选值较多的属性（分得越细信息增益越大）
-过拟合
-贪心无法保证最优
+安装Java环境（貌似有一些黑科技可以解决，但是坑比较多）
+在用上SpringBoot之前，还要手动安装Tomcat等玩意😂
 
-在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。
-信息增益率在属性上分的较细时，信息增益较大，需要找一个量来抑制这种增加：
-
-如果属性上的可选值越多，那么属性上的信息熵也就越大。
-
-继续ID3中的例子，信息增益为：
-$$Gain(outlook)=0.">
+最好能将一份代码编译成不同平台的可执行文件（交叉编译），于是想到了Golang。
+交叉编译和条件编译在Mac下编译Window可执行文件的方法是：
+1CGO_ENABL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C4.5">
-<meta property="og:url" content="http://yoursite.com/2017/03/13/c4-5/index.html">
+<meta property="og:title" content="Golang的第一次尝试">
+<meta property="og:url" content="http://yoursite.com/2017/08/28/first-golang/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="针对ID3算法的缺点：
+<meta property="og:description" content="当初Java的跨平台的卖点非常地吸引人，但是用起来还是不够顺滑，尤其是运行程序的机器不固定的时候：
 
-不能处理连续数据
-倾向于选择可选值较多的属性（分得越细信息增益越大）
-过拟合
-贪心无法保证最优
+安装Java环境（貌似有一些黑科技可以解决，但是坑比较多）
+在用上SpringBoot之前，还要手动安装Tomcat等玩意😂
 
-在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。
-信息增益率在属性上分的较细时，信息增益较大，需要找一个量来抑制这种增加：
-
-如果属性上的可选值越多，那么属性上的信息熵也就越大。
-
-继续ID3中的例子，信息增益为：
-$$Gain(outlook)=0.">
-<meta property="og:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5f317c1d7339ac9e69deab6465d8ffb0/image.png">
-<meta property="og:updated_time" content="2017-03-14T06:05:46.000Z">
+最好能将一份代码编译成不同平台的可执行文件（交叉编译），于是想到了Golang。
+交叉编译和条件编译在Mac下编译Window可执行文件的方法是：
+1CGO_ENABL">
+<meta property="og:updated_time" content="2017-08-28T09:19:35.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C4.5">
-<meta name="twitter:description" content="针对ID3算法的缺点：
+<meta name="twitter:title" content="Golang的第一次尝试">
+<meta name="twitter:description" content="当初Java的跨平台的卖点非常地吸引人，但是用起来还是不够顺滑，尤其是运行程序的机器不固定的时候：
 
-不能处理连续数据
-倾向于选择可选值较多的属性（分得越细信息增益越大）
-过拟合
-贪心无法保证最优
+安装Java环境（貌似有一些黑科技可以解决，但是坑比较多）
+在用上SpringBoot之前，还要手动安装Tomcat等玩意😂
 
-在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。
-信息增益率在属性上分的较细时，信息增益较大，需要找一个量来抑制这种增加：
-
-如果属性上的可选值越多，那么属性上的信息熵也就越大。
-
-继续ID3中的例子，信息增益为：
-$$Gain(outlook)=0.">
-<meta name="twitter:image" content="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5f317c1d7339ac9e69deab6465d8ffb0/image.png">
+最好能将一份代码编译成不同平台的可执行文件（交叉编译），于是想到了Golang。
+交叉编译和条件编译在Mac下编译Window可执行文件的方法是：
+1CGO_ENABL">
 
 
 
@@ -155,10 +135,10 @@ $$Gain(outlook)=0.">
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/13/c4-5/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/08/28/first-golang/"/>
 
 
-  <title> C4.5 | wsztrush </title>
+  <title> Golang的第一次尝试 | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -298,7 +278,7 @@ $$Gain(outlook)=0.">
             
             
               
-                C4.5
+                Golang的第一次尝试
               
             
           </h1>
@@ -310,8 +290,8 @@ $$Gain(outlook)=0.">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-13T14:57:29+08:00" content="2017-03-13">
-              2017-03-13
+            <time itemprop="dateCreated" datetime="2017-08-28T10:20:08+08:00" content="2017-08-28">
+              2017-08-28
             </time>
           </span>
 
@@ -324,8 +304,8 @@ $$Gain(outlook)=0.">
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
                   </a>
                 </span>
 
@@ -340,8 +320,8 @@ $$Gain(outlook)=0.">
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/03/13/c4-5/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/03/13/c4-5/" itemprop="commentsCount"></span>
+                <a href="/2017/08/28/first-golang/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/08/28/first-golang/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -350,6 +330,15 @@ $$Gain(outlook)=0.">
           
 
           
+          
+             <span id="/2017/08/28/first-golang/" class="leancloud_visitors" data-flag-title="Golang的第一次尝试">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
           
 
           
@@ -364,42 +353,25 @@ $$Gain(outlook)=0.">
       
 
       
-        <p>针对<a href="http://owl-pi.com/2017/03/10/id3/" target="_blank" rel="external">ID3</a>算法的缺点：</p>
-<ol>
-<li>不能处理连续数据</li>
-<li>倾向于选择可选值较多的属性（分得越细信息增益越大）</li>
-<li>过拟合</li>
-<li>贪心无法保证最优</li>
-</ol>
-<p>在1993年Ross Quinlan提出了C4.5算法，解决了部分问题。</p>
-<h2 id="信息增益率"><a href="#信息增益率" class="headerlink" title="信息增益率"></a>信息增益率</h2><p>在属性上分的较细时，信息增益较大，需要找一个量来抑制这种增加：</p>
-<blockquote>
-<p>如果属性上的可选值越多，那么属性上的信息熵也就越大。</p>
-</blockquote>
-<p>继续<a href="http://owl-pi.com/2017/03/10/id3/" target="_blank" rel="external">ID3</a>中的例子，信息增益为：</p>
-<p>$$<br>Gain(outlook)=0.940-(\frac{5}{14}*0.971+\frac{4}{14}*0+\frac{5}{14}*0.971)=0.246<br>$$</p>
-<p>属性本身的信息量为：</p>
-<p>$$<br>I(outlook)=-\frac{5}{14}*log(\frac{5}{14})-\frac{4}{14}*log(\frac{4}{14})-\frac{5}{14}*log(\frac{5}{14})=1.58<br>$$</p>
-<p>那么此时的信息增益率（把信息熵放到分母上来起到抑制作用）为：</p>
-<p>$$<br>GainRatio(outlook)=\frac{Gain(outlook)}{I(outlook)}=\frac{0.246}{1.58}<br>$$</p>
-<p>想不说废话也是有一定难度的，在选择时要把这种难度体现出来。</p>
-<h2 id="连续型"><a href="#连续型" class="headerlink" title="连续型"></a>连续型</h2><p>对于连续型的数据，可以将其转为离散 型：</p>
-<ol>
-<li>大于阈值</li>
-<li>小于阈值</li>
-</ol>
-<p>如果属性有N个不同的值，那么阈值有N-1种选择，计算量较大。一个优化办法是：</p>
-<blockquote>
-<p>将属性的值先排序，只有在Class发生变化的时候才考虑该阈值（在Class不变时，评估函数是单调的）。</p>
-</blockquote>
-<p>比如：</p>
-<p><img src="http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/tianchi.gzt/note/5f317c1d7339ac9e69deab6465d8ffb0/image.png" alt="image"></p>
-<p>原来需要考虑13种可能，而优化后只需要7种。另外：</p>
-<blockquote>
-<p>在选择阈值时分割数相同，所以用<strong>信息增益率</strong>的作为选择标准是不合适的，反而用<strong>信息增益</strong>会好一些。</p>
-</blockquote>
-<h2 id="剪枝"><a href="#剪枝" class="headerlink" title="剪枝"></a>剪枝</h2><p>如果树不断生长，最终一定是每个叶子节点上都只有一种类型，其实此时已经是比较严重的过拟合了，在后面的文章中再来看如果剪枝。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>感觉上C4.5像是ID3的一个可执行版本。。。</p>
+        <p>当初Java的跨平台的卖点非常地吸引人，但是用起来还是不够顺滑，尤其是运行程序的机器不固定的时候：</p>
+<ul>
+<li>安装Java环境（<font color="lightgrey">貌似有一些黑科技可以解决，但是坑比较多</font>）</li>
+<li>在用上SpringBoot之前，还要手动安装Tomcat等玩意😂</li>
+</ul>
+<p>最好能将一份代码编译成不同平台的可执行文件（<font color="lightgrey">交叉编译</font>），于是想到了Golang。</p>
+<h1 id="交叉编译和条件编译"><a href="#交叉编译和条件编译" class="headerlink" title="交叉编译和条件编译"></a>交叉编译和条件编译</h1><p>在Mac下编译Window可执行文件的方法是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o test.exe</div></pre></td></tr></table></figure>
+<p>编译Linux的方法是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o test.exe</div></pre></td></tr></table></figure>
+<p>其中参数的含义为：</p>
+<ul>
+<li><code>CGO_ENABLED</code>：交叉编译不支持CGO，所以禁用</li>
+<li><code>GOOS</code>：目标的OS</li>
+<li><code>GOARCH</code>：目标的CPU ARCH</li>
+</ul>
+<h1 id="自动升级"><a href="#自动升级" class="headerlink" title="自动升级"></a>自动升级</h1><h1 id="开机启动"><a href="#开机启动" class="headerlink" title="开机启动"></a>开机启动</h1><h1 id="进程保护"><a href="#进程保护" class="headerlink" title="进程保护"></a>进程保护</h1><h1 id="实际效果"><a href="#实际效果" class="headerlink" title="实际效果"></a>实际效果</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://www.jianshu.com/p/4f79ae4f081c" target="_blank" rel="external">http://www.jianshu.com/p/4f79ae4f081c</a></li>
+</ul>
 
       
     </div>
@@ -422,9 +394,9 @@ $$Gain(outlook)=0.">
       
         <div class="post-tags">
           
-            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+            <a href="/tags/编程/" rel="tag">#编程</a>
           
-            <a href="/tags/决策树/" rel="tag">#决策树</a>
+            <a href="/tags/Golang/" rel="tag">#Golang</a>
           
         </div>
       
@@ -433,17 +405,13 @@ $$Gain(outlook)=0.">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/10/id3/" rel="next" title="ID3">
-                <i class="fa fa-chevron-left"></i> ID3
+              <a href="/2017/08/25/rbm/" rel="next" title="受限玻尔兹曼机">
+                <i class="fa fa-chevron-left"></i> 受限玻尔兹曼机
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/14/cart/" rel="prev" title="CART-分类回归树">
-                CART-分类回归树 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -510,7 +478,7 @@ $$Gain(outlook)=0.">
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/images/avatar.jpg"
+               src="/images/avatar.jpeg"
                alt="wsztrush" />
           <p class="site-author-name" itemprop="name">wsztrush</p>
           <p class="site-description motion-element" itemprop="description"></p>
@@ -518,7 +486,7 @@ $$Gain(outlook)=0.">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -526,7 +494,7 @@ $$Gain(outlook)=0.">
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -535,7 +503,7 @@ $$Gain(outlook)=0.">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -564,7 +532,7 @@ $$Gain(outlook)=0.">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息增益率"><span class="nav-number">1.</span> <span class="nav-text">信息增益率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连续型"><span class="nav-number">2.</span> <span class="nav-text">连续型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#剪枝"><span class="nav-number">3.</span> <span class="nav-text">剪枝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#交叉编译和条件编译"><span class="nav-number">1.</span> <span class="nav-text">交叉编译和条件编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自动升级"><span class="nav-number">2.</span> <span class="nav-text">自动升级</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开机启动"><span class="nav-number">3.</span> <span class="nav-text">开机启动</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程保护"><span class="nav-number">4.</span> <span class="nav-text">进程保护</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实际效果"><span class="nav-number">5.</span> <span class="nav-text">实际效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
@@ -688,9 +656,9 @@ $$Gain(outlook)=0.">
 
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
-      var disqus_identifier = '2017/03/13/c4-5/';
-      var disqus_title = "C4.5";
-      var disqus_url = 'http://yoursite.com/2017/03/13/c4-5/';
+      var disqus_identifier = '2017/08/28/first-golang/';
+      var disqus_title = "Golang的第一次尝试";
+      var disqus_url = 'http://yoursite.com/2017/08/28/first-golang/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -742,6 +710,113 @@ $$Gain(outlook)=0.">
 
 
   
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
 
   
 <script>
