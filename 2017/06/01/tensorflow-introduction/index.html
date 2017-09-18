@@ -99,7 +99,7 @@
 12345import tensorflow as tfhello = tf.constant(&apos;Hello, TensorFlow!&apos;)sess = tf.Session()print(sess.run(hello))
 运行OK，但是会有警告信息（一些电脑上有">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/tensorflow-introduction/0.png">
-<meta property="og:updated_time" content="2017-08-29T06:45:46.000Z">
+<meta property="og:updated_time" content="2017-08-30T01:47:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TensorFlow入门">
 <meta name="twitter:description" content="安装在MAC上用的是Python3，直接用pip3安装：
@@ -480,13 +480,24 @@
 </ul>
 <p>使用套路是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train_op = tf.train.GradientDescentOptimizer(0.01).minimize(loss)</div></pre></td></tr></table></figure>
-<h1 id="模型的保存和提取"><a href="#模型的保存和提取" class="headerlink" title="模型的保存和提取"></a>模型的保存和提取</h1><ul>
-<li><a href="http://blog.csdn.net/marsjhao/article/details/72829635" target="_blank" rel="external">http://blog.csdn.net/marsjhao/article/details/72829635</a></li>
+<h1 id="模型的保存和提取"><a href="#模型的保存和提取" class="headerlink" title="模型的保存和提取"></a>模型的保存和提取</h1><p>存取模型用到的是<font color="red">saver = tf.train.Saver()</font>，保存方式为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">saver = tf.train.Saver()</div><div class="line"><span class="comment"># ...</span></div><div class="line">saver.save(sess, <span class="string">'./data/cnn/model.ckpt'</span>)</div></pre></td></tr></table></figure>
+<p>此时文件夹下生成的文件有：</p>
+<ul>
+<li><code>checkpoint</code>：目录下模型列表</li>
+<li><code>model.ckpt.data-00000-of-00001</code>：权重</li>
+<li><code>model.ckpt.index</code>：<font color="red">TODO</font></li>
+<li><code>model.ckpt.meta</code>：图结构</li>
 </ul>
+<p>第一种加载模型的方式为（<font color="lightgrey">需要重新定义图结构</font>）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 定义图结构</span></div><div class="line">saver = tf.train.Saver()</div><div class="line"><span class="comment"># ...</span></div><div class="line">saver.restore(sess, <span class="string">"./data/cnn/model.ckpt"</span>)</div></pre></td></tr></table></figure>
+<p>第二种加载方式为（<font color="lightgrey">不需要定义图结构</font>）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">saver = tf.train.import_meta_graph(<span class="string">"./data/cnn/model.meta"</span>)</div><div class="line"><span class="comment"># ...</span></div><div class="line">saver.restore(sess, <span class="string">"./data/cnn/model.ckpt"</span>)</div></pre></td></tr></table></figure>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="http://playground.tensorflow.org" target="_blank" rel="external">http://playground.tensorflow.org</a></li>
 <li><a href="http://www.tensorfly.cn/tfdoc/tutorials/overview.html" target="_blank" rel="external">http://www.tensorfly.cn/tfdoc/tutorials/overview.html</a></li>
 <li><a href="http://blog.csdn.net/jerry81333/article/details/53004903" target="_blank" rel="external">http://blog.csdn.net/jerry81333/article/details/53004903</a></li>
+<li><a href="http://blog.csdn.net/marsjhao/article/details/72829635" target="_blank" rel="external">http://blog.csdn.net/marsjhao/article/details/72829635</a></li>
 </ul>
 
       
