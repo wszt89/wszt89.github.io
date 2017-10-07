@@ -99,7 +99,8 @@
 12345import tensorflow as tfhello = tf.constant(&apos;Hello, TensorFlow!&apos;)sess = tf.Session()print(sess.run(hello))
 运行OK，但是会有警告信息（一些电脑上有">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/tensorflow-introduction/0.png">
-<meta property="og:updated_time" content="2017-08-30T01:47:36.000Z">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/tensorflow-introduction/0.png">
+<meta property="og:updated_time" content="2017-09-20T13:33:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TensorFlow入门">
 <meta name="twitter:description" content="安装在MAC上用的是Python3，直接用pip3安装：
@@ -430,7 +431,7 @@
 <li><code>use_cudnn_on_gpu</code>：是否加速</li>
 </ul>
 </li>
-<li><font color="red">tf.nn.max_pool：最大值池化</font><br>  - <code>value</code>：需要池化的输入，通常是【卷积】+【激活】处理后的维度<br>  - <code>ksize</code>：窗口，一般为[1, height, width, 1]<br>  - <code>strides</code>：<font color="lightgrey">同上</font><br>  - <code>padding</code>：<font color="lightgrey">同上</font></li>
+<li><font color="red">tf.nn.max_pool：最大值池化</font><br>- <code>value</code>：需要池化的输入，通常是【卷积】+【激活】处理后的维度<br>- <code>ksize</code>：窗口，一般为[1, height, width, 1]<br>- <code>strides</code>：<font color="lightgrey">同上</font><br>- <code>padding</code>：<font color="lightgrey">同上</font></li>
 <li><font color="red">tf.nn.dropout：防止过拟合，一般用在全连接层</font><ul>
 <li><code>x</code>：输入</li>
 <li><code>keep_prob</code>：神经元被选中的概率</li>
@@ -469,7 +470,7 @@
 <li><code>tf.reduce_sum</code></li>
 </ul>
 <p>作用如下图：</p>
-<p><img src="" alt=""></p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/tensorflow-introduction/0.png" alt=""></p>
 <p>优化器（<font color="lightgrey">实现了不同算法的优化器，原理后面慢慢补吧</font>）：</p>
 <ul>
 <li><code>tf.train.AdamOptimizer</code></li>
@@ -619,7 +620,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">35</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -636,7 +637,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

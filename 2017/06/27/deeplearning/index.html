@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="机器学习,深度学习,神经网络,CNN,RNN,DNN,MLP,LSTM," />
+  <meta name="keywords" content="机器学习,神经网络," />
 
 
 
@@ -84,16 +84,67 @@
 
 
 
-<meta name="description" content="历史组件激活函数卷积池化训练网络类型">
+<meta name="description" content="监督训练TODO
+
+
+无（半）监督训练之前有接触的无监督训练方法有：
+
+K-MEANS
+PCA
+
+它们使用不同的方式来生成对原始数据的描述，但是总体上看都是要体现数据区分度。
+PCA的原理描述如下：
+
+通过线性变换，将原始数据变换为一组线性无关的维度，用来提取数据主要特征，而主要特征应该有较大的方差。
+
+算法步骤如下：
+
+归一化
+求协方差矩阵
+求协方差矩阵的特征值和特征向量，选择最大的几个特征值组">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深度学习">
 <meta property="og:url" content="http://yoursite.com/2017/06/27/deeplearning/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="历史组件激活函数卷积池化训练网络类型">
-<meta property="og:updated_time" content="2017-06-30T22:19:35.000Z">
+<meta property="og:description" content="监督训练TODO
+
+
+无（半）监督训练之前有接触的无监督训练方法有：
+
+K-MEANS
+PCA
+
+它们使用不同的方式来生成对原始数据的描述，但是总体上看都是要体现数据区分度。
+PCA的原理描述如下：
+
+通过线性变换，将原始数据变换为一组线性无关的维度，用来提取数据主要特征，而主要特征应该有较大的方差。
+
+算法步骤如下：
+
+归一化
+求协方差矩阵
+求协方差矩阵的特征值和特征向量，选择最大的几个特征值组">
+<meta property="og:updated_time" content="2017-09-29T07:47:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深度学习">
-<meta name="twitter:description" content="历史组件激活函数卷积池化训练网络类型">
+<meta name="twitter:description" content="监督训练TODO
+
+
+无（半）监督训练之前有接触的无监督训练方法有：
+
+K-MEANS
+PCA
+
+它们使用不同的方式来生成对原始数据的描述，但是总体上看都是要体现数据区分度。
+PCA的原理描述如下：
+
+通过线性变换，将原始数据变换为一组线性无关的维度，用来提取数据主要特征，而主要特征应该有较大的方差。
+
+算法步骤如下：
+
+归一化
+求协方差矩阵
+求协方差矩阵的特征值和特征向量，选择最大的几个特征值组">
 
 
 
@@ -332,7 +383,167 @@
       
 
       
-        <h1 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h1><h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><h2 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h2><h2 id="卷积"><a href="#卷积" class="headerlink" title="卷积"></a>卷积</h2><h2 id="池化"><a href="#池化" class="headerlink" title="池化"></a>池化</h2><h1 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h1><h1 id="网络类型"><a href="#网络类型" class="headerlink" title="网络类型"></a>网络类型</h1>
+        <h1 id="监督训练"><a href="#监督训练" class="headerlink" title="监督训练"></a>监督训练</h1><font color="red">TODO</font>
+
+
+<h1 id="无（半）监督训练"><a href="#无（半）监督训练" class="headerlink" title="无（半）监督训练"></a>无（半）监督训练</h1><p>之前有接触的无监督训练方法有：</p>
+<ul>
+<li><strong>K-MEANS</strong></li>
+<li><strong>PCA</strong></li>
+</ul>
+<p>它们使用不同的方式来生成对原始数据的描述，但是总体上看都是要体现<font color="red">数据区分度</font>。</p>
+<p>PCA的原理描述如下：</p>
+<blockquote>
+<p>通过<font color="red">线性变换</font>，将原始数据变换为一组<font color="red">线性无关</font>的维度，用来提取数据<font color="red">主要特征</font>，而主要特征应该有较大的<font color="red">方差</font>。</p>
+</blockquote>
+<p>算法步骤如下：</p>
+<ul>
+<li>归一化</li>
+<li>求协方差矩阵</li>
+<li>求协方差矩阵的特征值和特征向量，选择最大的几个特征值组成降维矩</li>
+</ul>
+<p>在深度学习中也有一批方法用来对原始数据进行加工、抽取。</p>
+<h2 id="线性因子模型"><a href="#线性因子模型" class="headerlink" title="线性因子模型"></a>线性因子模型</h2><p>总体思路是：</p>
+<blockquote>
+<p>原始数据可以由一些不可观测的变量（潜变量）来更好、更本质地描述，潜变量与观测数据之间存在线性关系。</p>
+</blockquote>
+<p>假设潜变量$h$满足某种分布：<br>$$<br>h \sim p(h)<br>$$<br>观测变量$x$与潜变量$h$之间存在线性关系：<br>$$<br>x = Wh + b + noise<br>$$<br>其中，$noise$是对角化且服从正太分布。在不同模型中潜变量$h$有不同的分布，<font color="red">概率主成分分析模型</font>中：<br>$$<br>h \sim N(h; 0, 1)<br>$$<br>观测变量$x$的分布为：</p>
+<p>$$<br>x \sim N(x; b, WW^T + diag([\sigma^2_1,\sigma^2_2,…,\sigma^2_n]^T))<br>$$</p>
+<p>简化得到（<font color="lightgrey">假设所有的$\sigma$都相等</font>）：<br>$$<br>x \sim N(x; b, WW^T + \sigma^2I)<br>$$</p>
+<p>该模型想表达的含义是：</p>
+<blockquote>
+<p>除了一些微小残余的重构误差（<font color="lightgrey">至多为$\sigma^2$</font>），数据中的大多数变化可以用潜变量来描述。</p>
+</blockquote>
+<p>当$\sigma \rightarrow 0$时，退化为普通的主成分分析。</p>
+<hr>
+<p>变化快的数据不一定是真的“变化快”，变换中蕴含着不变（<font color="lightgrey">尤其在视频、音频方面</font>），我们可以使用<font color="red">慢特征分析</font>的思路来提取不变的信息。向代价函数中添加：<br>$$<br>\lambda \sum L(f(x^{(t+1)}), f(x^{(t)}))<br>$$<br>其中：</p>
+<ul>
+<li>$\lambda$是参数；</li>
+<li>$t$是时间序列下标；</li>
+<li>$f$是需要正则化的特征提取器；</li>
+<li>$L$是$f(x^{(t+1)}), f(x^{(t)})$之间的距离损失函数，常用均方误差；</li>
+</ul>
+<p>在SPA算法中，$f(x;\theta)$为线性函数，优化的目标为：<br>$$<br>\min_\theta \mathbb{E}(f(x^{(t+1)}) - f(x^{(x)}))<br>$$<br>满足约束（<font color="lightgrey">使得系统有唯一解，并防止所有特征趋向于0</font>）：<br>$$<br>\mathbb{E}(f(x^{(t)})) = 0 \quad \mathbb{E}(f(x^{(t)})^2) = 1<br>$$<br>该模型在很多时候表现的很好，但是需要特征的先验太强。</p>
+<hr>
+<font color="red">TODO 稀疏编码</font>
+
+
+
+<h2 id="自编码器"><a href="#自编码器" class="headerlink" title="自编码器"></a>自编码器</h2><p>通过神经网络，将输入复制到输出，在“复制”过程中通过一些策略来学习特征：</p>
+<ul>
+<li>欠完备（<font color="lightgrey">限制维度</font>）</li>
+<li>正则（<font color="lightgrey">使用损失函数来鼓励找到合适的特征</font>）</li>
+</ul>
+<p>去噪编码器：</p>
+<ul>
+<li>什么是噪音？</li>
+<li>为什么可以达到去噪音的效果？</li>
+</ul>
+<p>学习流形：</p>
+<ul>
+<li>什么是流形？</li>
+<li>什么是切平面？</li>
+</ul>
+<p>收缩编码器：</p>
+<ul>
+<li>收缩的含义是什么？ 收缩什么东西？</li>
+</ul>
+<p>预测稀疏分解：</p>
+<ul>
+<li>完全搞不动是啥玩意！</li>
+</ul>
+<h2 id="表示学习"><a href="#表示学习" class="headerlink" title="表示学习"></a>表示学习</h2><p>逐层无监督预训练：</p>
+<ul>
+<li>有效的场景是什么？</li>
+<li>为什么有时候有效、有时候有负面效果？</li>
+</ul>
+<p>迁移学习和领域自适应：</p>
+<ul>
+<li>什么是迁移学习？</li>
+<li>什么是领域自适应？</li>
+</ul>
+<p>半监督解释因果关系：</p>
+<ul>
+<li>什么原因能够使一个表示比另一个表示更好？</li>
+<li>如果表示向量$h$表示观察值$x$的很多潜在因素，并且输出向量$y$是最为重要的原因之一，那么从$h$预测$y$会很容易；</li>
+<li>半监督和无监督的区别是什么？作用的区别是什么？</li>
+</ul>
+<p>分布式表示：</p>
+<ul>
+<li>具有$k$个值的$n$个特征去描述$k^n$个不同的概念；</li>
+<li>与符号表示的区别是什么？</li>
+<li>为什么要使用分布式表示？</li>
+</ul>
+<p>得益于深度的指数增益</p>
+<ul>
+<li>缩小规模提高统计效率？</li>
+<li>深度不够时，会需要指数级的神经元数。</li>
+</ul>
+<p>提供发现潜在原因的线索</p>
+<ul>
+<li>当找不到一个普遍良好的正则化策略时，深度学习的一个目的是找到一套相当通用的正则化策略，使其能够适用于各种各样的AI任务。</li>
+<li>平滑</li>
+<li>线性</li>
+<li>多个解释因子</li>
+<li>因果因子</li>
+<li>等</li>
+</ul>
+<h2 id="深度学习中的结构化概率模型"><a href="#深度学习中的结构化概率模型" class="headerlink" title="深度学习中的结构化概率模型"></a>深度学习中的结构化概率模型</h2><p>结构化概率模型使用图来描述概率分布中变量之间的相互作用，从而描述一个概率分布。</p>
+<p>非结构化建模的挑战：</p>
+<ul>
+<li>枚举法（表格法）会卡在：内存+时间；</li>
+</ul>
+<p>使用图描述模型结构</p>
+<ul>
+<li>节点表示随机变量</li>
+<li>边表示直接互相作用</li>
+<li>图类型<ul>
+<li>有向图</li>
+<li>无向图</li>
+<li>配分函数：归一化常数</li>
+<li>基于能量的模型：能量函数是什么？模型如何训练？</li>
+<li>分离和d-分离：分离=条件独立=两个变量的连接路径是否涉及观察变量</li>
+<li>在有向图和无向图中转换</li>
+<li>因子图</li>
+</ul>
+</li>
+</ul>
+<p>从图模型中采样</p>
+<ul>
+<li>原始采样：从模型所表示的联合分布中产生样本</li>
+</ul>
+<p>结构化建模的优势</p>
+<ul>
+<li>显著降低表示概率分布、学习和推断的成本</li>
+<li>明确地将给定的现有知识与知识的学习或推断分开</li>
+</ul>
+<p>学习依赖关系</p>
+<ul>
+<li>通过潜变量描述依赖关系</li>
+<li>结构学习</li>
+</ul>
+<p>推断和近似推断</p>
+<ul>
+<li>预测给定其他变量的情况下一些变量的值</li>
+<li>给定其他变量的值，预测一些变量的概率分布</li>
+<li>非常难计算</li>
+</ul>
+<p>结构化概率模型的深度学习方法</p>
+<ul>
+<li>根据图模型的图而不是计算图来定义模型的深度</li>
+<li>分布式表示</li>
+</ul>
+<h2 id="蒙特卡罗方法"><a href="#蒙特卡罗方法" class="headerlink" title="蒙特卡罗方法"></a>蒙特卡罗方法</h2><p>采样和蒙特卡罗方法</p>
+<ul>
+<li>和或积分难以处理</li>
+<li>通过估计对应的平均值来近似期望（大数定理+中心极限定理）</li>
+<li>从基准分布中采样并不总是容易的</li>
+</ul>
+<p>重要采样</p>
+<ul>
+<li>​</li>
+</ul>
+<h2 id="生成模型"><a href="#生成模型" class="headerlink" title="生成模型"></a>生成模型</h2>
       
     </div>
 
@@ -356,19 +567,7 @@
           
             <a href="/tags/机器学习/" rel="tag">#机器学习</a>
           
-            <a href="/tags/深度学习/" rel="tag">#深度学习</a>
-          
             <a href="/tags/神经网络/" rel="tag">#神经网络</a>
-          
-            <a href="/tags/CNN/" rel="tag">#CNN</a>
-          
-            <a href="/tags/RNN/" rel="tag">#RNN</a>
-          
-            <a href="/tags/DNN/" rel="tag">#DNN</a>
-          
-            <a href="/tags/MLP/" rel="tag">#MLP</a>
-          
-            <a href="/tags/LSTM/" rel="tag">#LSTM</a>
           
         </div>
       
@@ -462,7 +661,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">35</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -479,7 +678,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -508,7 +707,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#历史"><span class="nav-number">1.</span> <span class="nav-text">历史</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#组件"><span class="nav-number">2.</span> <span class="nav-text">组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#激活函数"><span class="nav-number">2.1.</span> <span class="nav-text">激活函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卷积"><span class="nav-number">2.2.</span> <span class="nav-text">卷积</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#池化"><span class="nav-number">2.3.</span> <span class="nav-text">池化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#训练"><span class="nav-number">3.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络类型"><span class="nav-number">4.</span> <span class="nav-text">网络类型</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#监督训练"><span class="nav-number">1.</span> <span class="nav-text">监督训练</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无（半）监督训练"><span class="nav-number">2.</span> <span class="nav-text">无（半）监督训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#线性因子模型"><span class="nav-number">2.1.</span> <span class="nav-text">线性因子模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自编码器"><span class="nav-number">2.2.</span> <span class="nav-text">自编码器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表示学习"><span class="nav-number">2.3.</span> <span class="nav-text">表示学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度学习中的结构化概率模型"><span class="nav-number">2.4.</span> <span class="nav-text">深度学习中的结构化概率模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#蒙特卡罗方法"><span class="nav-number">2.5.</span> <span class="nav-text">蒙特卡罗方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成模型"><span class="nav-number">2.6.</span> <span class="nav-text">生成模型</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

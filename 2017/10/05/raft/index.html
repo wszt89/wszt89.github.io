@@ -1,0 +1,905 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="算法,一致性," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="问题是什么？分布式的网络中的通信是不可靠的，那通过“不靠谱”的网络是否能达成一致的结果？这就是“拜占庭问题”：
+
+拜占庭幅员辽阔，军队间距离很远，只能靠信差传递消息。在战争时期，所有将军必须达成一致共识，才去攻打敌人。
+然而，军队中存在间谍和叛徒，此时，忠诚的将军们如何才能不受影响并达成一致。
+
+拜占庭是对现实世界的模型化，拜占庭失效是指：一方向另一方发送消息，另一方没有收到或收到错误的消息。
+P">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RAFT协议">
+<meta property="og:url" content="http://yoursite.com/2017/10/05/raft/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="问题是什么？分布式的网络中的通信是不可靠的，那通过“不靠谱”的网络是否能达成一致的结果？这就是“拜占庭问题”：
+
+拜占庭幅员辽阔，军队间距离很远，只能靠信差传递消息。在战争时期，所有将军必须达成一致共识，才去攻打敌人。
+然而，军队中存在间谍和叛徒，此时，忠诚的将军们如何才能不受影响并达成一致。
+
+拜占庭是对现实世界的模型化，拜占庭失效是指：一方向另一方发送消息，另一方没有收到或收到错误的消息。
+P">
+<meta property="og:image" content="http://7xiz10.com1.z0.glb.clouddn.com/ZOOKEEPER-5.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/raft/0.png">
+<meta property="og:updated_time" content="2017-10-06T08:03:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RAFT协议">
+<meta name="twitter:description" content="问题是什么？分布式的网络中的通信是不可靠的，那通过“不靠谱”的网络是否能达成一致的结果？这就是“拜占庭问题”：
+
+拜占庭幅员辽阔，军队间距离很远，只能靠信差传递消息。在战争时期，所有将军必须达成一致共识，才去攻打敌人。
+然而，军队中存在间谍和叛徒，此时，忠诚的将军们如何才能不受影响并达成一致。
+
+拜占庭是对现实世界的模型化，拜占庭失效是指：一方向另一方发送消息，另一方没有收到或收到错误的消息。
+P">
+<meta name="twitter:image" content="http://7xiz10.com1.z0.glb.clouddn.com/ZOOKEEPER-5.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/05/raft/"/>
+
+
+  <title> RAFT协议 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                RAFT协议
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-10-05T20:57:16+08:00" content="2017-10-05">
+              2017-10-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/10/05/raft/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/10/05/raft/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/10/05/raft/" class="leancloud_visitors" data-flag-title="RAFT协议">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="问题是什么？"><a href="#问题是什么？" class="headerlink" title="问题是什么？"></a>问题是什么？</h1><p>分布式的网络中的通信是不可靠的，那通过“不靠谱”的网络是否能达成一致的结果？这就是“拜占庭问题”：</p>
+<blockquote>
+<p>拜占庭幅员辽阔，军队间距离很远，只能靠信差传递消息。在战争时期，所有将军必须达成一致共识，才去攻打敌人。</p>
+<p>然而，军队中存在间谍和叛徒，此时，忠诚的将军们如何才能不受影响并达成一致。</p>
+</blockquote>
+<p>拜占庭是对现实世界的模型化，拜占庭失效是指：一方向另一方发送消息，另一方没有收到或收到错误的消息。</p>
+<h1 id="PAXOS"><a href="#PAXOS" class="headerlink" title="PAXOS"></a>PAXOS</h1><p>Lamport也讲了一个故事，有三种角色：</p>
+<ul>
+<li><strong>PROPOSER</strong>：提出提案，内容包括编号$N$和$VALUE$；</li>
+<li><strong>ACCEPTOR</strong>：接受提案；</li>
+<li><strong>LEARNER</strong>：学习被选出的提案（<font color="lightgrey">毫无参与感</font>）；</li>
+</ul>
+<p>算法分成准备和批准两阶段：</p>
+<ul>
+<li>准备阶段<ul>
+<li>PROPOSER选择一个提案编号$N$，发送给ACCEPTOR中的一个多数派；</li>
+<li>ACCEPTOR收到请求后，如果$N&gt;M$，则将上次接受的$VALUE$回复给PROPOSER，并承诺不再回复小于$N$的提案；</li>
+</ul>
+</li>
+<li>批准阶段<ul>
+<li>PROPOSER收到多数派的回复后，向对应的ACCEPTOR再次发送请求（编号依旧是$N$，如果准备阶段有返回$VALUE$则使用，否则创建一个）；</li>
+<li>ACCEPTOR收到请求后，如果编号$N$大于本地收到过的编号$M$，更新$M$和$VALUE$，并返回$M$；</li>
+</ul>
+</li>
+</ul>
+<p>当PROPOSER收到过半的$M&lt;N$时，那么这一轮的选举目的达成，步骤如下：</p>
+<p><img src="http://7xiz10.com1.z0.glb.clouddn.com/ZOOKEEPER-5.png" alt=""></p>
+<p>算法保证了：</p>
+<ul>
+<li>如果一个编号为$N$的提案的值为$VALUE$，那么存在一个多数派，要么他们中任何人没有接受编号小于$N$的任何提案，要么他们已经接受的所有编号小于$N$的提案中编号最大的值为$VALUE$；</li>
+<li>当且仅当ACCEPTOR没有回应过大于$N$的准备阶段请求时，ACCEPTOR才会接受编号为$N$的提案；</li>
+</ul>
+<h1 id="RAFT"><a href="#RAFT" class="headerlink" title="RAFT"></a>RAFT</h1><p>算法中包含三种角色：</p>
+<ul>
+<li><strong>LEADER</strong>：领导，最多一个；</li>
+<li><strong>FOLLOWER</strong>：被领导通知干活的；</li>
+<li><strong>CANDIDATE</strong>：从FOLLOWER到LEADER的中间状态；</li>
+</ul>
+<p>变化如下：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/raft/0.png" alt=""></p>
+<p>选举逻辑：</p>
+<ul>
+<li>LEADER定时给FOLLOWER发送<font color="blue">心跳消息</font>；</li>
+<li>FOLLOWER收到LDEADER的心跳消息后，重置<font color="blue">选举定时器</font>，更新自己的TermId；</li>
+<li>FOLLOWER的选举定时器超时后，转变为CANDIDATE并发起投票；</li>
+<li>CANDIDATE收到<font color="blue">过半</font>投票后变为LEADER；</li>
+<li>CANDIDATE没有收到足够的票数，重新设置选举定时器避免冲突，自己的TermId加一；</li>
+<li>FOLLOWER收到选举消息后，如果没有投票就投票（<font color="lightgrey">根据TermId来判断是否投过</font>），并重置自己的选举定时器；</li>
+</ul>
+<p>写入逻辑：</p>
+<ul>
+<li>CLIENT发送请求给LEADER（<font color="lightgrey">不能给其他的角色发送请求</font>）；</li>
+<li>LEADER将请求记录到日志，并发送给其他服务器；</li>
+<li>LEADER收到过半服务器的保存响应，请求提交并通知CLIENT成功；</li>
+<li>LEADER刚被选举出来以后，以LEADER的日志为准（<font color="lightgrey">LEADER需要有所有已提交的日志，投票阶段需要比较日志中的TermId</font>），并同步给FOLLOWER；</li>
+</ul>
+<p>集群变化（<font color="lightgrey">分两阶段防止出现多个LEADER</font>）：</p>
+<ul>
+<li>LEADER收到命令，从$C_{old}$切换到$C_{new}$；</li>
+<li>LEADER本地生成一条日志，内容为$C_{old}\cup C_{new}$，并推送给FOLLOWER；</li>
+<li>FOLLOWER收到请求后，将$C_{old}\cup C_{new}$作为配置；</li>
+<li>LEADER在收到大多数的回复后，提交该记录；</li>
+<li>接着，LEADER生成新的一条记录$C_{new}$，并推送给FOLLOWER；</li>
+<li>FOLLOWER收到请求后，将$C_{new}$作为配置；</li>
+<li>LEADER收到大多数的回复后，返回CLIENT成功；</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总体上RAFT和PAXOS并没有差别那么大吧，毕竟分布式一致性要干的事情都差不多：</p>
+<blockquote>
+<p>从单个机器的角度来考虑策略，规避一些异常，试着选出唯一的LEADER。</p>
+</blockquote>
+<p>但是，现在RAFT貌似比PAXOS更火一些，后面有时间再进一步详细的看下。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://www.cnblogs.com/mindwind/p/5231986.html" target="_blank" rel="external">http://www.cnblogs.com/mindwind/p/5231986.html</a></li>
+<li><a href="http://blog.sina.com.cn/s/blog_3dbab28401014lt4.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_3dbab28401014lt4.html</a></li>
+<li><a href="http://thesecretlivesofdata.com/raft/" target="_blank" rel="external">http://thesecretlivesofdata.com/raft/</a></li>
+<li><a href="https://raft.github.io/raft.pdf" target="_blank" rel="external">https://raft.github.io/raft.pdf</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/27207160" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/27207160</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag">#算法</a>
+          
+            <a href="/tags/一致性/" rel="tag">#一致性</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/29/common-nn-model/" rel="next" title="常见神经网络模型">
+                <i class="fa fa-chevron-left"></i> 常见神经网络模型
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/07/pgsql/" rel="prev" title="pgsql">
+                pgsql <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题是什么？"><span class="nav-number">1.</span> <span class="nav-text">问题是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PAXOS"><span class="nav-number">2.</span> <span class="nav-text">PAXOS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RAFT"><span class="nav-number">3.</span> <span class="nav-text">RAFT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2017/10/05/raft/';
+      var disqus_title = "RAFT协议";
+      var disqus_url = 'http://yoursite.com/2017/10/05/raft/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
