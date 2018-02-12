@@ -1,0 +1,860 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编程,Golang," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="当初Java的跨平台的卖点非常地吸引人，但是用起来还是不够顺滑，尤其是运行程序的机器不固定的时候：
+
+安装Java环境（貌似有一些黑科技可以解决，但是坑比较多）
+在用上SpringBoot之前，还要手动安装Tomcat等玩意😂
+
+最好能将一份代码编译成不同平台的可执行文件（交叉编译），于是想到了Golang。
+交叉编译和条件编译在Mac下编译Window可执行文件的方法是：
+1CGO_ENABL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang的第一次尝试">
+<meta property="og:url" content="http://yoursite.com/2017/08/28/golang-first/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="当初Java的跨平台的卖点非常地吸引人，但是用起来还是不够顺滑，尤其是运行程序的机器不固定的时候：
+
+安装Java环境（貌似有一些黑科技可以解决，但是坑比较多）
+在用上SpringBoot之前，还要手动安装Tomcat等玩意😂
+
+最好能将一份代码编译成不同平台的可执行文件（交叉编译），于是想到了Golang。
+交叉编译和条件编译在Mac下编译Window可执行文件的方法是：
+1CGO_ENABL">
+<meta property="og:updated_time" content="2017-10-22T08:54:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Golang的第一次尝试">
+<meta name="twitter:description" content="当初Java的跨平台的卖点非常地吸引人，但是用起来还是不够顺滑，尤其是运行程序的机器不固定的时候：
+
+安装Java环境（貌似有一些黑科技可以解决，但是坑比较多）
+在用上SpringBoot之前，还要手动安装Tomcat等玩意😂
+
+最好能将一份代码编译成不同平台的可执行文件（交叉编译），于是想到了Golang。
+交叉编译和条件编译在Mac下编译Window可执行文件的方法是：
+1CGO_ENABL">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/28/golang-first/"/>
+
+
+  <title> Golang的第一次尝试 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Golang的第一次尝试
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-28T10:20:08+08:00" content="2017-08-28">
+              2017-08-28
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/08/28/golang-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/08/28/golang-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/08/28/golang-first/" class="leancloud_visitors" data-flag-title="Golang的第一次尝试">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>当初Java的跨平台的卖点非常地吸引人，但是用起来还是不够顺滑，尤其是运行程序的机器不固定的时候：</p>
+<ul>
+<li>安装Java环境（<font color="lightgrey">貌似有一些黑科技可以解决，但是坑比较多</font>）</li>
+<li>在用上SpringBoot之前，还要手动安装Tomcat等玩意😂</li>
+</ul>
+<p>最好能将一份代码编译成不同平台的可执行文件（<font color="lightgrey">交叉编译</font>），于是想到了Golang。</p>
+<h1 id="交叉编译和条件编译"><a href="#交叉编译和条件编译" class="headerlink" title="交叉编译和条件编译"></a>交叉编译和条件编译</h1><p>在Mac下编译Window可执行文件的方法是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o test.exe</div></pre></td></tr></table></figure>
+<p>编译Linux的方法是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o test.exe</div></pre></td></tr></table></figure>
+<p>其中参数的含义为：</p>
+<ul>
+<li><code>CGO_ENABLED</code>：交叉编译不支持CGO，所以禁用</li>
+<li><code>GOOS</code>：目标的OS</li>
+<li><code>GOARCH</code>：目标的CPU ARCH</li>
+</ul>
+<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h2 id="AES加密"><a href="#AES加密" class="headerlink" title="AES加密"></a>AES加密</h2><p>在与服务器通信中，需要使用AES加密，服务器端使用加密方式为AES，直接用Golang的AES会发现加密结果不一致：</p>
+<blockquote>
+<p>虽然同是AES，但是他们使用的模式是不一样的，在Java中默认使用ECB模式。</p>
+</blockquote>
+<p>在Golang中实现ECB模式的方法如下（<font color="lightgrey">核心的方法在于BlockSize、CryptBlocks方法，不过还没看懂</font>）：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 加密</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">AesEncrypt</span><span class="params">(content, key []<span class="keyword">byte</span>)</span> <span class="params">(crypted []<span class="keyword">byte</span>)</span></span> &#123;</div><div class="line">	block, err := aes.NewCipher(key)</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		<span class="comment">// TODO</span></div><div class="line">	&#125;</div><div class="line">	ecb := NewECBEncrypter(block)</div><div class="line">	content = PKCS5Padding(content, block.BlockSize())</div><div class="line">	crypted = <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="built_in">len</span>(content))</div><div class="line">	ecb.CryptBlocks(crypted, content)</div><div class="line">	<span class="keyword">return</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 解密</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">AesDecrypt</span><span class="params">(crypted, key []<span class="keyword">byte</span>)</span> <span class="params">(content []<span class="keyword">byte</span>)</span></span> &#123;</div><div class="line">	block, err := aes.NewCipher(key)</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		<span class="comment">// TODO</span></div><div class="line">	&#125;</div><div class="line">	blockMode := NewECBDecrypter(block)</div><div class="line">	content = <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="built_in">len</span>(crypted))</div><div class="line">	blockMode.CryptBlocks(content, crypted)</div><div class="line">	content = PKCS5UnPadding(content)</div><div class="line">	<span class="keyword">return</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 公用的数据结构。</span></div><div class="line"><span class="keyword">type</span> ecb <span class="keyword">struct</span> &#123;</div><div class="line">	b         cipher.Block</div><div class="line">	blockSize <span class="keyword">int</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">newECB</span><span class="params">(b cipher.Block)</span> *<span class="title">ecb</span></span> &#123;</div><div class="line">	<span class="keyword">return</span> &amp;ecb&#123;</div><div class="line">		b:         b,</div><div class="line">		blockSize: b.BlockSize(),</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 补全数据。</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">PKCS5Padding</span><span class="params">(ciphertext []<span class="keyword">byte</span>, blockSize <span class="keyword">int</span>)</span> []<span class="title">byte</span></span> &#123;</div><div class="line">	padding := blockSize - <span class="built_in">len</span>(ciphertext) % blockSize</div><div class="line">	padtext := bytes.Repeat([]<span class="keyword">byte</span>&#123;<span class="keyword">byte</span>(padding)&#125;, padding)</div><div class="line">	<span class="keyword">return</span> <span class="built_in">append</span>(ciphertext, padtext...)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 去除补全的数据。</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">PKCS5UnPadding</span><span class="params">(origData []<span class="keyword">byte</span>)</span> []<span class="title">byte</span></span> &#123;</div><div class="line">	length := <span class="built_in">len</span>(origData)</div><div class="line">	unpadding := <span class="keyword">int</span>(origData[length - <span class="number">1</span>])</div><div class="line">	<span class="keyword">return</span> origData[:(length - unpadding)]</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// ECB模式的加密实现。</span></div><div class="line"><span class="keyword">type</span> ecbEncrypter ecb</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewECBEncrypter</span><span class="params">(b cipher.Block)</span> <span class="title">cipher</span>.<span class="title">BlockMode</span></span> &#123;</div><div class="line">	<span class="keyword">return</span> (*ecbEncrypter)(newECB(b))</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(x *ecbEncrypter)</span> <span class="title">BlockSize</span><span class="params">()</span> <span class="title">int</span></span> &#123;</div><div class="line">	<span class="keyword">return</span> x.blockSize</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(x *ecbEncrypter)</span> <span class="title">CryptBlocks</span><span class="params">(dst, src []<span class="keyword">byte</span>)</span></span> &#123;</div><div class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(src) % x.blockSize != <span class="number">0</span> &#123;</div><div class="line">		<span class="built_in">panic</span>(<span class="string">"crypto/cipher: input not full blocks"</span>)</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(dst) &lt; <span class="built_in">len</span>(src) &#123;</div><div class="line">		<span class="built_in">panic</span>(<span class="string">"crypto/cipher: output smaller than input"</span>)</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> <span class="built_in">len</span>(src) &gt; <span class="number">0</span> &#123;</div><div class="line">		x.b.Encrypt(dst, src[:x.blockSize])</div><div class="line">		src = src[x.blockSize:]</div><div class="line">		dst = dst[x.blockSize:]</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// ECB模式的解密实现。</span></div><div class="line"><span class="keyword">type</span> ecbDecrypter ecb</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewECBDecrypter</span><span class="params">(b cipher.Block)</span> <span class="title">cipher</span>.<span class="title">BlockMode</span></span> &#123;</div><div class="line">	<span class="keyword">return</span> (*ecbDecrypter)(newECB(b))</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(x *ecbDecrypter)</span> <span class="title">BlockSize</span><span class="params">()</span> <span class="title">int</span></span> &#123;</div><div class="line">	<span class="keyword">return</span> x.blockSize</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(x *ecbDecrypter)</span> <span class="title">CryptBlocks</span><span class="params">(dst, src []<span class="keyword">byte</span>)</span></span> &#123;</div><div class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(src) % x.blockSize != <span class="number">0</span> &#123;</div><div class="line">		<span class="built_in">panic</span>(<span class="string">"crypto/cipher: input not full blocks"</span>)</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(dst) &lt; <span class="built_in">len</span>(src) &#123;</div><div class="line">		<span class="built_in">panic</span>(<span class="string">"crypto/cipher: output smaller than input"</span>)</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> <span class="built_in">len</span>(src) &gt; <span class="number">0</span> &#123;</div><div class="line">		x.b.Decrypt(dst, src[:x.blockSize])</div><div class="line">		src = src[x.blockSize:]</div><div class="line">		dst = dst[x.blockSize:]</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h2><p>业务中的场景是：</p>
+<blockquote>
+<p>从服务端向客户端推送指令。</p>
+</blockquote>
+<p>实际中使用的是长连接的方案。因为，如果走HTTP的话，需要给园区开公网IP（<font color="lightgrey">有安全问题，况且不能做个业务就开个端口吧</font>）。</p>
+<p>这里使用工具<a href="github.com/gorilla/websocket">github.com/gorilla/websocket</a>（<font color="lightgrey">例子比较多、用起来简单</font>）：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">c, _, err := websocket.DefaultDialer.Dial(path, <span class="literal">nil</span>)</div><div class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">	fmt.Println(<span class="string">"[ERROR] "</span>, err)</div><div class="line">&#125;</div><div class="line"><span class="keyword">for</span> &#123;</div><div class="line">	_, message, err := c.ReadMessage()</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		log.Println(<span class="string">"read:"</span>, err)</div><div class="line">		<span class="keyword">return</span></div><div class="line">	&#125;</div><div class="line">	log.Printf(<span class="string">"recv: %s"</span>, message)</div><div class="line">	fmt.Println(<span class="keyword">string</span>(message))</div><div class="line">	<span class="keyword">if</span> strings.HasPrefix(<span class="keyword">string</span>(message), <span class="string">"2::"</span>) &#123;</div><div class="line">		c.WriteMessage(websocket.TextMessage, []<span class="keyword">byte</span>(<span class="string">"2::"</span>))</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="创建进程"><a href="#创建进程" class="headerlink" title="创建进程"></a>创建进程</h2><h2 id="定时执行"><a href="#定时执行" class="headerlink" title="定时执行"></a>定时执行</h2><h1 id="自动升级"><a href="#自动升级" class="headerlink" title="自动升级"></a>自动升级</h1><h1 id="开机启动"><a href="#开机启动" class="headerlink" title="开机启动"></a>开机启动</h1><h1 id="进程保护"><a href="#进程保护" class="headerlink" title="进程保护"></a>进程保护</h1><h1 id="实际效果"><a href="#实际效果" class="headerlink" title="实际效果"></a>实际效果</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li>交叉编译：<a href="http://www.jianshu.com/p/4f79ae4f081c" target="_blank" rel="external">http://www.jianshu.com/p/4f79ae4f081c</a></li>
+<li>加密：<a href="http://www.cnblogs.com/lavin/p/5373188.html" target="_blank" rel="external">http://www.cnblogs.com/lavin/p/5373188.html</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编程/" rel="tag">#编程</a>
+          
+            <a href="/tags/Golang/" rel="tag">#Golang</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/25/rbm/" rel="next" title="受限玻尔兹曼机">
+                <i class="fa fa-chevron-left"></i> 受限玻尔兹曼机
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/29/common-nn-model/" rel="prev" title="常见神经网络模型">
+                常见神经网络模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#交叉编译和条件编译"><span class="nav-number">1.</span> <span class="nav-text">交叉编译和条件编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工具"><span class="nav-number">2.</span> <span class="nav-text">工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AES加密"><span class="nav-number">2.1.</span> <span class="nav-text">AES加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebSocket"><span class="nav-number">2.2.</span> <span class="nav-text">WebSocket</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建进程"><span class="nav-number">2.3.</span> <span class="nav-text">创建进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时执行"><span class="nav-number">2.4.</span> <span class="nav-text">定时执行</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自动升级"><span class="nav-number">3.</span> <span class="nav-text">自动升级</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开机启动"><span class="nav-number">4.</span> <span class="nav-text">开机启动</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程保护"><span class="nav-number">5.</span> <span class="nav-text">进程保护</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实际效果"><span class="nav-number">6.</span> <span class="nav-text">实际效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2017/08/28/golang-first/';
+      var disqus_title = "Golang的第一次尝试";
+      var disqus_url = 'http://yoursite.com/2017/08/28/golang-first/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

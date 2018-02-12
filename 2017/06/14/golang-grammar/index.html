@@ -104,7 +104,7 @@
 
 为工业开发量身定做，语法感觉并没有那么完备（复杂）。从传统入门程序来看它大概是这个样子：
 123456789package mainimport (	&quot;fmt&quot;)func main() &amp;#123;	fmt.Print(&quot;Hello World!&quot;)&amp;#12">
-<meta property="og:updated_time" content="2017-06-17T00:09:17.000Z">
+<meta property="og:updated_time" content="2017-10-12T14:37:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Golang：语法">
 <meta name="twitter:description" content="Golang也是有相当的一段历史了（学新东西总是慢人一步，好可怕🤔），特点是：
@@ -463,6 +463,48 @@
 <figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> a, ok := &lt;-c; ok &#123;</div><div class="line">	fmt.Println(a)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>当需要从多个管道中读取数据时可以使用<font color="red">select</font>（<font color="lightgrey">有点像I/O中的玩法</font>）:</p>
 <figure class="highlight golang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> c <span class="keyword">chan</span> <span class="keyword">int</span></div><div class="line"><span class="keyword">var</span> d <span class="keyword">chan</span> <span class="keyword">int</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	c = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">4</span>)</div><div class="line">	d = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">4</span>)</div><div class="line"></div><div class="line">	<span class="keyword">var</span> i <span class="keyword">int</span></div><div class="line">	<span class="keyword">for</span> &#123;</div><div class="line">		<span class="keyword">select</span> &#123;</div><div class="line">		<span class="keyword">case</span> i = &lt;-c:</div><div class="line">			<span class="keyword">break</span></div><div class="line">		<span class="keyword">case</span> i = &lt;-d:</div><div class="line">			<span class="keyword">break</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="包的用法"><a href="#包的用法" class="headerlink" title="包的用法"></a>包的用法</h1><p>应用的目录如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- app</div><div class="line">   |- src ：源码</div><div class="line">   |- pkg ：go install生成的.a文件</div><div class="line">   |- bin ：可执行文件</div></pre></td></tr></table></figure>
+<p>Golang中包的特点：</p>
+<ul>
+<li>包名与所在的目录名没什么关系（<font color="lightgrey">最好保持一致，不然容易引入和使用的两个地方不一致</font>）；</li>
+<li>包可以由多个文件组成；</li>
+<li>包中的多个文件可以互相调用方法、使用变量，不管是否导出；</li>
+<li>包中不能有相同的方法和变量（<font color="lightgrey">除了init方法</font>）；</li>
+<li>每个目录只能存在一个包；</li>
+<li>导入包时使用GOPATH之后的路径；</li>
+<li>init函数相关：<ul>
+<li>同一个文件中可以有多个init方法；</li>
+<li>同一个文件中，从上往下执行； </li>
+<li>同一个包中，按照文件名的字典序执行；</li>
+<li>不同包之间，如果不存在依赖，先import的先执行；</li>
+<li>不同包之间，如果存在依赖，先执行最早被依赖的；</li>
+</ul>
+</li>
+</ul>
+<p>在Golang中不允许出现循环依赖。</p>
+<h1 id="单测"><a href="#单测" class="headerlink" title="单测"></a>单测</h1><p>做单测的几个规则（<font color="lightgrey">是否强制？</font>）：</p>
+<ul>
+<li>和源码在相同的目录；</li>
+<li><code>xxx.go</code>对应的单测的文件名为<code>xxx_test.go</code>；</li>
+<li>原方法中的方法<code>Xxx</code>对应单测中的方法是<code>TestXxx(t *testing.T)</code>，Test后的第一个字符必须大写；</li>
+<li>需要引入测试包<code>testing</code>；</li>
+<li>如果要做性能测试，要实现的方法是<code>BenchmarkX(b *testing.B)</code>；</li>
+</ul>
+<p>举个栗子，自定义包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- src</div><div class="line">   |-Apush</div><div class="line">      |- Apush.go</div><div class="line">      |- Apush_test.go</div></pre></td></tr></table></figure>
+<p>其中Apush.go代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> Apush</div><div class="line"></div><div class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">SayHello</span><span class="params">()</span></span> &#123;</div><div class="line">	fmt.Println(<span class="string">"hello world"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对应的测试文件Apush_test.go代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> Apush</div><div class="line"></div><div class="line"><span class="keyword">import</span> (</div><div class="line">	<span class="string">"testing"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestSayHello</span><span class="params">(t *testing.T)</span></span> &#123;</div><div class="line">	SayHello()</div><div class="line">	t.Error(<span class="string">"hello"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">BenchmarkSayHello</span><span class="params">(b *testing.B)</span></span> &#123;</div><div class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; b.N; i++ &#123;</div><div class="line">		SayHello()</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>直接运行时会报错的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">go install</div></pre></td></tr></table></figure>
+<p>然后在执行对应的单测方法即可。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li>单测：<a href="https://studygolang.com/articles/2464" target="_blank" rel="external">https://studygolang.com/articles/2464</a></li>
+<li>包：<a href="https://studygolang.com/articles/155" target="_blank" rel="external">https://studygolang.com/articles/155</a></li>
+</ul>
+
       
     </div>
 
@@ -582,7 +624,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">41</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -590,7 +632,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -599,7 +641,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -628,7 +670,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础类型"><span class="nav-number">1.</span> <span class="nav-text">基础类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高级类型"><span class="nav-number">2.</span> <span class="nav-text">高级类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义类型"><span class="nav-number">3.</span> <span class="nav-text">自定义类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#控制与方法"><span class="nav-number">4.</span> <span class="nav-text">控制与方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#错误处理"><span class="nav-number">5.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口"><span class="nav-number">6.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#反射"><span class="nav-number">7.</span> <span class="nav-text">反射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#I-O"><span class="nav-number">8.</span> <span class="nav-text">I/O</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#并发编程"><span class="nav-number">9.</span> <span class="nav-text">并发编程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础类型"><span class="nav-number">1.</span> <span class="nav-text">基础类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高级类型"><span class="nav-number">2.</span> <span class="nav-text">高级类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义类型"><span class="nav-number">3.</span> <span class="nav-text">自定义类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#控制与方法"><span class="nav-number">4.</span> <span class="nav-text">控制与方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#错误处理"><span class="nav-number">5.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口"><span class="nav-number">6.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#反射"><span class="nav-number">7.</span> <span class="nav-text">反射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#I-O"><span class="nav-number">8.</span> <span class="nav-text">I/O</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#并发编程"><span class="nav-number">9.</span> <span class="nav-text">并发编程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#包的用法"><span class="nav-number">10.</span> <span class="nav-text">包的用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#单测"><span class="nav-number">11.</span> <span class="nav-text">单测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">12.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
@@ -647,7 +689,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

@@ -84,58 +84,40 @@
 
 
 
-<meta name="description" content="概述号称最强的“最先进”的开源数据库，对比MySQL：
+<meta name="description" content="概述今天要给大家介绍的是PostgreSQL（the world’s most advanced open source database），号称最先进的开源数据库。
+特点主要从三个角度来看PostgreSQL先进的地方：
 
-支持json、数组等结构；
-通过插件可以实现：地理位置、路径计算等；
-over分组聚合；
-递归查询；
-更多的索引及强悍的查询速度；
+索引
+查询
+地理位置
 
-在实际使用时，还需要考虑对应的运维工具是否全面、成熟。
-PostGis在对应的数据库执行命令：
-1CREATE EXTENSION postgis
-描述空间对象的方法有：
-
-WKT、EWKT：文本；
-WKB">
+索引MySQL的索引种类较少、用法单一，使用时必须严格地遵守最左匹配。所以有时候建索引会非常纠结字段的顺序，就怕一不小心没覆盖到：变成了全表扫描。
+而">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PostgreSQL">
 <meta property="og:url" content="http://yoursite.com/2017/10/07/pgsql/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="概述号称最强的“最先进”的开源数据库，对比MySQL：
+<meta property="og:description" content="概述今天要给大家介绍的是PostgreSQL（the world’s most advanced open source database），号称最先进的开源数据库。
+特点主要从三个角度来看PostgreSQL先进的地方：
 
-支持json、数组等结构；
-通过插件可以实现：地理位置、路径计算等；
-over分组聚合；
-递归查询；
-更多的索引及强悍的查询速度；
+索引
+查询
+地理位置
 
-在实际使用时，还需要考虑对应的运维工具是否全面、成熟。
-PostGis在对应的数据库执行命令：
-1CREATE EXTENSION postgis
-描述空间对象的方法有：
-
-WKT、EWKT：文本；
-WKB">
-<meta property="og:updated_time" content="2017-10-09T06:04:30.000Z">
+索引MySQL的索引种类较少、用法单一，使用时必须严格地遵守最左匹配。所以有时候建索引会非常纠结字段的顺序，就怕一不小心没覆盖到：变成了全表扫描。
+而">
+<meta property="og:updated_time" content="2018-01-30T03:26:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PostgreSQL">
-<meta name="twitter:description" content="概述号称最强的“最先进”的开源数据库，对比MySQL：
+<meta name="twitter:description" content="概述今天要给大家介绍的是PostgreSQL（the world’s most advanced open source database），号称最先进的开源数据库。
+特点主要从三个角度来看PostgreSQL先进的地方：
 
-支持json、数组等结构；
-通过插件可以实现：地理位置、路径计算等；
-over分组聚合；
-递归查询；
-更多的索引及强悍的查询速度；
+索引
+查询
+地理位置
 
-在实际使用时，还需要考虑对应的运维工具是否全面、成熟。
-PostGis在对应的数据库执行命令：
-1CREATE EXTENSION postgis
-描述空间对象的方法有：
-
-WKT、EWKT：文本；
-WKB">
+索引MySQL的索引种类较少、用法单一，使用时必须严格地遵守最左匹配。所以有时候建索引会非常纠结字段的顺序，就怕一不小心没覆盖到：变成了全表扫描。
+而">
 
 
 
@@ -374,72 +356,66 @@ WKB">
       
 
       
-        <p><img src="" alt=""></p>
-<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>号称最强的“最先进”的开源数据库，对比MySQL：</p>
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>今天要给大家介绍的是PostgreSQL（the world’s most advanced open source database），号称最先进的开源数据库。</p>
+<h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><p>主要从三个角度来看PostgreSQL先进的地方：</p>
 <ul>
-<li>支持json、数组等结构；</li>
-<li>通过插件可以实现：地理位置、路径计算等；</li>
-<li>over分组聚合；</li>
-<li>递归查询；</li>
-<li>更多的索引及强悍的查询速度；</li>
+<li>索引</li>
+<li>查询</li>
+<li>地理位置</li>
 </ul>
-<p>在实际使用时，还需要考虑对应的运维工具是否全面、成熟。</p>
-<h1 id="PostGis"><a href="#PostGis" class="headerlink" title="PostGis"></a>PostGis</h1><p>在对应的数据库执行命令：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> EXTENSION postgis</div></pre></td></tr></table></figure>
-<p>描述空间对象的方法有：</p>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>MySQL的索引种类较少、用法单一，使用时必须严格地遵守最左匹配。所以有时候建索引会非常纠结字段的顺序，就怕一不小心没覆盖到：变成了全表扫描。</p>
+<p>而在PostgreSQL中，GiST（Generalized Search Tree）支持根据索引中的任意子集进行查询，能覆盖的查询场景更多，此外，可以用来：</p>
 <ul>
-<li>WKT、EWKT：文本；</li>
-<li>WKB、EWKB：二进制；</li>
+<li>最近点搜索；</li>
+<li>点是否在某个范围；</li>
 </ul>
-<p>数据类型有：</p>
+<p>而GIN索引则可以支持到JSON、ARRAY中的键值对，比MySQL的虚拟列要方便很多。丰富地用法会让索引的使用更加便捷：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> <span class="keyword">INDEX</span> </div><div class="line">	uk_group </div><div class="line"><span class="keyword">ON</span> </div><div class="line">	was_task(outer_id) </div><div class="line"><span class="keyword">WHERE</span> </div><div class="line">	is_deleted = <span class="string">'0'</span></div></pre></td></tr></table></figure>
+<p>因为几乎所有的查询中都会带上<code>is_deleted</code>，相比MySQL的优势在于：</p>
 <ul>
-<li><code>POINT(0 0)</code></li>
-<li><code>LINESTRING(0 0,1 1,1 2)</code></li>
-<li><code>POLYGON((0 0,4 0,4 4,0 4,0 0),(1 1, 2 1, 2 2, 1 2,1 1))</code></li>
-<li><code>MULTIPOINT(0 0,1 2)</code></li>
-<li><code>MULTILINESTRING((0 0,1 1,1 2),(2 3,3 2,5 4))</code></li>
-<li><code>MULTIPOLYGON(((0 0,4 0,4 4,0 4,0 0),(1 1,2 1,2 2,1 2,1 1)))</code></li>
-<li><code>GEOMETRYCOLLECTION(POINT(2 3),LINESTRING(2 3,3 4))</code></li>
+<li>减少了索引大小；</li>
+<li>降低了索引的行数；</li>
 </ul>
-<p>坐标系分为两种：</p>
+<p>同时可以在表达式上建索引，非常方便用来对指定的查询场景进行优化：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span></div><div class="line">	idx_container</div><div class="line"><span class="keyword">ON</span></div><div class="line">	was_task(<span class="keyword">lower</span>(container_code))</div></pre></td></tr></table></figure>
+<p>数据库强不强，索引很重要。😀</p>
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><p>首先，几乎所有的子查询，PostgreSQL都要比MySQL快。</p>
+<p>支持递归查询，获取树形的数据可以更加优雅（不在需要服务器和数据库多次交互）：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">test</span> (</div><div class="line">	<span class="keyword">id</span> 	<span class="built_in">CHARACTER</span>,</div><div class="line">	pid	<span class="built_in">CHARACTER</span></div><div class="line">)</div><div class="line"><span class="comment">--------</span></div><div class="line"><span class="keyword">WITH</span> <span class="keyword">RECURSIVE</span> t <span class="keyword">AS</span> (</div><div class="line">	<span class="keyword">SELECT</span> a.id, a.pid <span class="keyword">FROM</span> <span class="keyword">test</span> a <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="string">'1'</span></div><div class="line">	<span class="keyword">UNION</span> ALL</div><div class="line">	<span class="keyword">SELECT</span> k.id, k.pid <span class="keyword">FROM</span> <span class="keyword">test</span> k <span class="keyword">INNER</span> <span class="keyword">JOIN</span> t c <span class="keyword">ON</span> c.id = k.pid</div><div class="line">) <span class="keyword">SELECT</span> <span class="keyword">id</span>, pid <span class="keyword">FROM</span> t;</div></pre></td></tr></table></figure>
+<p>同时支持OVER，计算各科的排名或者TOP N变得非常简单：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">test</span> (</div><div class="line">	<span class="keyword">name</span> 	<span class="built_in">CHARACTER</span>,</div><div class="line">	course	<span class="built_in">CHARACTER</span>,</div><div class="line">	score	<span class="built_in">INTEGER</span></div><div class="line">)</div><div class="line"><span class="comment">--------</span></div><div class="line"><span class="keyword">SELECT</span></div><div class="line">	*, ROW_NUMBER() <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> course <span class="keyword">ORDER</span> <span class="keyword">BY</span> score <span class="keyword">DESC</span>) rn</div><div class="line"><span class="keyword">FROM</span></div><div class="line">	<span class="keyword">test</span></div><div class="line"><span class="keyword">WHERE</span></div><div class="line">	rn &lt;= <span class="number">3</span></div></pre></td></tr></table></figure>
+<p>强大的SQL表达能力使得我们在数据分析时更加得心应手。</p>
+<h2 id="地理位置"><a href="#地理位置" class="headerlink" title="地理位置"></a>地理位置</h2><p>吸引很多公司开启PostgreSQL的原因是其强大的地理位置处理能力，依赖的插件有：</p>
 <ul>
-<li><code>geometry</code>：平面；</li>
-<li><code>geography</code>：球面，按照经纬度计算，计算量会更大；</li>
+<li>PostGIS</li>
+<li>PgRouting</li>
 </ul>
-<h1 id="PgRouting"><a href="#PgRouting" class="headerlink" title="PgRouting"></a>PgRouting</h1><h1 id="Json"><a href="#Json" class="headerlink" title="Json"></a>Json</h1><p>支持<font color="red">json</font>和<font color="red">jsonb</font>两种类型，区别在于：</p>
-<blockquote>
-<p>json是使用时解析，jsonb是保存解析后的结果。</p>
-</blockquote>
-<p>它们共有的操作包括：</p>
+<p>从此，计算两个之间的最短路径，只需要一行代码：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span></div><div class="line">	*</div><div class="line"><span class="keyword">FROM</span></div><div class="line">	pgr_dijkstra(<span class="string">'</span></div><div class="line">                 	SELECT</div><div class="line">                 		source::integer,</div><div class="line">                 		target::integer,</div><div class="line">                 		length::double precision AS cost</div><div class="line">                 	FROM</div><div class="line">                 		beijing_line</div><div class="line">                 ', <span class="number">30</span>, <span class="number">60</span>, <span class="literal">false</span>, <span class="literal">false</span>)</div></pre></td></tr></table></figure>
+<p>此外，封装了丰富的图算法：$A^*$、Vrp等。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>PostgreSQL的其他优势有：</p>
 <ul>
-<li><code>-&gt;</code>：根据下标或键值获取元素；</li>
-<li><code>-&gt;&gt;</code>：与<code>-&gt;</code>类似，结果为文本；</li>
-<li><code>#&gt;</code>：根据下标或键值组成的路径获取元素；</li>
-<li><code>#&gt;&gt;</code>：与<code>#&gt;</code>类似，结果为文本；</li>
+<li>丰富的数据类型；</li>
+<li>利用PostgREST可以快速提供API接口；</li>
+<li>支持Trigram索引，可以用来提升全文索引效果，实现高效的正则搜索；</li>
+<li>高效处理图结构；</li>
+<li>支持MADlib，方便地使用机器学习；</li>
+<li>支持通过LLVM JIT将SQL转化为native code执行；</li>
 </ul>
-<p>jsonb额外支持的操作符包括：</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>仓库中，业务场景变得越来越丰富，已经不仅仅满足于可以跑通流程和系统稳定，有了更高的要求：</p>
 <ul>
-<li><code>@&gt;</code>、<code>@&gt;</code>：最上层的包含关系<ul>
-<li><code>select &#39;{&quot;a&quot;:1, &quot;b&quot;:2}&#39;::jsonb @&gt;&#39;{&quot;b&quot;:2}&#39;::jsonb;</code></li>
-<li><code>select &#39;{&quot;b&quot;:2}&#39;::jsonb &lt;@ &#39;{&quot;a&quot;:1,&quot;b&quot;:2}&#39;::jsonb;</code></li>
+<li>能看到更多的统计和分析；</li>
+<li>做出更合理的决策；</li>
 </ul>
-</li>
-<li><code>?</code>、<code>?|</code>、<code>?&amp;</code>：键是否在对象中<ul>
-<li><code>select &#39;{&quot;a&quot;:1, &quot;b&quot;:2}&#39;::jsonb ? &#39;b&#39;;</code></li>
-<li><code>select &#39;{&quot;a&quot;:1, &quot;b&quot;:2, &quot;c&quot;:3}&#39;::jsonb ?| array[&#39;b&#39;,&#39;c&#39;];</code></li>
-<li><code>select &#39;[&quot;a&quot;, &quot;b&quot;]&#39;::jsonb ?&amp; array[&#39;a&#39;, &#39;b&#39;];</code></li>
+<p>而对于从来不在SQL中出现JOIN的我们，使用MySQL来实现似乎遇到的困难越来越多，更多样、有更强分析能力的存储或许会有所帮助。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://blog.csdn.net/kongxx/article/details/47035491" target="_blank" rel="external">http://blog.csdn.net/kongxx/article/details/47035491</a></li>
+<li><a href="https://www.zhihu.com/question/20010554" target="_blank" rel="external">https://www.zhihu.com/question/20010554</a></li>
+<li><a href="http://blog.csdn.net/luojinbai/article/details/45078809" target="_blank" rel="external">http://blog.csdn.net/luojinbai/article/details/45078809</a></li>
+<li><a href="https://www.cnblogs.com/nidaye/p/4567761.html" target="_blank" rel="external">https://www.cnblogs.com/nidaye/p/4567761.html</a></li>
+<li><a href="https://postgrest.com/en/v4.4/" target="_blank" rel="external">https://postgrest.com/en/v4.4/</a></li>
 </ul>
-</li>
-<li><code>||</code>、<code>-</code>、<code>#-</code>：对json对象进行操作<ul>
-<li><code>select &#39;[&quot;a&quot;, &quot;b&quot;]&#39;::jsonb || &#39;[&quot;c&quot;, &quot;d&quot;]&#39;::jsonb;</code></li>
-<li><code>select &#39;{&quot;a&quot;: &quot;b&quot;}&#39;::jsonb - &#39;a&#39;;</code></li>
-<li><code>select &#39;[&quot;a&quot;, &quot;b&quot;]&#39;::jsonb - 1;</code></li>
-<li><code>select &#39;[&quot;a&quot;, {&quot;b&quot;:1}]&#39;::jsonb #- &#39;{1,b}&#39;;</code></li>
-</ul>
-</li>
-</ul>
-<p>在json上可以建<font color="red">GIN</font>索引来提升查询速度。</p>
-<h1 id="其他特性"><a href="#其他特性" class="headerlink" title="其他特性"></a>其他特性</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1>
+
       
     </div>
 
@@ -557,7 +533,7 @@ WKB">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">41</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -565,7 +541,7 @@ WKB">
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -574,7 +550,7 @@ WKB">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -603,7 +579,7 @@ WKB">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PostGis"><span class="nav-number">2.</span> <span class="nav-text">PostGis</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PgRouting"><span class="nav-number">3.</span> <span class="nav-text">PgRouting</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Json"><span class="nav-number">4.</span> <span class="nav-text">Json</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他特性"><span class="nav-number">5.</span> <span class="nav-text">其他特性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特点"><span class="nav-number">2.</span> <span class="nav-text">特点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#索引"><span class="nav-number">2.1.</span> <span class="nav-text">索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询"><span class="nav-number">2.2.</span> <span class="nav-text">查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#地理位置"><span class="nav-number">2.3.</span> <span class="nav-text">地理位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">2.4.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
@@ -622,7 +598,7 @@ WKB">
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

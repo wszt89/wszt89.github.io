@@ -1,0 +1,1048 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编程,语法,rust," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="现代的编程语言，会有各种“奇技淫巧”来接管内存的释放，较大的一支是通过垃圾回收，然而：
+
+大部分的垃圾回收会导致或多或少的卡顿。
+
+在一些场景中是无法忍受的，Rust似乎是C/C++之外一种不错的选择。
+起步一键安装：
+1curl https://sh.rustup.rs -sSf | sh
+将在你的电脑上安装：
+
+cargo：管理依赖包，有点像Maven；
+rustc：编译器；
+rustup：R">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust">
+<meta property="og:url" content="http://yoursite.com/2017/11/08/rust/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="现代的编程语言，会有各种“奇技淫巧”来接管内存的释放，较大的一支是通过垃圾回收，然而：
+
+大部分的垃圾回收会导致或多或少的卡顿。
+
+在一些场景中是无法忍受的，Rust似乎是C/C++之外一种不错的选择。
+起步一键安装：
+1curl https://sh.rustup.rs -sSf | sh
+将在你的电脑上安装：
+
+cargo：管理依赖包，有点像Maven；
+rustc：编译器；
+rustup：R">
+<meta property="og:updated_time" content="2017-11-27T03:28:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Rust">
+<meta name="twitter:description" content="现代的编程语言，会有各种“奇技淫巧”来接管内存的释放，较大的一支是通过垃圾回收，然而：
+
+大部分的垃圾回收会导致或多或少的卡顿。
+
+在一些场景中是无法忍受的，Rust似乎是C/C++之外一种不错的选择。
+起步一键安装：
+1curl https://sh.rustup.rs -sSf | sh
+将在你的电脑上安装：
+
+cargo：管理依赖包，有点像Maven；
+rustc：编译器；
+rustup：R">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/08/rust/"/>
+
+
+  <title> Rust | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Rust
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-11-08T16:02:13+08:00" content="2017-11-08">
+              2017-11-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/11/08/rust/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/11/08/rust/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/11/08/rust/" class="leancloud_visitors" data-flag-title="Rust">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>现代的编程语言，会有各种“奇技淫巧”来接管内存的释放，较大的一支是通过垃圾回收，然而：</p>
+<blockquote>
+<p>大部分的垃圾回收会导致或多或少的卡顿。</p>
+</blockquote>
+<p>在一些场景中是无法忍受的，Rust似乎是C/C++之外一种不错的选择。</p>
+<h1 id="起步"><a href="#起步" class="headerlink" title="起步"></a>起步</h1><p>一键安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl https://sh.rustup.rs <span class="_">-s</span>Sf | sh</div></pre></td></tr></table></figure>
+<p>将在你的电脑上安装：</p>
+<ul>
+<li><strong>cargo</strong>：管理依赖包，有点像Maven；</li>
+<li><strong>rustc</strong>：编译器；</li>
+<li><strong>rustup</strong>：Rust版本管理工具，语言本身迭代非常快，工具还是非常有必要的，另外用来做交叉编译也很简单；</li>
+</ul>
+<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><p>用惯了自带GC的语言，再也不想手动管内存了。而RUST则既不用管内存释放、也没有GC，优势在于：</p>
+<ul>
+<li>Cover无法忍受GC过程中Stop The World导致停顿的场景（点亮技能树）；</li>
+<li>方便地交叉编译；</li>
+<li>安全的内存管理；</li>
+<li>跟随语言一起成长的机会；</li>
+<li>从语言设计的理念中，学习一些编程的最佳实践；</li>
+</ul>
+<p>总的来说，花点时间学习RUST还是非常值得的。</p>
+<h1 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h1><p>与之前用过的语言的差别比较大，上手成本有点高。</p>
+<h2 id="原生类型"><a href="#原生类型" class="headerlink" title="原生类型"></a>原生类型</h2><ul>
+<li>i8、i16、i32、i64、<font color="green">isize</font>；</li>
+<li>u8、u16、u32、u64、<font color="green">usize</font>；</li>
+<li>f32、f64；</li>
+<li>char；</li>
+<li>bool；</li>
+<li>数组：[1,2,3]、[i32; 3]、[0; 3]；</li>
+<li>切片：&amp;a[..]、&amp;a[1..4]；</li>
+<li>元组：(1,true)；</li>
+</ul>
+<p>变量声明（<font color="lightgrey">变量声明貌似与let的真实想表达的含义并不是很贴切</font>）支持类型推导，默认不可写（<font color="lightgrey">需要mut</font>）：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 变量</span></div><div class="line"><span class="keyword">let</span> a : <span class="keyword">bool</span> = <span class="literal">true</span>;</div><div class="line"><span class="keyword">let</span> b = <span class="literal">true</span>;</div><div class="line"><span class="keyword">let</span> c = <span class="number">123i64</span>;</div><div class="line"><span class="keyword">let</span> <span class="keyword">mut</span> a = <span class="number">123</span>;</div><div class="line"><span class="comment">// 常量</span></div><div class="line"><span class="keyword">static</span> LANGUAGE: &amp;<span class="symbol">'static</span> <span class="keyword">str</span> = <span class="string">"Rust"</span>;</div><div class="line"><span class="keyword">const</span> THRESHOLD: <span class="keyword">i32</span> = <span class="number">10</span>;</div></pre></td></tr></table></figure>
+<p>不支持隐式类型转换，只能硬来：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> decimal = <span class="number">65.4321_f32</span>;</div><div class="line"><span class="keyword">let</span> integer = decimal <span class="keyword">as</span> <span class="keyword">u8</span>;</div></pre></td></tr></table></figure>
+<h2 id="自定义类型"><a href="#自定义类型" class="headerlink" title="自定义类型"></a>自定义类型</h2><p>没有class、用struct来搞定：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Nil</span></span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Pair</span></span>(<span class="keyword">i32</span>, <span class="keyword">i32</span>);</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Point</span></span> &#123;</div><div class="line">	x : <span class="keyword">f32</span>,</div><div class="line">	y : <span class="keyword">f32</span></div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Rectangle</span></span> &#123;</div><div class="line">	p1 : Point,</div><div class="line">	p2 : Point</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> point: Point = Point&#123;x : <span class="number">0.3</span>, y : <span class="number">0.4</span>&#125;;</div></pre></td></tr></table></figure>
+<p>枚举可以混合多种值，默认从0开始递增：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Person</span></span> &#123;</div><div class="line">	Engineer,</div><div class="line">	Scientist,</div><div class="line">	Height(<span class="keyword">i32</span>),</div><div class="line">	Weight(<span class="keyword">i32</span>),</div><div class="line">	Info&#123;name: <span class="built_in">String</span>, height: <span class="keyword">i32</span>&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="作用域和生命周期"><a href="#作用域和生命周期" class="headerlink" title="作用域和生命周期"></a>作用域和生命周期</h2><p>必须要弄得非常清楚的几个概念：</p>
+<ul>
+<li>所有权<ul>
+<li>每个值都<font color="red">有且仅有</font>一个所有者；</li>
+<li>当所有者离开作用域，值会被销毁；</li>
+</ul>
+</li>
+<li>移动：<u>let mut x = y</u><ul>
+<li>资源的所有者发生变换，老的所有者不能使用，避免<a href="https://baike.baidu.com/item/%E6%82%AC%E5%9E%82%E6%8C%87%E9%92%88/6693380?fr=aladdin" target="_blank" rel="external">悬垂指针</a>；</li>
+<li>能够改变可变性；</li>
+</ul>
+</li>
+<li>借用：<u>let x = &amp;mut y</u>、<u>let ref mut x = y</u><ul>
+<li>访问值，但不会变为它的所有者；</li>
+<li>被借用后，所有者不能释放、修改值；</li>
+<li>允许有多个借用；</li>
+<li>能够改变可变性，限制：不允许借用不可变为可变；</li>
+<li>不可变借用可以冻结可变值；</li>
+<li>可多次不可变借用、期间不允许可变借用；</li>
+<li>同一时间只允许一个可变借用；</li>
+</ul>
+</li>
+</ul>
+<p>而Rust的精髓就在于：</p>
+<blockquote>
+<p>通过所有权、借用，在生命周期的框架下安全地使用内存。</p>
+</blockquote>
+<p>在函数内部，通过分析作用域得到的生命周期是准确的：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</div><div class="line">	<span class="keyword">let</span> p: &amp;<span class="keyword">i32</span>;</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">let</span> local = <span class="number">1i32</span>;</div><div class="line">		p = &amp;local;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">println!</span>(<span class="string">"&#123;:?&#125;"</span>, p);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>有函数调用时，会遇到问题（<font color="lightgrey">返回&amp;y是不安全的</font>）：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">foo</span></span>(x: &amp;<span class="keyword">str</span>, y: &amp;<span class="keyword">str</span>) -&gt; &amp;<span class="keyword">str</span> &#123;</div><div class="line">	<span class="keyword">if</span> random() % <span class="number">2</span> == <span class="number">0</span> &#123; x &#125; <span class="keyword">else</span> &#123; y &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</div><div class="line">	<span class="keyword">let</span> x = <span class="built_in">String</span>::from(<span class="string">"X"</span>);</div><div class="line">	<span class="keyword">let</span> z;</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">let</span> y = <span class="built_in">String</span>::from(<span class="string">"Y"</span>);</div><div class="line">		z = foo(&amp;x, &amp;y);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">println!</span>(<span class="string">"z = &#123;&#125;"</span>, z);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>既然分析不出来，只能人工来标注：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">foo</span></span>&lt;<span class="symbol">'X</span>, <span class="symbol">'Y</span>, <span class="symbol">'Z</span>&gt;(x: &amp;<span class="symbol">'X</span> <span class="keyword">str</span>, y: &amp;<span class="symbol">'Y</span> <span class="keyword">str</span>, z: &amp;<span class="symbol">'Z</span> <span class="keyword">str</span>) -&gt; &amp;<span class="symbol">'R</span> <span class="keyword">str</span>&#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>于是，整个流程就通了：</p>
+<ul>
+<li><strong>函数内部</strong>：通过作用域自动计算；</li>
+<li><strong>函数调用</strong>：通过人工标注串联起来；</li>
+</ul>
+<p>每个都写会很烦，在省略标注后，编译器会按照规则制定合适的生命周期：</p>
+<ul>
+<li>入参<font color="red">只有一个</font>生命周期，返回值也指定为该值；</li>
+<li>入参有<font color="red">&amp;self、&amp;mut self</font>，返回值指定为对应的值；</li>
+</ul>
+<p>比如会将：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">get_str</span></span>(s: &amp;<span class="built_in">String</span>) -&gt; &amp;<span class="keyword">str</span> &#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>补全为：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">get_str</span></span>&lt;<span class="symbol">'a</span>&gt;(s: &amp;<span class="symbol">'a</span> <span class="built_in">String</span>) -&gt; &amp;<span class="symbol">'a</span> <span class="keyword">str</span> &#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h2><p>写法上的特点如下：</p>
+<ul>
+<li>少了小括号；</li>
+<li>循环增加了<font color="red">loop</font>、干掉了do…while，循环可以返回值；</li>
+<li>增加了<font color="red">match</font>、干掉了switch；</li>
+</ul>
+<p>举个栗子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 条件判断。</span></div><div class="line"><span class="keyword">let</span> n = <span class="number">5</span>;</div><div class="line"><span class="keyword">if</span> n &lt; <span class="number">0</span> &#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// 循环。</span></div><div class="line"><span class="symbol">'a</span> : <span class="keyword">loop</span> &#123;</div><div class="line">	<span class="comment">// break a;</span></div><div class="line">	<span class="comment">// continue a;</span></div><div class="line">	<span class="comment">// break 123; 返回值</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">while</span> n &lt; <span class="number">101</span> &#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">for</span> n <span class="keyword">in</span> <span class="number">1</span>..<span class="number">101</span> &#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// 分支。</span></div><div class="line"><span class="keyword">let</span> number = <span class="number">13</span>;</div><div class="line"><span class="keyword">match</span> number &#123;</div><div class="line">	<span class="number">1</span> =&gt; <span class="built_in">println!</span>(<span class="string">"One!"</span>),</div><div class="line">	<span class="number">2</span> | <span class="number">3</span> | <span class="number">5</span> | <span class="number">7</span> | <span class="number">11</span> =&gt; <span class="built_in">println!</span>(<span class="string">"This is a prime"</span>),</div><div class="line">	<span class="number">13</span>..<span class="number">19</span> =&gt; <span class="built_in">println!</span>(<span class="string">"A teen"</span>),</div><div class="line">	_ =&gt; <span class="built_in">println!</span>(<span class="string">"Ain't special"</span>),</div><div class="line">&#125;</div><div class="line"><span class="keyword">let</span> pair = (<span class="number">2</span>, -<span class="number">2</span>);</div><div class="line"><span class="keyword">match</span> pair &#123;</div><div class="line">	(x, y) <span class="keyword">if</span> x == y =&gt; <span class="comment">//...,</span></div><div class="line">	(x, y) <span class="keyword">if</span> x + y == <span class="number">0</span> ==&gt; <span class="comment">// ...,</span></div><div class="line">	(x, _) <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">1</span> ==&gt; <span class="comment">// ...,</span></div><div class="line">	_ =&gt; <span class="comment">// ...,</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>定义没有大的差别，定义结构体的方法时需要<font color="red">self</font>作为入参：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">func_name</span></span>(n: <span class="keyword">u32</span>) -&gt; <span class="keyword">bool</span> &#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">	<span class="literal">true</span></div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Point</span></span> &#123;</div><div class="line">	x : <span class="keyword">f64</span>,</div><div class="line">	y : <span class="keyword">f64</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">impl</span> Point &#123;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">new</span></span>(x: <span class="keyword">f64</span>, y: <span class="keyword">f64</span>) -&gt; Point &#123;</div><div class="line">		Point&#123;x: x, y: y&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">show</span></span>(&amp;<span class="keyword">self</span>) &#123;</div><div class="line">		<span class="built_in">print!</span>(<span class="string">"&#123;&#125;, &#123;&#125;"</span>, x, y)</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>支持Lambda，和函数的区别是<font color="red">可以使用外部的环境变量</font>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">function_1</span></span>(i: <span class="keyword">i32</span>) -&gt; <span class="keyword">i32</span> &#123;i + <span class="number">1</span>&#125;</div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">function_2</span> = |<span class="title">i</span>: <span class="title">i32</span>| -&gt; <span class="title">i32</span> &#123;<span class="title">i</span> + 1&#125;;</span></div><div class="line"><span class="title">fn</span> <span class="title">function_3</span> = |<span class="title">i</span>| <span class="title">i</span>+1;</div><div class="line"><span class="title">fn</span> <span class="title">function_4</span> = || 1;</div></pre></td></tr></table></figure>
+<p>实现原理：</p>
+<blockquote>
+<p>生成匿名的struct，通过分析代码，决定其应该包括的数据。</p>
+</blockquote>
+<p>由于Rust中的所有权、借用、可变性等概念，需要考虑下面的细节：</p>
+<ul>
+<li>成员应该用什么类型初始化？T、&amp;T、&amp;mut T？</li>
+<li>函数调用时应该用什么类型？self、&amp;self、&amp;mut self？</li>
+</ul>
+<p>函数也可以作为一个值进行传递：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">apply</span></span>&lt;F&gt;(f: F) <span class="keyword">where</span></div><div class="line">F: <span class="built_in">FnOnce</span>()&#123;</div><div class="line">	f();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> diary = || &#123;</div><div class="line">	<span class="built_in">println!</span>(<span class="string">"diary"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line">apply(diary);</div></pre></td></tr></table></figure>
+<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><p>特性trait像接口，是函数的集合，让具体的类型来实现：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Animal</span></span> &#123;</div><div class="line">	<span class="comment">// 注意这里的返回值</span></div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">new</span></span>(name: &amp;<span class="symbol">'static</span> <span class="keyword">str</span>) -&gt; <span class="keyword">Self</span>;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">name</span></span>(&amp;<span class="keyword">self</span>) -&gt; &amp;<span class="symbol">'static</span> <span class="keyword">str</span>;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Sheep</span></span> &#123;</div><div class="line">	name: &amp;<span class="symbol">'static</span> <span class="keyword">str</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">impl</span> Animal <span class="keyword">for</span> Sheep &#123;</div><div class="line">	<span class="comment">// 注意这里的返回值</span></div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">new</span></span>(name: &amp;<span class="symbol">'static</span> <span class="keyword">str</span>) -&gt; Sheep &#123;</div><div class="line">		Sheep&#123;name: name&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">name</span></span>(&amp;<span class="keyword">self</span>) -&gt; &amp;<span class="symbol">'static</span> <span class="keyword">str</span>&#123;</div><div class="line">		<span class="keyword">self</span>.name</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>常用的可以通过driver来提供：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#[derive(PartialEq, PartialOrd)]</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Sheep</span></span> &#123;&#125;</div></pre></td></tr></table></figure>
+<p>包括：</p>
+<ul>
+<li>Eq、PartialEq、Ord、PartialOrd</li>
+<li>Clone</li>
+<li>Copy</li>
+<li>Hash</li>
+<li>Default</li>
+<li>Zero</li>
+<li>Debug</li>
+</ul>
+<p>甚至可以实现运算符重载：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Foo</span></span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Bar</span></span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">FooBar</span></span>;</div><div class="line"><span class="keyword">impl</span> ops::Add&lt;Bar&gt; <span class="keyword">for</span> Foo &#123;</div><div class="line">	<span class="class"><span class="keyword">type</span> <span class="title">Output</span></span> = FooBar;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">add</span></span>(<span class="keyword">self</span>, _rsh: Bar) -&gt; FooBar &#123;</div><div class="line">		<span class="comment">// ...</span></div><div class="line">		Forbar</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后，通过实现标准的特性可以改变默认的行为：</p>
+<ul>
+<li>Drop.drop</li>
+<li>Iterator.next</li>
+</ul>
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><p>错误处理是重中之重，也是各显神通的地方。Rust的panic有点像异常，但是：</p>
+<blockquote>
+<p>std::panic::catch_unwind能够捕获painc，但不能保证捕获所有的。</p>
+</blockquote>
+<p>不建议使用。常用的是基于返回值：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 失败时不关心原因。</span></div><div class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Option</span></span>&lt;T&gt; &#123;</div><div class="line">	<span class="literal">None</span>,</div><div class="line">	<span class="literal">Some</span>(T)</div><div class="line">&#125;</div><div class="line"><span class="comment">// 失败时关心原因。</span></div><div class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Result</span></span>&lt;T, E&gt; &#123;</div><div class="line">	<span class="literal">Ok</span>(T),</div><div class="line">	<span class="literal">Err</span>(E)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用时：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 发生异常后自定义处理方式。</span></div><div class="line"><span class="keyword">let</span> <span class="keyword">mut</span> file = <span class="keyword">match</span> File::open(<span class="string">"file_path"</span>) &#123;</div><div class="line">	<span class="literal">Ok</span>(file) =&gt; file,</div><div class="line">	<span class="literal">Err</span>(err) =&gt; <span class="keyword">return</span> <span class="literal">Err</span>(err.to_string()),</div><div class="line">&#125;;</div><div class="line"><span class="keyword">let</span> <span class="literal">Err</span>(err) = file.read_to_string(&amp;<span class="keyword">mut</span> content)&#123;</div><div class="line">	<span class="keyword">return</span> <span class="literal">Err</span>(err.to_string());</div><div class="line">&#125;</div><div class="line"><span class="comment">// 利用宏简化。</span></div><div class="line"><span class="built_in">try!</span>(file.read_to_string(&amp;<span class="keyword">mut</span> contents));</div><div class="line"><span class="comment">// 将错误直接抛出(painc!)。</span></div><div class="line"><span class="keyword">let</span> <span class="keyword">mut</span> file = File::open(<span class="string">"file_path"</span>).unwrap();</div><div class="line"><span class="keyword">let</span> <span class="keyword">mut</span> file = File::open(<span class="string">"file_path"</span>).expect(<span class="string">"error!"</span>);</div></pre></td></tr></table></figure>
+<p>特殊场景中<font color="red">try!</font>的简化效果并不是很满意：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> event : EventInfo = <span class="built_in">try!</span>(<span class="built_in">try!</span>(<span class="built_in">try!</span>(<span class="built_in">try!</span>(<span class="built_in">try!</span>(<span class="keyword">self</span>.request(Method::Post, &amp;dsn.get_submit_url()))</div><div class="line">	.with_header(<span class="string">"X-Sentry-Auth"</span>, &amp;dsn.get_auth_header(event.timestamp)))</div><div class="line">	.with_json_body(&amp;event))</div><div class="line">	.send()).convert());</div></pre></td></tr></table></figure>
+<p>响应群众号召退出<font color="red">问号语法糖</font>，新语言就是可以任性啊：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> event : EventInfo = <span class="keyword">self</span>.request(Method::Post, &amp;dsn.get_submit_url())?</div><div class="line">	.with_header(<span class="string">"X-Sentry-Auth"</span>, &amp;dsn.get_auth_header(event.timestamp))?</div><div class="line">	.with_json_body(&amp;event)?</div><div class="line">	.send()?.convert()?;</div></pre></td></tr></table></figure>
+<p>为了避免没有营养的逻辑判断，Option和Result封装了通用的操作：</p>
+<ul>
+<li>map</li>
+<li>map_err</li>
+<li>and</li>
+<li>or</li>
+<li>and_then</li>
+<li>or_else</li>
+</ul>
+<p>对于自定义的错误类型，可以实现<font color="red">From</font>，这样可以无缝使用语法糖：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">pub</span> <span class="class"><span class="keyword">trait</span> <span class="title">From</span></span>&lt;T&gt; &#123;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">from</span></span>(T) -&gt; <span class="keyword">Self</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">impl</span> <span class="built_in">From</span>&lt;io:Error&gt; <span class="keyword">for</span> MyError &#123;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">from</span></span>(err: io:Error) -&gt; MyError &#123;</div><div class="line">		<span class="comment">// ...</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h2><p>类型和功能泛化可以扩大它们的适用范围、减少重复代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SGen</span></span>&lt;T&gt;(T);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">f1</span></span>&lt;T&gt;(T)&#123;...&#125;</div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">f2</span></span>&lt;T&gt;(_s: SGen&lt;T&gt;)&#123;...&#125;</div><div class="line"></div><div class="line">f2::&lt;<span class="keyword">char</span>&gt;(SGen(<span class="string">'a'</span>));  <span class="comment">// 显式指定类型(返回值是泛型，或者没有足够的信息进行类型推导)</span></div><div class="line">f2(SGen(<span class="string">'a'</span>));          <span class="comment">// 隐式指定类型</span></div></pre></td></tr></table></figure>
+<p>在实现struct的方法时，需要指定类型：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">S</span></span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">GenericVal</span></span>&lt;T&gt;(T,);</div><div class="line"></div><div class="line"><span class="keyword">impl</span> GenericVal&lt;<span class="keyword">f32</span>&gt;&#123;&#125;</div><div class="line"><span class="keyword">impl</span> GenericVal&lt;S&gt;&#123;&#125;</div><div class="line"><span class="keyword">impl</span> &lt;T&gt; GenericVal&lt;T&gt;&#123;&#125;</div></pre></td></tr></table></figure>
+<p>对特性来说，实现者也可泛化：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">trait</span> <span class="title">DoubleDrop</span></span>&lt;T&gt; &#123;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">double_drop</span></span>(<span class="keyword">self</span>, _: T);</div><div class="line">&#125;</div><div class="line"><span class="keyword">impl</span>&lt;T, U&gt; DoubleDrop&lt;T&gt; <span class="keyword">for</span> U &#123;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">double_drop</span></span>(<span class="keyword">self</span>, _: T) &#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的例子中，类型变量是很随意的，有时候需要加以限制：</p>
+<blockquote>
+<p>使用时，类型变量的真实值必须实现了指定的特性。</p>
+</blockquote>
+<p>举个栗子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 限定方法参数。</span></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">printer</span></span>&lt;T: Display&gt;(t: T) &#123;...&#125;</div><div class="line"><span class="comment">// 限定对象参数。</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">S</span></span>&lt;T: Display&gt;(T);</div><div class="line"><span class="comment">// 多重限定。</span></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">compare_prints</span></span>&lt;T: Debug + Display&gt;(t: &amp;T) &#123;...&#125;</div><div class="line"><span class="comment">// 不同的参数分别做限制。</span></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">compare_types</span></span>&lt;T: Debug, U: Debug&gt;(t: &amp;T, u: &amp;U)&#123;...&#125;</div></pre></td></tr></table></figure>
+<p>使用where关键字也可以实现限定，甚至更灵活：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">trait</span> <span class="title">PrintInOption</span></span> &#123;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">print_in_option</span></span>(<span class="keyword">self</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">impl</span>&lt;T&gt; PrintInOption <span class="keyword">for</span> T <span class="keyword">where</span></div><div class="line"><span class="built_in">Option</span>&lt;T&gt; : Debug &#123;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">print_in_option</span></span>(<span class="keyword">self</span>) &#123;</div><div class="line">		<span class="comment">// ...</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>由于需要指明所有的类型，在使用时可能会比较繁琐：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Contains</span></span>&lt;A, B&gt; &#123;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">contains</span></span>(&amp;<span class="keyword">self</span>, &amp;A, &amp;B) -&gt; <span class="keyword">bool</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">impl</span> Contains&lt;<span class="keyword">i32</span>, <span class="keyword">i32</span>&gt; <span class="keyword">for</span> Container &#123;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">contains</span></span>(&amp;<span class="keyword">self</span>, number_1: &amp;<span class="keyword">i32</span>, number_2: &amp;<span class="keyword">i32</span>) -&gt; <span class="keyword">bool</span> &#123;</div><div class="line">		<span class="comment">// ...</span></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">difference</span></span>&lt;A, B, C&gt;(container: &amp;C) -&gt; <span class="keyword">i32</span> <span class="keyword">where</span></div><div class="line">C: Contains&lt;A, B&gt; &#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>换种写法：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Contains</span></span> &#123;</div><div class="line">	<span class="class"><span class="keyword">type</span> <span class="title">A</span></span>;</div><div class="line">	<span class="class"><span class="keyword">type</span> <span class="title">B</span></span>;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">contains</span></span>(&amp;<span class="keyword">self</span>, &amp;A, &amp;B) -&gt; <span class="keyword">bool</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>此时，代码的可读性有了一定的提高：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">impl</span> Contains <span class="keyword">for</span> Container &#123;</div><div class="line">	<span class="class"><span class="keyword">type</span> <span class="title">A</span></span> = <span class="keyword">i32</span>;</div><div class="line">	<span class="class"><span class="keyword">type</span> <span class="title">B</span></span> = <span class="keyword">i32</span>;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">contains</span></span>(&amp;<span class="keyword">self</span>, number_1: &amp;<span class="keyword">i32</span>, number_2: &amp;<span class="keyword">i32</span>) &#123;</div><div class="line">		<span class="comment">// ...    </span></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">difference</span></span>&lt;C: Contains&gt;(container: &amp;C) -&gt; <span class="keyword">i32</span> &#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h2><p>模块是一堆fn、struct、trait、impl及mod的集合：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">mod</span> my &#123;</div><div class="line">	<span class="function"><span class="keyword">fn</span> <span class="title">private_function</span></span>()&#123;&#125;</div><div class="line">	<span class="keyword">pub</span> <span class="function"><span class="keyword">fn</span> <span class="title">function</span></span>()&#123;&#125;</div><div class="line"></div><div class="line">	<span class="keyword">pub</span> <span class="keyword">mod</span> nested &#123;</div><div class="line">		<span class="keyword">pub</span> <span class="function"><span class="keyword">fn</span> <span class="title">nested_function</span></span>()&#123;&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">my::function();</div><div class="line">my::nested::nested_function();</div><div class="line"></div><div class="line"><span class="keyword">use</span> my::function;</div><div class="line"><span class="keyword">use</span> my::function <span class="keyword">as</span> f1;</div><div class="line"><span class="keyword">use</span> my::*;</div></pre></td></tr></table></figure>
+<p>use有简化的作用，和Python有点像但更灵活，支持模块级别的self、super调用。</p>
+<h2 id="库"><a href="#库" class="headerlink" title="库"></a>库</h2><p>库是一个编译单元，可以用<strong>—crate-type</strong>进行设置，使用已有库时可以用：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">extern</span> <span class="keyword">crate</span> rary;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</div><div class="line">	rary::public_function();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><p>设置mod、crate、fn的元数据，可以用来：</p>
+<ul>
+<li>条件编译；</li>
+<li>设置库版本、名称；</li>
+<li>压制警告；</li>
+<li>启用编译器特性；</li>
+<li>链接非Rust语言的库；</li>
+<li>单元测试；</li>
+</ul>
+<p>来看一些例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#[allow(dead_code)]</span></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">unused_function</span></span>()&#123;&#125;</div><div class="line"></div><div class="line"><span class="meta">#![crate_type = <span class="meta-string">"lib"</span>]</span></div><div class="line"><span class="meta">#![crate_name = <span class="meta-string">"rary"</span>]</span></div><div class="line"></div><div class="line"><span class="meta">#[cfg(target_os = <span class="meta-string">"linux"</span>)]</span></div><div class="line"><span class="meta">#[cfg(not(target_os = <span class="meta-string">"linux"</span>))]</span></div><div class="line"></div><div class="line"><span class="meta">#[cfg(some_condition)]</span></div></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Rust不想引入GC的前提下解决内存安全的问题，思路是：</p>
+<blockquote>
+<p>让逻辑发生在可控范围内，危险的简便写法宁可不要。</p>
+</blockquote>
+<p>增加了不小的学习成本和使用成本，但是，对做大型的项目来说，收益还是非常吸引人的。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li>官方文档地址：<a href="https://www.rust-lang.org/zh-CN/" target="_blank" rel="external">https://www.rust-lang.org/zh-CN/</a></li>
+<li>闭包：<a href="https://zhuanlan.zhihu.com/p/23710601" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/23710601</a></li>
+<li>生命周期：<a href="https://zhuanlan.zhihu.com/p/21872443" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/21872443</a></li>
+<li>​</li>
+<li>cargo：<a href="http://www.jianshu.com/p/37f484836e2b" target="_blank" rel="external">http://www.jianshu.com/p/37f484836e2b</a></li>
+<li>修改cargo源：<a href="http://blog.csdn.net/xiangxianghehe/article/details/53471936" target="_blank" rel="external">http://blog.csdn.net/xiangxianghehe/article/details/53471936</a></li>
+<li>rustup：<a href="https://github.com/rustcc/RustPrimer/blob/master/install/rustup.md" target="_blank" rel="external">https://github.com/rustcc/RustPrimer/blob/master/install/rustup.md</a></li>
+<li><a href="https://rustwiki.org/zh-CN//rust-by-example/generics.html" target="_blank" rel="external">https://rustwiki.org/zh-CN//rust-by-example/generics.html</a></li>
+<li>生命周期：<a href="http://lotabout.me/2016/rust-lifetime/" target="_blank" rel="external">http://lotabout.me/2016/rust-lifetime/</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编程/" rel="tag">#编程</a>
+          
+            <a href="/tags/语法/" rel="tag">#语法</a>
+          
+            <a href="/tags/rust/" rel="tag">#rust</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/27/cpu-gpu/" rel="next" title="CPU和GPU">
+                <i class="fa fa-chevron-left"></i> CPU和GPU
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/07/netty/" rel="prev" title="Netty">
+                Netty <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#起步"><span class="nav-number">1.</span> <span class="nav-text">起步</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优势"><span class="nav-number">1.1.</span> <span class="nav-text">优势</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#语法"><span class="nav-number">2.</span> <span class="nav-text">语法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原生类型"><span class="nav-number">2.1.</span> <span class="nav-text">原生类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义类型"><span class="nav-number">2.2.</span> <span class="nav-text">自定义类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域和生命周期"><span class="nav-number">2.3.</span> <span class="nav-text">作用域和生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流程控制"><span class="nav-number">2.4.</span> <span class="nav-text">流程控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">2.5.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特性"><span class="nav-number">2.6.</span> <span class="nav-text">特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#错误处理"><span class="nav-number">2.7.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型"><span class="nav-number">2.8.</span> <span class="nav-text">泛型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块"><span class="nav-number">2.9.</span> <span class="nav-text">模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#库"><span class="nav-number">2.10.</span> <span class="nav-text">库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#属性"><span class="nav-number">2.11.</span> <span class="nav-text">属性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2017/11/08/rust/';
+      var disqus_title = "Rust";
+      var disqus_url = 'http://yoursite.com/2017/11/08/rust/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

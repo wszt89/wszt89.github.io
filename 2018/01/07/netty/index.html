@@ -1,0 +1,926 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="工具,编程,网络," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="概述在进行网络编程时，需要考虑的东西非常多：
+
+是否阻塞
+单机能支持多少的连接
+线程数会不会太多
+编解码、拆包、粘包、各种各样的协议
+
+使用Netty，将我们从原始的java工具中解放出来，也不必在重复地造各种轮子。
+DEMO服务端123456789101112131415161718192021222324252627282930313233343536373839404142434445464">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty">
+<meta property="og:url" content="http://yoursite.com/2018/01/07/netty/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="概述在进行网络编程时，需要考虑的东西非常多：
+
+是否阻塞
+单机能支持多少的连接
+线程数会不会太多
+编解码、拆包、粘包、各种各样的协议
+
+使用Netty，将我们从原始的java工具中解放出来，也不必在重复地造各种轮子。
+DEMO服务端123456789101112131415161718192021222324252627282930313233343536373839404142434445464">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/netty/1.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/netty/3.png">
+<meta property="og:updated_time" content="2018-02-12T02:06:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netty">
+<meta name="twitter:description" content="概述在进行网络编程时，需要考虑的东西非常多：
+
+是否阻塞
+单机能支持多少的连接
+线程数会不会太多
+编解码、拆包、粘包、各种各样的协议
+
+使用Netty，将我们从原始的java工具中解放出来，也不必在重复地造各种轮子。
+DEMO服务端123456789101112131415161718192021222324252627282930313233343536373839404142434445464">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com//image/netty/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/07/netty/"/>
+
+
+  <title> Netty | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Netty
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-01-07T13:11:15+08:00" content="2018-01-07">
+              2018-01-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/01/07/netty/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/07/netty/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/01/07/netty/" class="leancloud_visitors" data-flag-title="Netty">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>在进行网络编程时，需要考虑的东西非常多：</p>
+<ul>
+<li>是否阻塞</li>
+<li>单机能支持多少的连接</li>
+<li>线程数会不会太多</li>
+<li>编解码、拆包、粘包、各种各样的协议</li>
+</ul>
+<p>使用Netty，将我们从原始的java工具中解放出来，也不必在重复地造各种轮子。</p>
+<h1 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h1><h2 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyServerTest</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        EventLoopGroup bossGroup = <span class="keyword">new</span> NioEventLoopGroup();</div><div class="line">        EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            ServerBootstrap serverBootstrap = <span class="keyword">new</span> ServerBootstrap();</div><div class="line">            serverBootstrap.group(bossGroup, workerGroup)</div><div class="line">                    .channel(NioServerSocketChannel.class)</div><div class="line">                    .childHandler(<span class="keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123;</div><div class="line">                        <span class="meta">@Override</span></div><div class="line">                        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel socketChannel)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                            socketChannel.pipeline().addLast(<span class="string">"framer"</span>, <span class="keyword">new</span> DelimiterBasedFrameDecoder(<span class="number">8192</span>, Delimiters.lineDelimiter()));</div><div class="line">                            socketChannel.pipeline().addLast(<span class="string">"decoder"</span>, <span class="keyword">new</span> StringDecoder());</div><div class="line">                            socketChannel.pipeline().addLast(<span class="string">"encoder"</span>, <span class="keyword">new</span> StringEncoder());</div><div class="line"></div><div class="line">                            socketChannel.pipeline().addLast(<span class="string">"handler"</span>, <span class="keyword">new</span> SimpleChannelInboundHandler&lt;String&gt;() &#123;</div><div class="line">                                <span class="meta">@Override</span></div><div class="line">                                <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, String msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                                    System.out.println(<span class="string">"服务端接受的消息 : "</span> + msg);</div><div class="line">                                    <span class="keyword">if</span> (<span class="string">"quit"</span>.equals(msg)) &#123;</div><div class="line">                                        ctx.close();</div><div class="line">                                    &#125;</div><div class="line">                                    Date date = <span class="keyword">new</span> Date();</div><div class="line">                                    ctx.writeAndFlush(date + <span class="string">"\n"</span>);</div><div class="line">                                &#125;</div><div class="line"></div><div class="line">                                <span class="meta">@Override</span></div><div class="line">                                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                                    System.out.println(<span class="string">"连接的客户端地址:"</span> + ctx.channel().remoteAddress());</div><div class="line">                                    ctx.writeAndFlush(<span class="string">"客户端"</span> + InetAddress.getLocalHost().getHostName() + <span class="string">"成功与服务端建立连接！ \n"</span>);</div><div class="line">                                    <span class="keyword">super</span>.channelActive(ctx);</div><div class="line">                                &#125;</div><div class="line">                            &#125;);</div><div class="line">                        &#125;</div><div class="line">                    &#125;)</div><div class="line">                    .option(ChannelOption.SO_BACKLOG, <span class="number">128</span>)</div><div class="line">                    .childOption(ChannelOption.SO_KEEPALIVE, <span class="keyword">true</span>);</div><div class="line"></div><div class="line">            ChannelFuture channelFuture = serverBootstrap.bind(<span class="number">8989</span>).sync();</div><div class="line">            channelFuture.channel().closeFuture().sync();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            bossGroup.shutdownGracefully();</div><div class="line">            workerGroup.shutdownGracefully();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyClientTest</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            Bootstrap bootstrap = <span class="keyword">new</span> Bootstrap();</div><div class="line">            bootstrap.group(workerGroup)</div><div class="line">                    .channel(NioSocketChannel.class)</div><div class="line">                    .option(ChannelOption.SO_KEEPALIVE, <span class="keyword">true</span>)</div><div class="line">                    .handler(<span class="keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123;</div><div class="line">                        <span class="meta">@Override</span></div><div class="line">                        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                            ch.pipeline().addLast(<span class="string">"framer"</span>, <span class="keyword">new</span> DelimiterBasedFrameDecoder(<span class="number">8192</span>, Delimiters.lineDelimiter()));</div><div class="line">                            ch.pipeline().addLast(<span class="string">"decoder"</span>, <span class="keyword">new</span> StringDecoder());</div><div class="line">                            ch.pipeline().addLast(<span class="string">"encoder"</span>, <span class="keyword">new</span> StringEncoder());</div><div class="line"></div><div class="line">                            ch.pipeline().addLast(<span class="string">"handler"</span>, <span class="keyword">new</span> SimpleChannelInboundHandler&lt;String&gt;() &#123;</div><div class="line">                                <span class="meta">@Override</span></div><div class="line">                                <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, String msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                                    System.out.println(<span class="string">"客户端接受的消息: "</span> + msg);</div><div class="line">                                &#125;</div><div class="line"></div><div class="line">                                <span class="meta">@Override</span></div><div class="line">                                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                                    System.out.println(<span class="string">"正在连接... "</span>);</div><div class="line">                                    <span class="keyword">super</span>.channelActive(ctx);</div><div class="line">                                &#125;</div><div class="line"></div><div class="line">                                <span class="meta">@Override</span></div><div class="line">                                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelInactive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                                    System.out.println(<span class="string">"连接关闭! "</span>);</div><div class="line">                                    <span class="keyword">super</span>.channelInactive(ctx);</div><div class="line">                                &#125;</div><div class="line">                            &#125;);</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line"></div><div class="line">            Channel channel = bootstrap.connect(<span class="string">"127.0.0.1"</span>, <span class="number">8989</span>).sync().channel();</div><div class="line"></div><div class="line">            channel.writeAndFlush(<span class="string">"abc"</span> + <span class="string">"\r\n"</span>);</div><div class="line"></div><div class="line">            Thread.sleep(<span class="number">1000</span>);</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            workerGroup.shutdownGracefully();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h1><p>Netty中用到的核心概念和功能：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">概念</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Bootstrap/ServerBootstrap</td>
+<td style="text-align:left">引导配置，方便上手</td>
+</tr>
+<tr>
+<td style="text-align:left">EventLoop/EventLoopGroup</td>
+<td style="text-align:left">线程处理</td>
+</tr>
+<tr>
+<td style="text-align:left">Channel</td>
+<td style="text-align:left">包装原生的IO操作</td>
+</tr>
+<tr>
+<td style="text-align:left">ChannelHandler</td>
+<td style="text-align:left">事件处理器</td>
+</tr>
+<tr>
+<td style="text-align:left">ChannelPipeline</td>
+<td style="text-align:left">ChannelHandler组成的管道，事件会从管道上流过并被依次处理</td>
+</tr>
+</tbody>
+</table>
+<p>核心关系如下：</p>
+<p><img src="" alt=""></p>
+<h2 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h2><p>核心的作用在于：</p>
+<blockquote>
+<p>将不同的IO，封装后对<font color="blue">用户</font>提供统一的操作方式。</p>
+</blockquote>
+<p>将方法根据作用分类：</p>
+<ul>
+<li>获取属性：localAddress、parent、eventLoop；</li>
+<li>获取状态：isActive、isOpen、isRegistered；</li>
+<li>工厂方法：newPromise、newSucceededFuture；</li>
+<li>事件触发：bind、connect、read、write；</li>
+</ul>
+<p>此外，其中的<font color="blue">Unsafe</font>提供了直接的IO操作供Netty内部使用。</p>
+<p>下面通过NioSocketChannel来看整体流程中的作用：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/netty/1.png" alt=""></p>
+<h2 id="EventLoop-amp-EventLoopGroup"><a href="#EventLoop-amp-EventLoopGroup" class="headerlink" title="EventLoop &amp; EventLoopGroup"></a>EventLoop &amp; EventLoopGroup</h2><p>先挑一个相对简单的ThreadPerChannelEventLoop开始看：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/netty/3.png" alt=""></p>
+<p>在run中不停地循环从taskQueue中取出事件执行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">for</span> (;;) &#123;</div><div class="line">        Runnable task = takeTask(); <span class="comment">// 从任务队列中拿任务出来执行</span></div><div class="line">        <span class="keyword">if</span> (task != <span class="keyword">null</span>) &#123;</div><div class="line">            task.run();</div><div class="line">            updateLastExecutionTime();</div><div class="line">        &#125;</div><div class="line">        Channel ch = <span class="keyword">this</span>.ch;</div><div class="line">        <span class="keyword">if</span> (isShuttingDown()) &#123; <span class="comment">// 关机逻辑</span></div><div class="line">            <span class="keyword">if</span> (ch != <span class="keyword">null</span>) &#123;</div><div class="line">                ch.unsafe().close(ch.unsafe().voidPromise());</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (confirmShutdown()) &#123;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">if</span> (ch != <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (!ch.isRegistered()) &#123; <span class="comment">// 注销逻辑</span></div><div class="line">                    runAllTasks();</div><div class="line">                    deregister();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在run方法中无限循环尝试取出任务并执行。那么，<font color="blue">taskQueue中的任务是什么时候放进去的？</font>对于register方法栈如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">AbstractBootstrap.bind</div><div class="line">+---AbstractBootstrap.doBind</div><div class="line">    +---AbstractBootstrap.initAndRegister</div><div class="line">        +---ThreadPerChannelEventLoopGroup.register <span class="comment">// 注意这个入口</span></div><div class="line">            +---ThreadPerChannelEventLoop.register</div><div class="line">                +---SingleThreadEventLoop.register</div><div class="line">                    +---AbstractChannel$AbstractUnsafe.register</div><div class="line">                        +---SingleThreadEventLoop.execute</div><div class="line">                            +---SingleThreadEventLoop.addTask</div></pre></td></tr></table></figure>
+<p>在ThreadPerChannelEventLoopGroup.register中会调用nextChild来获取空闲的eventLoop，没有则新建：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> EventLoop <span class="title">nextChild</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// ..</span></div><div class="line">    ThreadPerChannelEventLoop loop = idleChildren.poll();</div><div class="line">    <span class="keyword">if</span> (loop == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (maxChannels &gt; <span class="number">0</span> &amp;&amp; activeChildren.size() &gt;= maxChannels) &#123;</div><div class="line">            <span class="keyword">throw</span> tooManyChannels;</div><div class="line">        &#125;</div><div class="line">        loop = newChild(childArgs);</div><div class="line">        loop.terminationFuture().addListener(childTerminationListener);</div><div class="line">    &#125;</div><div class="line">    activeChildren.add(loop);</div><div class="line">    <span class="keyword">return</span> loop;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对于bind 方法栈如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">AbstractBootstrap.bind</div><div class="line">+---AbstractBootstrap.doBind</div><div class="line">    +---SingleThreadEventExecutor.execute</div><div class="line">        +---SingleThreadEventExecutor.addTask</div></pre></td></tr></table></figure>
+<p>事件被发送到channelPipeline上，被HeadContext调用AbstractChannel$AbstractUnsafe来完成：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">bind</span><span class="params">(<span class="keyword">final</span> SocketAddress localAddress, <span class="keyword">final</span> ChannelPromise promise)</span> </span>&#123;</div><div class="line">    <span class="comment">// ...</span></div><div class="line">    <span class="keyword">boolean</span> wasActive = isActive();</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        doBind(localAddress); <span class="comment">// 调用Java原生的bind方法。</span></div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</div><div class="line">         <span class="comment">// ...</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (!wasActive &amp;&amp; isActive()) &#123;</div><div class="line">        invokeLater(<span class="keyword">new</span> OneTimeTask() &#123; <span class="comment">// 创建任务，用来触发channelActive。</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                pipeline.fireChannelActive(); </div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">    safeSetSuccess(promise);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>事件channelActive在DefaultPipeline中触发了read事件：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> ChannelPipeline <span class="title">fireChannelActive</span><span class="params">()</span> </span>&#123;</div><div class="line">    head.fireChannelActive();</div><div class="line">    <span class="keyword">if</span> (channel.config().isAutoRead()) &#123;</div><div class="line">        channel.read();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>事件read最终还是由HeadContext调用AbstractChannel$AbstractUnsafe来完成：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Runnable readTask = <span class="keyword">new</span> Runnable() &#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (!isReadPending() &amp;&amp; !config().isAutoRead()) &#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        setReadPending(<span class="keyword">false</span>);</div><div class="line">        doRead(); <span class="comment">// 读取数据。</span></div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doBeginRead</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">if</span> (isReadPending()) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    setReadPending(<span class="keyword">true</span>);</div><div class="line">    eventLoop().execute(readTask); <span class="comment">// 将readTask提交到任务队列。</span></div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doRead</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">for</span> (;;) &#123; <span class="comment">// 处理该任务的线程不停地读取消息。</span></div><div class="line">            localRead = doReadMessages(readBuf);</div><div class="line">            <span class="comment">// ...</span></div><div class="line">            <span class="keyword">int</span> size = readBuf.size();</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i ++) &#123;</div><div class="line">                pipeline.fireChannelRead(readBuf.get(i)); <span class="comment">// 将消息交给pipeline。</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</div><div class="line">        exception = t;</div><div class="line">    &#125;</div><div class="line">    pipeline.fireChannelReadComplete();</div><div class="line">    <span class="keyword">if</span> (closed) &#123;</div><div class="line">        <span class="keyword">if</span> (isOpen()) &#123;</div><div class="line">            unsafe().close(unsafe().voidPromise());</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (localRead == <span class="number">0</span> &amp;&amp; isActive()) &#123;</div><div class="line">        read();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">doReadMessages</span><span class="params">(List&lt;Object&gt; buf)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Socket s = socket.accept();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// 完成读取，发现读取到的其实是一个连接。</span></div><div class="line">            buf.add(<span class="keyword">new</span> OioSocketChannel(<span class="keyword">this</span>, s));</div><div class="line">            <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// ...</span></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="ChannelHandler"><a href="#ChannelHandler" class="headerlink" title="ChannelHandler"></a>ChannelHandler</h2><h1 id="源码学习"><a href="#源码学习" class="headerlink" title="源码学习"></a>源码学习</h1><h2 id="AttributeMap"><a href="#AttributeMap" class="headerlink" title="AttributeMap"></a>AttributeMap</h2><p>作用是：</p>
+<blockquote>
+<p>类似Map（比Map的实现简单很多）又有点像ThreadLocal，为子类提供统一的属性维护方法，保证线程安全。实践了一下感觉还是很好用的。</p>
+</blockquote>
+<p>特点是：</p>
+<blockquote>
+<p>利用CAS操作减少了锁开销，Key保证了全局唯一。</p>
+</blockquote>
+<p>使用方法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="keyword">static</span> AttributeKey&lt;Integer&gt; ID = AttributeKey.valueOf(<span class="string">"id"</span>);</div><div class="line"><span class="comment">// </span></div><div class="line">Integer id = ctx.attr(ID).get();</div></pre></td></tr></table></figure>
+<p>相关的实现类：</p>
+<ul>
+<li>DefaultAttributeMap</li>
+</ul>
+<h2 id="ByteBuf"><a href="#ByteBuf" class="headerlink" title="ByteBuf"></a>ByteBuf</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://blog.csdn.net/abc_key/article/category/2374891" target="_blank" rel="external">http://blog.csdn.net/abc_key/article/category/2374891</a></li>
+<li><a href="http://blog.csdn.net/zxhoo/article/category/1800249" target="_blank" rel="external">http://blog.csdn.net/zxhoo/article/category/1800249</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/工具/" rel="tag">#工具</a>
+          
+            <a href="/tags/编程/" rel="tag">#编程</a>
+          
+            <a href="/tags/网络/" rel="tag">#网络</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/08/rust/" rel="next" title="Rust">
+                <i class="fa fa-chevron-left"></i> Rust
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/24/quatz/" rel="prev" title="quatz">
+                quatz <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DEMO"><span class="nav-number">2.</span> <span class="nav-text">DEMO</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务端"><span class="nav-number">2.1.</span> <span class="nav-text">服务端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端"><span class="nav-number">2.2.</span> <span class="nav-text">客户端</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#核心概念"><span class="nav-number">3.</span> <span class="nav-text">核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Channel"><span class="nav-number">3.1.</span> <span class="nav-text">Channel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EventLoop-amp-EventLoopGroup"><span class="nav-number">3.2.</span> <span class="nav-text">EventLoop & EventLoopGroup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ChannelHandler"><span class="nav-number">3.3.</span> <span class="nav-text">ChannelHandler</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码学习"><span class="nav-number">4.</span> <span class="nav-text">源码学习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AttributeMap"><span class="nav-number">4.1.</span> <span class="nav-text">AttributeMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ByteBuf"><span class="nav-number">4.2.</span> <span class="nav-text">ByteBuf</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2018/01/07/netty/';
+      var disqus_title = "Netty";
+      var disqus_url = 'http://yoursite.com/2018/01/07/netty/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

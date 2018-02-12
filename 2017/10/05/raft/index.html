@@ -84,36 +84,60 @@
 
 
 
-<meta name="description" content="问题是什么？分布式的网络中的通信是不可靠的，那通过“不靠谱”的网络是否能达成一致的结果？这就是“拜占庭问题”：
+<meta name="description" content="数据一致性，是分布式场景中非常难搞的问题：
 
-拜占庭幅员辽阔，军队间距离很远，只能靠信差传递消息。在战争时期，所有将军必须达成一致共识，才去攻打敌人。
-然而，军队中存在间谍和叛徒，此时，忠诚的将军们如何才能不受影响并达成一致。
+向集群写入数据，如何保证保存的数据与写入的数据是一致的？（描述起来和线程安全有点像😀）
 
-拜占庭是对现实世界的模型化，拜占庭失效是指：一方向另一方发送消息，另一方没有收到或收到错误的消息。
-P">
+解决不好，面临的将是：
+
+各机器上保存的数据对不上，也不知道该相信谁。
+
+最早解决的这个问题的是PAXOS算法，后续出现的都可以看做它的变体。核心的思路是：
+
+只有超过半数的机器接受以后，才认为成功。
+
+问题难度在于网络上有太多的不确定性（即使是局域网）：
+
+中">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RAFT协议">
 <meta property="og:url" content="http://yoursite.com/2017/10/05/raft/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="问题是什么？分布式的网络中的通信是不可靠的，那通过“不靠谱”的网络是否能达成一致的结果？这就是“拜占庭问题”：
+<meta property="og:description" content="数据一致性，是分布式场景中非常难搞的问题：
 
-拜占庭幅员辽阔，军队间距离很远，只能靠信差传递消息。在战争时期，所有将军必须达成一致共识，才去攻打敌人。
-然而，军队中存在间谍和叛徒，此时，忠诚的将军们如何才能不受影响并达成一致。
+向集群写入数据，如何保证保存的数据与写入的数据是一致的？（描述起来和线程安全有点像😀）
 
-拜占庭是对现实世界的模型化，拜占庭失效是指：一方向另一方发送消息，另一方没有收到或收到错误的消息。
-P">
+解决不好，面临的将是：
+
+各机器上保存的数据对不上，也不知道该相信谁。
+
+最早解决的这个问题的是PAXOS算法，后续出现的都可以看做它的变体。核心的思路是：
+
+只有超过半数的机器接受以后，才认为成功。
+
+问题难度在于网络上有太多的不确定性（即使是局域网）：
+
+中">
 <meta property="og:image" content="http://7xiz10.com1.z0.glb.clouddn.com/ZOOKEEPER-5.png">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com//image/raft/0.png">
-<meta property="og:updated_time" content="2017-10-06T08:03:51.000Z">
+<meta property="og:updated_time" content="2017-11-08T08:05:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RAFT协议">
-<meta name="twitter:description" content="问题是什么？分布式的网络中的通信是不可靠的，那通过“不靠谱”的网络是否能达成一致的结果？这就是“拜占庭问题”：
+<meta name="twitter:description" content="数据一致性，是分布式场景中非常难搞的问题：
 
-拜占庭幅员辽阔，军队间距离很远，只能靠信差传递消息。在战争时期，所有将军必须达成一致共识，才去攻打敌人。
-然而，军队中存在间谍和叛徒，此时，忠诚的将军们如何才能不受影响并达成一致。
+向集群写入数据，如何保证保存的数据与写入的数据是一致的？（描述起来和线程安全有点像😀）
 
-拜占庭是对现实世界的模型化，拜占庭失效是指：一方向另一方发送消息，另一方没有收到或收到错误的消息。
-P">
+解决不好，面临的将是：
+
+各机器上保存的数据对不上，也不知道该相信谁。
+
+最早解决的这个问题的是PAXOS算法，后续出现的都可以看做它的变体。核心的思路是：
+
+只有超过半数的机器接受以后，才认为成功。
+
+问题难度在于网络上有太多的不确定性（即使是局域网）：
+
+中">
 <meta name="twitter:image" content="http://7xiz10.com1.z0.glb.clouddn.com/ZOOKEEPER-5.png">
 
 
@@ -353,83 +377,111 @@ P">
       
 
       
-        <h1 id="问题是什么？"><a href="#问题是什么？" class="headerlink" title="问题是什么？"></a>问题是什么？</h1><p>分布式的网络中的通信是不可靠的，那通过“不靠谱”的网络是否能达成一致的结果？这就是“拜占庭问题”：</p>
+        <p>数据一致性，是分布式场景中非常难搞的问题：</p>
 <blockquote>
-<p>拜占庭幅员辽阔，军队间距离很远，只能靠信差传递消息。在战争时期，所有将军必须达成一致共识，才去攻打敌人。</p>
-<p>然而，军队中存在间谍和叛徒，此时，忠诚的将军们如何才能不受影响并达成一致。</p>
+<p>向集群写入数据，如何保证保存的数据与写入的数据是一致的？<font color="lightgrey">（描述起来和线程安全有点像😀）</font></p>
 </blockquote>
-<p>拜占庭是对现实世界的模型化，拜占庭失效是指：一方向另一方发送消息，另一方没有收到或收到错误的消息。</p>
-<h1 id="PAXOS"><a href="#PAXOS" class="headerlink" title="PAXOS"></a>PAXOS</h1><p>Lamport也讲了一个故事，有三种角色：</p>
+<p>解决不好，面临的将是：</p>
+<blockquote>
+<p>各机器上保存的数据对不上，也不知道该相信谁。</p>
+</blockquote>
+<p>最早解决的这个问题的是PAXOS算法，后续出现的都可以看做它的变体。核心的思路是：</p>
+<blockquote>
+<p>只有<font color="red">超过半数</font>的机器接受以后，才认为成功。</p>
+</blockquote>
+<p>问题难度在于网络上有太多的不确定性（<font color="lightgrey">即使是局域网</font>）：</p>
 <ul>
-<li><strong>PROPOSER</strong>：提出提案，内容包括编号$N$和$VALUE$；</li>
-<li><strong>ACCEPTOR</strong>：接受提案；</li>
-<li><strong>LEARNER</strong>：学习被选出的提案（<font color="lightgrey">毫无参与感</font>）；</li>
+<li>中断</li>
+<li>延迟</li>
+<li>丢包</li>
 </ul>
-<p>算法分成准备和批准两阶段：</p>
-<ul>
-<li>准备阶段<ul>
-<li>PROPOSER选择一个提案编号$N$，发送给ACCEPTOR中的一个多数派；</li>
-<li>ACCEPTOR收到请求后，如果$N&gt;M$，则将上次接受的$VALUE$回复给PROPOSER，并承诺不再回复小于$N$的提案；</li>
-</ul>
-</li>
-<li>批准阶段<ul>
-<li>PROPOSER收到多数派的回复后，向对应的ACCEPTOR再次发送请求（编号依旧是$N$，如果准备阶段有返回$VALUE$则使用，否则创建一个）；</li>
-<li>ACCEPTOR收到请求后，如果编号$N$大于本地收到过的编号$M$，更新$M$和$VALUE$，并返回$M$；</li>
-</ul>
-</li>
-</ul>
-<p>当PROPOSER收到过半的$M&lt;N$时，那么这一轮的选举目的达成，步骤如下：</p>
+<p>在需要考虑所有极端、碰巧的情况下，“超过半数”似乎抓到了简单而可靠的本质。</p>
+<h1 id="PAXOS"><a href="#PAXOS" class="headerlink" title="PAXOS"></a>PAXOS</h1><p>算法的执行流程如下：</p>
 <p><img src="http://7xiz10.com1.z0.glb.clouddn.com/ZOOKEEPER-5.png" alt=""></p>
-<p>算法保证了：</p>
-<ul>
-<li>如果一个编号为$N$的提案的值为$VALUE$，那么存在一个多数派，要么他们中任何人没有接受编号小于$N$的任何提案，要么他们已经接受的所有编号小于$N$的提案中编号最大的值为$VALUE$；</li>
-<li>当且仅当ACCEPTOR没有回应过大于$N$的准备阶段请求时，ACCEPTOR才会接受编号为$N$的提案；</li>
-</ul>
-<h1 id="RAFT"><a href="#RAFT" class="headerlink" title="RAFT"></a>RAFT</h1><p>算法中包含三种角色：</p>
-<ul>
-<li><strong>LEADER</strong>：领导，最多一个；</li>
-<li><strong>FOLLOWER</strong>：被领导通知干活的；</li>
-<li><strong>CANDIDATE</strong>：从FOLLOWER到LEADER的中间状态；</li>
-</ul>
-<p>变化如下：</p>
-<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/raft/0.png" alt=""></p>
-<p>选举逻辑：</p>
-<ul>
-<li>LEADER定时给FOLLOWER发送<font color="blue">心跳消息</font>；</li>
-<li>FOLLOWER收到LDEADER的心跳消息后，重置<font color="blue">选举定时器</font>，更新自己的TermId；</li>
-<li>FOLLOWER的选举定时器超时后，转变为CANDIDATE并发起投票；</li>
-<li>CANDIDATE收到<font color="blue">过半</font>投票后变为LEADER；</li>
-<li>CANDIDATE没有收到足够的票数，重新设置选举定时器避免冲突，自己的TermId加一；</li>
-<li>FOLLOWER收到选举消息后，如果没有投票就投票（<font color="lightgrey">根据TermId来判断是否投过</font>），并重置自己的选举定时器；</li>
-</ul>
-<p>写入逻辑：</p>
-<ul>
-<li>CLIENT发送请求给LEADER（<font color="lightgrey">不能给其他的角色发送请求</font>）；</li>
-<li>LEADER将请求记录到日志，并发送给其他服务器；</li>
-<li>LEADER收到过半服务器的保存响应，请求提交并通知CLIENT成功；</li>
-<li>LEADER刚被选举出来以后，以LEADER的日志为准（<font color="lightgrey">LEADER需要有所有已提交的日志，投票阶段需要比较日志中的TermId</font>），并同步给FOLLOWER；</li>
-</ul>
-<p>集群变化（<font color="lightgrey">分两阶段防止出现多个LEADER</font>）：</p>
-<ul>
-<li>LEADER收到命令，从$C_{old}$切换到$C_{new}$；</li>
-<li>LEADER本地生成一条日志，内容为$C_{old}\cup C_{new}$，并推送给FOLLOWER；</li>
-<li>FOLLOWER收到请求后，将$C_{old}\cup C_{new}$作为配置；</li>
-<li>LEADER在收到大多数的回复后，提交该记录；</li>
-<li>接着，LEADER生成新的一条记录$C_{new}$，并推送给FOLLOWER；</li>
-<li>FOLLOWER收到请求后，将$C_{new}$作为配置；</li>
-<li>LEADER收到大多数的回复后，返回CLIENT成功；</li>
-</ul>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总体上RAFT和PAXOS并没有差别那么大吧，毕竟分布式一致性要干的事情都差不多：</p>
+<p>集群收到写请求（<font color="lightgrey">可能同时有多个</font>）后，会尝试通过消息同步给过半的机器，并尝试让它们接受该值。接收到消息的机器并没有上帝视角：</p>
 <blockquote>
-<p>从单个机器的角度来考虑策略，规避一些异常，试着选出唯一的LEADER。</p>
+<p>不清楚全局的情况，它只能根据收到的<font color="red">消息</font>和自己的<font color="red">状态</font>来进行判断是否接受。</p>
 </blockquote>
-<p>但是，现在RAFT貌似比PAXOS更火一些，后面有时间再进一步详细的看下。</p>
+<p>消息可以从两个角度来看（<font color="lightgrey">需要参与者的默契配合才能达到目标</font>）：</p>
+<ul>
+<li>发送者</li>
+<li>接收者</li>
+</ul>
+<p>如果消息只包含内容，那接收者啥都干不了（<font color="lightgrey">因为啥都没有、无法判断😶</font>），于是可以在发送者这里加一个非常强的条件：</p>
+<blockquote>
+<p>所有的消息按照发送顺序（<font color="lightgrey">一个虚拟的顺序</font>），从小到达排序并设置唯一的ID：在一个消息失败之后，继续发一个较大ID的消息进行尝试。</p>
+</blockquote>
+<p>有了顺序的ID也只能进行简单的比较而已：</p>
+<ul>
+<li>大于</li>
+<li>等于</li>
+<li>小于</li>
+</ul>
+<p>好像还是简单了，无法保证<font color="red">被过半的机器接受</font>，换个角度，发送者判断有没有过半非常简单：</p>
+<blockquote>
+<p>发送者通过消息询问接收者，判断肯定的响应是否过半。</p>
+</blockquote>
+<p>于是一步分成两步走：</p>
+<ul>
+<li>准备阶段：查看有没有过半的接收者，有则锁定他们；</li>
+<li>批准阶段：发送写入消息给过半的接收者；</li>
+</ul>
+<p>那怎么锁定接收者呢？</p>
+<blockquote>
+<p>你只能接收$ID=7$的消息？</p>
+</blockquote>
+<p>这样显然不行，如果$ID=7$的消息跪了，那这个接收者是不是也就永远废了？因为消息是“顺序”的（<font color="lightgrey">完全是被逼的，还有其他的可能性么</font>）：</p>
+<ul>
+<li>收到$ID=7$的消息，说明$ID &lt; 7$的消息已经都跪了，不能接受（<font color="lightgrey">想想什么叫跪了</font>）；</li>
+<li>同样道理，如果后面收到$ID &gt; 7$的消息，也是可以接受的；</li>
+</ul>
+<p>于是，准备阶段接受的规则是<font color="red">只增不减</font>，但是，这样避免不了<font color="red">有多个发送者准备成功</font>，准备阶段貌似无法避免了，那看看能不能在下个阶段补上漏洞（<font color="lightgrey">同样是被逼的</font>）：</p>
+<blockquote>
+<p>和准备阶段的思路一样，批准阶段的策略也只能是只增不减。</p>
+</blockquote>
+<p>最后，还有一个问题（<font color="lightgrey">这是一个问题吗？</font>）：</p>
+<blockquote>
+<p>一定顺序提交多个值可能都会被接受。</p>
+</blockquote>
+<p>解决方法看起来有点定制：接收方将之前接受过的值返回给发送方，逼迫其使用该值！</p>
+<h1 id="RAFT"><a href="#RAFT" class="headerlink" title="RAFT"></a>RAFT</h1><p>选举过程中节点状态流转为：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com//image/raft/0.png" alt=""></p>
+<p>其中：</p>
+<ul>
+<li><strong>LEADER</strong>：领导（<font color="lightgrey">同一时间最多有一个</font>）；</li>
+<li><strong>FOLLOWER</strong>：被通知干活的；</li>
+<li><strong>CANDIDATE</strong>：FOLLOWER到LEADER的中间状态；</li>
+</ul>
+<h2 id="Leader-Election"><a href="#Leader-Election" class="headerlink" title="Leader Election"></a>Leader Election</h2><p>当FOLLOWER发现LEADER跪了，就会变成CANDIDATE发起投票（<font color="lightgrey">选我选我选我😝</font>），采用与PAXOS几乎一样的策略：</p>
+<ul>
+<li><strong>发送方</strong>：保证消息ID的递增；</li>
+<li><strong>接收方</strong>：只接受更大的消息；</li>
+</ul>
+<p>同样的问题来了：<font color="red">存在多个CANDIDATE时，如何只保证有一个变成LEADER</font>？RAFT换了一个思路：</p>
+<blockquote>
+<p>不同的机器在一轮竞选中使用相同的ID。</p>
+</blockquote>
+<p>看起来有点像是用工程简化了理论。在集群中维护多个定时器：</p>
+<ul>
+<li><strong>选举定时器</strong>：时间一到，FOLLOWER就会变成CANDIDATE发起选举；</li>
+<li><strong>心跳定时器</strong>：LEADER会定时给其他的节点发送心跳消息，其他节点收到后会重置选举定时器（<font color="lightgrey">防止FOLLOWER造反</font>）；</li>
+</ul>
+<p>靠着几个定时器，看起来可以维护好序列，但是在一些极端延迟的情况下也能做到吗？（<font color="lightgrey">这里还是有点疑问啊</font>）</p>
+<h2 id="Log-Replication"><a href="#Log-Replication" class="headerlink" title="Log Replication"></a>Log Replication</h2><p>所有的CLIENT请求都由LEADER来处理：</p>
+<blockquote>
+<p>LEADER收到请求后，将其发送给其他节点，收到过半的写入请求后返回CLIENT成功。</p>
+</blockquote>
+<p>然而在实现中，需要考虑各种极端情况，细节等刷完论文再来补充吧。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>PAXOS提供的分布式场景下的基本思路，而RAFT相对来说简单、落地性强，然而：</p>
+<blockquote>
+<p>RAFT并不是一个简单的东西。</p>
+</blockquote>
+<p>在分布式环境中玩耍，还是需要相当的功底啊。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="http://www.cnblogs.com/mindwind/p/5231986.html" target="_blank" rel="external">http://www.cnblogs.com/mindwind/p/5231986.html</a></li>
-<li><a href="http://blog.sina.com.cn/s/blog_3dbab28401014lt4.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_3dbab28401014lt4.html</a></li>
 <li><a href="http://thesecretlivesofdata.com/raft/" target="_blank" rel="external">http://thesecretlivesofdata.com/raft/</a></li>
 <li><a href="https://raft.github.io/raft.pdf" target="_blank" rel="external">https://raft.github.io/raft.pdf</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/27207160" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/27207160</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/30706032" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/30706032</a></li>
+<li><a href="https://web.stanford.edu/~ouster/cgi-bin/papers/OngaroPhD.pdf" target="_blank" rel="external">https://web.stanford.edu/~ouster/cgi-bin/papers/OngaroPhD.pdf</a></li>
 </ul>
 
       
@@ -549,7 +601,7 @@ P">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">41</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -557,7 +609,7 @@ P">
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -566,7 +618,7 @@ P">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -595,7 +647,7 @@ P">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题是什么？"><span class="nav-number">1.</span> <span class="nav-text">问题是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PAXOS"><span class="nav-number">2.</span> <span class="nav-text">PAXOS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RAFT"><span class="nav-number">3.</span> <span class="nav-text">RAFT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PAXOS"><span class="nav-number">1.</span> <span class="nav-text">PAXOS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RAFT"><span class="nav-number">2.</span> <span class="nav-text">RAFT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Leader-Election"><span class="nav-number">2.1.</span> <span class="nav-text">Leader Election</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Log-Replication"><span class="nav-number">2.2.</span> <span class="nav-text">Log Replication</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
@@ -614,7 +666,7 @@ P">
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
