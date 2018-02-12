@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="PostgreSQL,数据库," />
 
 
 
@@ -84,13 +84,58 @@
 
 
 
+<meta name="description" content="概述号称最强的“最先进”的开源数据库，对比MySQL：
+
+支持json、数组等结构；
+通过插件可以实现：地理位置、路径计算等；
+over分组聚合；
+递归查询；
+更多的索引及强悍的查询速度；
+
+在实际使用时，还需要考虑对应的运维工具是否全面、成熟。
+PostGis在对应的数据库执行命令：
+1CREATE EXTENSION postgis
+描述空间对象的方法有：
+
+WKT、EWKT：文本；
+WKB">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pgsql">
+<meta property="og:title" content="PostgreSQL">
 <meta property="og:url" content="http://yoursite.com/2017/10/07/pgsql/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:updated_time" content="2017-10-07T07:49:18.000Z">
+<meta property="og:description" content="概述号称最强的“最先进”的开源数据库，对比MySQL：
+
+支持json、数组等结构；
+通过插件可以实现：地理位置、路径计算等；
+over分组聚合；
+递归查询；
+更多的索引及强悍的查询速度；
+
+在实际使用时，还需要考虑对应的运维工具是否全面、成熟。
+PostGis在对应的数据库执行命令：
+1CREATE EXTENSION postgis
+描述空间对象的方法有：
+
+WKT、EWKT：文本；
+WKB">
+<meta property="og:updated_time" content="2017-10-09T06:04:30.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pgsql">
+<meta name="twitter:title" content="PostgreSQL">
+<meta name="twitter:description" content="概述号称最强的“最先进”的开源数据库，对比MySQL：
+
+支持json、数组等结构；
+通过插件可以实现：地理位置、路径计算等；
+over分组聚合；
+递归查询；
+更多的索引及强悍的查询速度；
+
+在实际使用时，还需要考虑对应的运维工具是否全面、成熟。
+PostGis在对应的数据库执行命令：
+1CREATE EXTENSION postgis
+描述空间对象的方法有：
+
+WKT、EWKT：文本；
+WKB">
 
 
 
@@ -114,7 +159,7 @@
   <link rel="canonical" href="http://yoursite.com/2017/10/07/pgsql/"/>
 
 
-  <title> pgsql | wsztrush </title>
+  <title> PostgreSQL | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -254,7 +299,7 @@
             
             
               
-                pgsql
+                PostgreSQL
               
             
           </h1>
@@ -272,6 +317,25 @@
           </span>
 
           
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
 
           
             
@@ -288,7 +352,7 @@
 
           
           
-             <span id="/2017/10/07/pgsql/" class="leancloud_visitors" data-flag-title="pgsql">
+             <span id="/2017/10/07/pgsql/" class="leancloud_visitors" data-flag-title="PostgreSQL">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -310,7 +374,72 @@
       
 
       
-        
+        <p><img src="" alt=""></p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>号称最强的“最先进”的开源数据库，对比MySQL：</p>
+<ul>
+<li>支持json、数组等结构；</li>
+<li>通过插件可以实现：地理位置、路径计算等；</li>
+<li>over分组聚合；</li>
+<li>递归查询；</li>
+<li>更多的索引及强悍的查询速度；</li>
+</ul>
+<p>在实际使用时，还需要考虑对应的运维工具是否全面、成熟。</p>
+<h1 id="PostGis"><a href="#PostGis" class="headerlink" title="PostGis"></a>PostGis</h1><p>在对应的数据库执行命令：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> EXTENSION postgis</div></pre></td></tr></table></figure>
+<p>描述空间对象的方法有：</p>
+<ul>
+<li>WKT、EWKT：文本；</li>
+<li>WKB、EWKB：二进制；</li>
+</ul>
+<p>数据类型有：</p>
+<ul>
+<li><code>POINT(0 0)</code></li>
+<li><code>LINESTRING(0 0,1 1,1 2)</code></li>
+<li><code>POLYGON((0 0,4 0,4 4,0 4,0 0),(1 1, 2 1, 2 2, 1 2,1 1))</code></li>
+<li><code>MULTIPOINT(0 0,1 2)</code></li>
+<li><code>MULTILINESTRING((0 0,1 1,1 2),(2 3,3 2,5 4))</code></li>
+<li><code>MULTIPOLYGON(((0 0,4 0,4 4,0 4,0 0),(1 1,2 1,2 2,1 2,1 1)))</code></li>
+<li><code>GEOMETRYCOLLECTION(POINT(2 3),LINESTRING(2 3,3 4))</code></li>
+</ul>
+<p>坐标系分为两种：</p>
+<ul>
+<li><code>geometry</code>：平面；</li>
+<li><code>geography</code>：球面，按照经纬度计算，计算量会更大；</li>
+</ul>
+<h1 id="PgRouting"><a href="#PgRouting" class="headerlink" title="PgRouting"></a>PgRouting</h1><h1 id="Json"><a href="#Json" class="headerlink" title="Json"></a>Json</h1><p>支持<font color="red">json</font>和<font color="red">jsonb</font>两种类型，区别在于：</p>
+<blockquote>
+<p>json是使用时解析，jsonb是保存解析后的结果。</p>
+</blockquote>
+<p>它们共有的操作包括：</p>
+<ul>
+<li><code>-&gt;</code>：根据下标或键值获取元素；</li>
+<li><code>-&gt;&gt;</code>：与<code>-&gt;</code>类似，结果为文本；</li>
+<li><code>#&gt;</code>：根据下标或键值组成的路径获取元素；</li>
+<li><code>#&gt;&gt;</code>：与<code>#&gt;</code>类似，结果为文本；</li>
+</ul>
+<p>jsonb额外支持的操作符包括：</p>
+<ul>
+<li><code>@&gt;</code>、<code>@&gt;</code>：最上层的包含关系<ul>
+<li><code>select &#39;{&quot;a&quot;:1, &quot;b&quot;:2}&#39;::jsonb @&gt;&#39;{&quot;b&quot;:2}&#39;::jsonb;</code></li>
+<li><code>select &#39;{&quot;b&quot;:2}&#39;::jsonb &lt;@ &#39;{&quot;a&quot;:1,&quot;b&quot;:2}&#39;::jsonb;</code></li>
+</ul>
+</li>
+<li><code>?</code>、<code>?|</code>、<code>?&amp;</code>：键是否在对象中<ul>
+<li><code>select &#39;{&quot;a&quot;:1, &quot;b&quot;:2}&#39;::jsonb ? &#39;b&#39;;</code></li>
+<li><code>select &#39;{&quot;a&quot;:1, &quot;b&quot;:2, &quot;c&quot;:3}&#39;::jsonb ?| array[&#39;b&#39;,&#39;c&#39;];</code></li>
+<li><code>select &#39;[&quot;a&quot;, &quot;b&quot;]&#39;::jsonb ?&amp; array[&#39;a&#39;, &#39;b&#39;];</code></li>
+</ul>
+</li>
+<li><code>||</code>、<code>-</code>、<code>#-</code>：对json对象进行操作<ul>
+<li><code>select &#39;[&quot;a&quot;, &quot;b&quot;]&#39;::jsonb || &#39;[&quot;c&quot;, &quot;d&quot;]&#39;::jsonb;</code></li>
+<li><code>select &#39;{&quot;a&quot;: &quot;b&quot;}&#39;::jsonb - &#39;a&#39;;</code></li>
+<li><code>select &#39;[&quot;a&quot;, &quot;b&quot;]&#39;::jsonb - 1;</code></li>
+<li><code>select &#39;[&quot;a&quot;, {&quot;b&quot;:1}]&#39;::jsonb #- &#39;{1,b}&#39;;</code></li>
+</ul>
+</li>
+</ul>
+<p>在json上可以建<font color="red">GIN</font>索引来提升查询速度。</p>
+<h1 id="其他特性"><a href="#其他特性" class="headerlink" title="其他特性"></a>其他特性</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1>
       
     </div>
 
@@ -330,6 +459,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/PostgreSQL/" rel="tag">#PostgreSQL</a>
+          
+            <a href="/tags/数据库/" rel="tag">#数据库</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
@@ -342,6 +479,10 @@
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/07/race-1/" rel="prev" title="土地智能监管">
+                土地智能监管 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -416,7 +557,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-count">36</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -424,7 +565,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -433,7 +574,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -462,7 +603,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PostGis"><span class="nav-number">2.</span> <span class="nav-text">PostGis</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PgRouting"><span class="nav-number">3.</span> <span class="nav-text">PgRouting</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Json"><span class="nav-number">4.</span> <span class="nav-text">Json</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他特性"><span class="nav-number">5.</span> <span class="nav-text">其他特性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
@@ -587,7 +728,7 @@
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
       var disqus_identifier = '2017/10/07/pgsql/';
-      var disqus_title = "pgsql";
+      var disqus_title = "PostgreSQL";
       var disqus_url = 'http://yoursite.com/2017/10/07/pgsql/';
 
       function run_disqus_script(disqus_script){
