@@ -1,0 +1,887 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="分布式,任务," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="概述在前面看过一点使用Quartz、Timer、ScheduledExecutorService来做定时任务，大都是单机的。要做一个分布式地任务调度，面临的问题会更多，当然发挥的作用也更大。
+问题如何触发任务？容易想到的（也是比较容易实现的）是由Client触发：在每个Client上初始化定时程序，触发时竞争在Redis、MySQL中实现的锁，谁拿到谁执行：
+
+优点：
+
+实现简单，可以快速上线；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式任务">
+<meta property="og:url" content="http://yoursite.com/2018/03/12/distributed-task/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="概述在前面看过一点使用Quartz、Timer、ScheduledExecutorService来做定时任务，大都是单机的。要做一个分布式地任务调度，面临的问题会更多，当然发挥的作用也更大。
+问题如何触发任务？容易想到的（也是比较容易实现的）是由Client触发：在每个Client上初始化定时程序，触发时竞争在Redis、MySQL中实现的锁，谁拿到谁执行：
+
+优点：
+
+实现简单，可以快速上线；">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-task/0.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-task/1.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-task/2.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-task/3.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-task/4.png">
+<meta property="og:updated_time" content="2018-03-26T13:28:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分布式任务">
+<meta name="twitter:description" content="概述在前面看过一点使用Quartz、Timer、ScheduledExecutorService来做定时任务，大都是单机的。要做一个分布式地任务调度，面临的问题会更多，当然发挥的作用也更大。
+问题如何触发任务？容易想到的（也是比较容易实现的）是由Client触发：在每个Client上初始化定时程序，触发时竞争在Redis、MySQL中实现的锁，谁拿到谁执行：
+
+优点：
+
+实现简单，可以快速上线；">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-task/0.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/12/distributed-task/"/>
+
+
+  <title> 分布式任务 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                分布式任务
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-12T20:51:03+08:00" content="2018-03-12">
+              2018-03-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/03/12/distributed-task/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/03/12/distributed-task/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/03/12/distributed-task/" class="leancloud_visitors" data-flag-title="分布式任务">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>在前面看过一点使用Quartz、Timer、ScheduledExecutorService来做定时任务，大都是单机的。要做一个分布式地任务调度，面临的问题会更多，当然发挥的作用也更大。</p>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><h2 id="如何触发任务？"><a href="#如何触发任务？" class="headerlink" title="如何触发任务？"></a>如何触发任务？</h2><p>容易想到的（<font color="lightgrey">也是比较容易实现的</font>）是由Client触发：在每个Client上初始化定时程序，触发时竞争在Redis、MySQL中实现的锁，谁拿到谁执行：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/distributed-task/0.png" alt=""></p>
+<p>优点：</p>
+<ul>
+<li>实现简单，可以快速上线；</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>当Client以及Job比较多的时候，Lock的竞争会越来越激烈，压力变大；</li>
+<li>无法对任务进行精细地感知和控制；</li>
+</ul>
+<p>第二种方法是由Server初始化定时任务，触发后选择一个比较空闲的Client来执行：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/distributed-task/1.png" alt=""></p>
+<p>优点：</p>
+<ul>
+<li>单个Job只在有限数量的Server上，对锁的竞争以及任务更新时对数据源的压力都会小很多</li>
+</ul>
+<h2 id="如何感知有哪些Client？"><a href="#如何感知有哪些Client？" class="headerlink" title="如何感知有哪些Client？"></a>如何感知有哪些Client？</h2><p>第一种方法是<u>在Client初始化过程中通知Server自己的存在</u>，这种做法的优点是：</p>
+<ul>
+<li>不需要依赖任何第三方或者中间件</li>
+</ul>
+<p>缺点是：</p>
+<ul>
+<li>当机器下线、任务的触发会失败，需要尝试其他的Client</li>
+</ul>
+<p>第二种方法类似<u>发布-订阅</u>方式，比如使用Zookeeper的临时节点。</p>
+<h2 id="为什么需要分布式锁以及如何实现？"><a href="#为什么需要分布式锁以及如何实现？" class="headerlink" title="为什么需要分布式锁以及如何实现？"></a>为什么需要分布式锁以及如何实现？</h2><p>单个Job只分配到单个的Server上，是不是就不需要分布式锁了？</p>
+<p>如果这么搞确实不需要，但是：</p>
+<blockquote>
+<ul>
+<li>这台服务器挂了，是不是整个业务线的调度就挂掉了？</li>
+<li>就算没有挂，这台服务更新程序后重启，你让业务方怎么办？</li>
+</ul>
+</blockquote>
+<p>结果可能是优化了一个不明显的地方，却引入了不容忽视的问题。那么如何来实现一个分布式锁，大概思路有几个：</p>
+<ul>
+<li>Zookeeper：创建节点；</li>
+<li>Redis：超时时间、Key的唯一性；</li>
+<li>MySQL：唯一约束、更新时间；</li>
+</ul>
+<p>总的来说都比较简单，貌似也没有特别大的坑。</p>
+<h2 id="如何处理任务的更新？"><a href="#如何处理任务的更新？" class="headerlink" title="如何处理任务的更新？"></a>如何处理任务的更新？</h2><p>无非是Pull（拉取更新）还是Push（被通知已更新）的问题，任务的更新通常较少，用Pull的方式实现简单且完全够用：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/distributed-task/2.png" alt=""></p>
+<p>Server的调度器（Quartz）支持任务的增、删，拿到变更之后进行本地修改即可。</p>
+<h2 id="如何实现子任务？"><a href="#如何实现子任务？" class="headerlink" title="如何实现子任务？"></a>如何实现子任务？</h2><p>单个任务可以由多个子任务构成，而单个的子任务又可以由多个孙子任务构成。业务场景很常见，那么怎么来实现呢？</p>
+<p>第一种方法可以分两步实现：</p>
+<ul>
+<li>在Client上父任务将子任务传给Server并持久化；</li>
+<li>在Server会通知所有的Client启动线程来拉取任务执行；</li>
+</ul>
+<p>如下：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/distributed-task/3.png" alt=""></p>
+<p>缺点是：</p>
+<blockquote>
+<p>本来Server只负责任务的调度，现在穿插在流程中有较大压力，同时数据库的压力会比较大。</p>
+</blockquote>
+<p>另一种可能的方式是由Client直接通知其他的Client来执行：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/distributed-task/4.png" alt=""></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>看一个相对成熟的中间件，基本上可以看到很多分布式经典问题的经典解决方案，分布式任务方面的解决方案也很多（比如当当的Elastic-Job），认真地看一个收获还是很多的。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/分布式/" rel="tag">#分布式</a>
+          
+            <a href="/tags/任务/" rel="tag">#任务</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/24/quartz/" rel="next" title="Quartz">
+                <i class="fa fa-chevron-left"></i> Quartz
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/26/distributed-theory/" rel="prev" title="常见分布式概念和理论">
+                常见分布式概念和理论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#如何触发任务？"><span class="nav-number">2.1.</span> <span class="nav-text">如何触发任务？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何感知有哪些Client？"><span class="nav-number">2.2.</span> <span class="nav-text">如何感知有哪些Client？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要分布式锁以及如何实现？"><span class="nav-number">2.3.</span> <span class="nav-text">为什么需要分布式锁以及如何实现？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何处理任务的更新？"><span class="nav-number">2.4.</span> <span class="nav-text">如何处理任务的更新？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何实现子任务？"><span class="nav-number">2.5.</span> <span class="nav-text">如何实现子任务？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2018/03/12/distributed-task/';
+      var disqus_title = "分布式任务";
+      var disqus_url = 'http://yoursite.com/2018/03/12/distributed-task/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
