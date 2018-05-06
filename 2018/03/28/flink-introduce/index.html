@@ -1,0 +1,937 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="分布式,工具,数据,编程,并发," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="写在前面实时的数据处理框架只用过Jstorm，总体感觉：
+
+开发成本高
+门槛高
+功能有限
+
+而Flink将节点做成有状态的，很多问题都迎刃而解，SQL的编程方式也极大地增加了受众范围。
+经典问题的解决如果框架做的太少，很多问题在业务逻辑里面实现非常复杂，成本也非常高，最好是在框架上能比较好地支持。
+错误恢复当某个任务崩溃甚至整个图崩溃，如何恢复恢复执行并保证结果准确？在官网的文章Data Stre">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flink简介">
+<meta property="og:url" content="http://yoursite.com/2018/03/28/flink-introduce/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="写在前面实时的数据处理框架只用过Jstorm，总体感觉：
+
+开发成本高
+门槛高
+功能有限
+
+而Flink将节点做成有状态的，很多问题都迎刃而解，SQL的编程方式也极大地增加了受众范围。
+经典问题的解决如果框架做的太少，很多问题在业务逻辑里面实现非常复杂，成本也非常高，最好是在框架上能比较好地支持。
+错误恢复当某个任务崩溃甚至整个图崩溃，如何恢复恢复执行并保证结果准确？在官网的文章Data Stre">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/0.svg">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/1.svg">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/2.svg">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/3.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/5.svg">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/7.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/6.svg">
+<meta property="og:updated_time" content="2018-04-06T00:18:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flink简介">
+<meta name="twitter:description" content="写在前面实时的数据处理框架只用过Jstorm，总体感觉：
+
+开发成本高
+门槛高
+功能有限
+
+而Flink将节点做成有状态的，很多问题都迎刃而解，SQL的编程方式也极大地增加了受众范围。
+经典问题的解决如果框架做的太少，很多问题在业务逻辑里面实现非常复杂，成本也非常高，最好是在框架上能比较好地支持。
+错误恢复当某个任务崩溃甚至整个图崩溃，如何恢复恢复执行并保证结果准确？在官网的文章Data Stre">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/0.svg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/28/flink-introduce/"/>
+
+
+  <title> Flink简介 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Flink简介
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-03-28T10:35:42+08:00" content="2018-03-28">
+              2018-03-28
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/03/28/flink-introduce/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/03/28/flink-introduce/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/03/28/flink-introduce/" class="leancloud_visitors" data-flag-title="Flink简介">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>实时的数据处理框架只用过Jstorm，总体感觉：</p>
+<ul>
+<li>开发成本高</li>
+<li>门槛高</li>
+<li>功能有限</li>
+</ul>
+<p>而Flink将节点做成<font color="blue">有状态</font>的，很多问题都迎刃而解，SQL的编程方式也极大地增加了受众范围。</p>
+<h1 id="经典问题的解决"><a href="#经典问题的解决" class="headerlink" title="经典问题的解决"></a>经典问题的解决</h1><p>如果框架做的太少，很多问题在业务逻辑里面实现非常复杂，成本也非常高，最好是在框架上能比较好地支持。</p>
+<h2 id="错误恢复"><a href="#错误恢复" class="headerlink" title="错误恢复"></a>错误恢复</h2><p>当某个任务崩溃甚至整个图崩溃，如何恢复恢复执行并保证结果准确？在官网的文章<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.4/internals/stream_checkpointing.html" target="_blank" rel="external">Data Streaming Fault Tolerance</a> 中过程讲的比较清楚。这里要涉及到的几个概念：</p>
+<ul>
+<li>barrier</li>
+<li>state</li>
+</ul>
+<p>Flink在消息流中会插入barrier，将连续不断地流隔开成连续不断的批：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/0.svg" alt=""></p>
+<p>每完成一批消息就保存一个state，这样就会存储一系列的state。如果挂掉，只需要回放保存成功的state之后的消息即可。</p>
+<p>节点只有单个输入的话逻辑非常简单，存在多个输入时需要考虑：</p>
+<ul>
+<li>什么时候保存state</li>
+<li>什么时候向后面的节点发送消息</li>
+</ul>
+<p>如下图：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/1.svg" alt=""></p>
+<p>为了保证可恢复可以这么做：</p>
+<blockquote>
+<p>当task收到所有的输入的id=n的barrier，才会保存id=n的state。成功后才开始消费id=n+1的消息。</p>
+</blockquote>
+<p>每个节点state的保存过程是独立的，不需要等整个图的id=n的barrier完成再执行：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/2.svg" alt=""></p>
+<p>看到这里，恢复逻辑也自然就清晰了：</p>
+<ul>
+<li>加载最近保存成功的state</li>
+<li>让消费消息的节点重新拉取对应的offset之后的消息</li>
+</ul>
+<p>注意：错误恢复依赖消息来源的回放能力（<font color="lightgrey">要不把消息先灌到Kafka中😂</font>）。</p>
+<h2 id="Exactly-Once"><a href="#Exactly-Once" class="headerlink" title="Exactly Once"></a>Exactly Once</h2><p>从字面上的理解是：</p>
+<blockquote>
+<p>消息仅仅被投递了一次，并且被消费成功了。</p>
+</blockquote>
+<p>所有的开发都知道这不现实，为了保证消息可以被成功消费的做法是：<font color="blue">重试 + 幂等</font>。所以，这个问题应该从结果上理解：</p>
+<blockquote>
+<p>在最终的结果上，一个消息只起到一次的作用。</p>
+</blockquote>
+<p>从上面的过程中可以看出来，每个消息作用在state上的次数只能是一次（<font color="lightgrey">有没有感觉在本地存储导致实现起来太轻松了</font>）。对应在基本的JStorm中依靠Acker机制只能保证<font color="blue">At Least Once</font>：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/3.png" alt=""></p>
+<p>在Acker中依赖 (0^1)^(1)^(0^2)^(2) = 0 来判断是否消息走完了整个Topology。</p>
+<h2 id="反压"><a href="#反压" class="headerlink" title="反压"></a>反压</h2><p>需要使用反压（<font color="lightgrey">Back Pressure</font>）的场景是：</p>
+<blockquote>
+<p>系统收到数据的速度高于处理速度，比如：垃圾回收导致处理卡顿、秒杀等峰值流量等。</p>
+</blockquote>
+<p><font color="blue">Back</font>的含义在于：</p>
+<blockquote>
+<p>由下游节点向上游节点试压，试图降低消息的速度。</p>
+</blockquote>
+<p>两个思路：</p>
+<ul>
+<li>有个调度节点告诉上游慢点</li>
+<li>类似阻塞队列，下游还没有消费完时上游被阻塞，这也是Flink的做法</li>
+</ul>
+<h1 id="主要流程及核心概念"><a href="#主要流程及核心概念" class="headerlink" title="主要流程及核心概念"></a>主要流程及核心概念</h1><p>分布式环境中运行的Flink如下：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/5.svg" alt=""></p>
+<p>主要角色包括：</p>
+<ul>
+<li>JobManager：集群管理员，集群中只有一个（<font color="lightgrey">需要解决单点问题</font>），负责：<ul>
+<li>TaskManager的注册、监控；</li>
+<li>任务的创建、取消、调度；</li>
+</ul>
+</li>
+<li>TaskManager：任务执行者，集群中存在多个独立的，负责：<ul>
+<li>执行任务；</li>
+<li>管理资源，任务之间内存隔离；</li>
+</ul>
+</li>
+<li>Slot：</li>
+<li>JobGraph：</li>
+<li>Metrics：</li>
+</ul>
+<h2 id="创建并提交任务"><a href="#创建并提交任务" class="headerlink" title="创建并提交任务"></a>创建并提交任务</h2><p>步骤如下：</p>
+<ol>
+<li>根据SQL等方式描述的计算过程构建JobGraph = JobVertex + JobEdge；</li>
+<li>由JobClient将任务提交给JobManager；</li>
+<li>在JobManager将JobGraph转化为ExecutionGraph；</li>
+<li>由JobManager将任务分发给TaskManager；</li>
+</ol>
+<p>如下图：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/7.png" alt=""></p>
+<p>在JobManager会完成从JobGraph到ExecutionGraph的转化：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/flink-introduce/6.svg" alt=""></p>
+<h2 id="调度"><a href="#调度" class="headerlink" title="调度"></a>调度</h2><h2 id="消息的分发"><a href="#消息的分发" class="headerlink" title="消息的分发"></a>消息的分发</h2><h2 id="任务的鲁棒性"><a href="#任务的鲁棒性" class="headerlink" title="任务的鲁棒性"></a>任务的鲁棒性</h2><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://www.cnblogs.com/wei-li/p/GraphLab.html" target="_blank" rel="external">十分钟了解分布式计算:GraphLab</a></li>
+<li><a href="https://ci.apache.org/projects/flink/flink-docs-release-1.4/internals/stream_checkpointing.html" target="_blank" rel="external">Data Streaming Fault Tolerance</a></li>
+<li><a href="http://vinoyang.com/2016/06/22/flink-data-stream-partitioner/" target="_blank" rel="external">Apache Flink流分区器剖析</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/分布式/" rel="tag">#分布式</a>
+          
+            <a href="/tags/工具/" rel="tag">#工具</a>
+          
+            <a href="/tags/数据/" rel="tag">#数据</a>
+          
+            <a href="/tags/编程/" rel="tag">#编程</a>
+          
+            <a href="/tags/并发/" rel="tag">#并发</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/26/distributed-theory/" rel="next" title="常见分布式概念和理论">
+                <i class="fa fa-chevron-left"></i> 常见分布式概念和理论
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/11/cluster-management/" rel="prev" title="集群管理">
+                集群管理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#经典问题的解决"><span class="nav-number">2.</span> <span class="nav-text">经典问题的解决</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#错误恢复"><span class="nav-number">2.1.</span> <span class="nav-text">错误恢复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exactly-Once"><span class="nav-number">2.2.</span> <span class="nav-text">Exactly Once</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反压"><span class="nav-number">2.3.</span> <span class="nav-text">反压</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主要流程及核心概念"><span class="nav-number">3.</span> <span class="nav-text">主要流程及核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建并提交任务"><span class="nav-number">3.1.</span> <span class="nav-text">创建并提交任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调度"><span class="nav-number">3.2.</span> <span class="nav-text">调度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息的分发"><span class="nav-number">3.3.</span> <span class="nav-text">消息的分发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#任务的鲁棒性"><span class="nav-number">3.4.</span> <span class="nav-text">任务的鲁棒性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2018/03/28/flink-introduce/';
+      var disqus_title = "Flink简介";
+      var disqus_url = 'http://yoursite.com/2018/03/28/flink-introduce/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
