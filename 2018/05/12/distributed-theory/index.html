@@ -1,0 +1,1041 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="分布式," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="写在前面在分布式的环境中，往往将一个服务器或者服务器上运行的进程称为一个节点，节点和节点之间通过网络互联。运行过程中可能遇到的异常有：
+
+异常：服务器宕机、网络异常、磁盘故障等；
+超时：很典型也很难处理的点，不知道对方是真失败还是假失败；
+一致性
+
+现在各种分布式的服务、存储应用在各种应用的后台，作为一个开发应该好好理解背后的思路。
+基本理论和套路江湖中的前辈、高人总结了很多的理论和套路，非常值得">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常见分布式概念和理论">
+<meta property="og:url" content="http://yoursite.com/2018/05/12/distributed-theory/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="写在前面在分布式的环境中，往往将一个服务器或者服务器上运行的进程称为一个节点，节点和节点之间通过网络互联。运行过程中可能遇到的异常有：
+
+异常：服务器宕机、网络异常、磁盘故障等；
+超时：很典型也很难处理的点，不知道对方是真失败还是假失败；
+一致性
+
+现在各种分布式的服务、存储应用在各种应用的后台，作为一个开发应该好好理解背后的思路。
+基本理论和套路江湖中的前辈、高人总结了很多的理论和套路，非常值得">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/0.jpg">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/1.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/2.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/3.png">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/4.png">
+<meta property="og:updated_time" content="2018-05-12T14:38:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常见分布式概念和理论">
+<meta name="twitter:description" content="写在前面在分布式的环境中，往往将一个服务器或者服务器上运行的进程称为一个节点，节点和节点之间通过网络互联。运行过程中可能遇到的异常有：
+
+异常：服务器宕机、网络异常、磁盘故障等；
+超时：很典型也很难处理的点，不知道对方是真失败还是假失败；
+一致性
+
+现在各种分布式的服务、存储应用在各种应用的后台，作为一个开发应该好好理解背后的思路。
+基本理论和套路江湖中的前辈、高人总结了很多的理论和套路，非常值得">
+<meta name="twitter:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/0.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/12/distributed-theory/"/>
+
+
+  <title> 常见分布式概念和理论 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                常见分布式概念和理论
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-05-12T20:51:03+08:00" content="2018-05-12">
+              2018-05-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/05/12/distributed-theory/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/05/12/distributed-theory/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/05/12/distributed-theory/" class="leancloud_visitors" data-flag-title="常见分布式概念和理论">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>在分布式的环境中，往往将一个服务器或者服务器上运行的进程称为一个节点，节点和节点之间通过网络互联。运行过程中可能遇到的异常有：</p>
+<ul>
+<li>异常：服务器宕机、网络异常、磁盘故障等；</li>
+<li>超时：很典型也很难处理的点，不知道对方是真失败还是假失败；</li>
+<li>一致性</li>
+</ul>
+<p>现在各种分布式的服务、存储应用在各种应用的后台，作为一个开发应该好好理解背后的思路。</p>
+<h1 id="基本理论和套路"><a href="#基本理论和套路" class="headerlink" title="基本理论和套路"></a>基本理论和套路</h1><p>江湖中的前辈、高人总结了很多的理论和套路，非常值得花时间好好学习理解。</p>
+<h2 id="CAP理论"><a href="#CAP理论" class="headerlink" title="CAP理论"></a>CAP理论</h2><p>CAP理论告诉我们：</p>
+<blockquote>
+<p>在一个分布式系统中，<strong>C</strong>onsistency、<strong>A</strong>vailability、<strong>P</strong>artition tolerance三者不可兼得！</p>
+</blockquote>
+<p>为了理解定理的含义，需要逐个琢磨，一致性可以理解为：</p>
+<blockquote>
+<p>每次读操作都可以取到最新的值（<font color="lightgrey">也就是说所有有效数据备份中的值是相同的</font>）！</p>
+</blockquote>
+<p>这是我们平时所说的强一致性，其他层次的一致性还有（在NoSQL中更常见）：</p>
+<ul>
+<li>单调一致性</li>
+<li>会话一致性</li>
+<li>最终一致性</li>
+</ul>
+<p>可用性比较直观一些：</p>
+<blockquote>
+<p>当部分机器挂掉以后，集群是否依然有能力响应客户端的读写请求！</p>
+</blockquote>
+<p>分区容忍性是最不直观的（<font color="lightgrey">貌似之前的理解一直是错误的</font>）：</p>
+<blockquote>
+<p>什么是分区</p>
+<p>在分布式系统中，节点之间通过网络互相联通。当网络或者机器发生故障，集群分成隔离的几个分区。</p>
+<p>什么是分区容忍</p>
+<p>当出现分区，数据仍能被访问到。如果仅仅将数据保存在单个节点，那节点挂了数据就访问不到了。所以，提升容忍性的做法是将数据多保存几份。</p>
+</blockquote>
+<p>既然不可兼得，最好是三选其二，比如：</p>
+<ul>
+<li>CA：单机系统；</li>
+<li>AP：主备；</li>
+<li>CP：传统数据库的分布式事务（<font color="lightgrey">挂就挂了，但是数据一定是一致</font>😋）；</li>
+</ul>
+<p>现实中对CAP的取舍分成了两条路线：</p>
+<ul>
+<li>BASE：基本可用、软状态、最终一致；</li>
+<li>ACID：原子性、一致性、隔离性、持久性；</li>
+</ul>
+<p>随着跨城甚至跨洲的数据中心的出现，要保证数据的一致性付出的代价会相当大，毕竟信息的传播速度上限是光速，通常想办法将“不一致”的危害降低到最小即可。</p>
+<h2 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h2><p>面临场景是分配：</p>
+<blockquote>
+<p>将全量的mm条记录，均匀地分布到nn台机器上处理。</p>
+</blockquote>
+<p>一般想到的做法是：</p>
+<ul>
+<li>排序后分段指派，$(i−1)×(m/n)−i×(m/n)(i−1)×(m/n)−i×(m/n)$去$i$号机器；</li>
+<li>哈希取模，$i\ mod\ n=j$去$j$号机器；</li>
+</ul>
+<p>假如此时将机器数目从$n$增加到$n+1$，应该如何调整?看起来是需要全部重算一遍，非常地消耗资源，且很多时候看起来是不可行的。背后所反应出来的是：</p>
+<blockquote>
+<p>这两种方法，在应对动态变化的环境非常乏力，而现实往往是在不停变化的。</p>
+</blockquote>
+<p>用一致性哈希解决这种问题的思路如下图：</p>
+<p><a href="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/0.jpg" target="_blank" rel="external"><img src="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/0.jpg" alt="img"></a></p>
+<p>思路是分成两步：</p>
+<ul>
+<li>将数据哈希到中间层；</li>
+<li>将中间层哈希到服务器；</li>
+</ul>
+<p>这样做的好处是：</p>
+<blockquote>
+<p>当一台服务器挂掉以后，只会影响有限的中间层，将中间层路由到其他的服务器上就可以了，而数据到中间层的映射不需要做任何改动。</p>
+</blockquote>
+<p>在用环形管理的节点看起来是一个相当好的办法。</p>
+<h2 id="2PC（二阶段提交）"><a href="#2PC（二阶段提交）" class="headerlink" title="2PC（二阶段提交）"></a>2PC（二阶段提交）</h2><p>面临的场景是分布式事务：</p>
+<blockquote>
+<p>当有多个执行者共同完成一项操作，如何保证数据的一致性？</p>
+</blockquote>
+<p>比如让客户端分别向执行者发起请求：</p>
+<p><a href="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/1.png" target="_blank" rel="external"><img src="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/1.png" alt="img"></a></p>
+<p>如果某个执行者失败了怎么办？想让成功的回滚？但是回滚它们的过程也可能失败😂。二阶段提交算法应运而生，思路是分成两步：</p>
+<ul>
+<li>准备阶段<ul>
+<li>协调者向所有执行者询问是否可以执行；</li>
+<li>执行者将信息写入日志，但是并不会提交事务；</li>
+<li>执行者发送ACK消息给协调者，如果可以则发送“同意”，否则发送“中止”；</li>
+</ul>
+</li>
+<li>提交阶段<ul>
+<li>收到所有执行者ACK消息且都为同意：<ul>
+<li>协调者向所有执行者发送“提交”消息；</li>
+<li>执行者收到“提交”消息后，完成事务提交，并释放锁定的资源；</li>
+<li>执行者向协调者发送“完成”消息；</li>
+<li>协调者收到所有的“完成”消息后，将事务变为完成；</li>
+</ul>
+</li>
+<li>有执行者回复“中止”或者部分执行者超时：<ul>
+<li>协调者向所有执行者发送“回滚”消息；</li>
+<li>执行者收到“回滚”消息后，取消事务提交，并释放锁定的资源；</li>
+<li>执行者向协调器发送“完成”消息；</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>如下图：</p>
+<p><a href="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/2.png" target="_blank" rel="external"><img src="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/2.png" alt="img"></a></p>
+<p>在正常的情况下，能保证一起成功和一起回滚，但是遇到宕机是否还能表现正常：</p>
+<blockquote>
+<p>情况一：协调者挂了，执行者没挂</p>
+<p>备份机器启动，向所有的执行者询问事务执行情况，根据反馈可以在任何阶段恢复到之前的状态。</p>
+<p>情况二：协调者没挂，执行者挂了</p>
+<p>和情况一类似，在执行者重新启动之后，可以询问协调者事务情况，继续对事务进行提交或回滚。</p>
+<p>情况三：协调者和执行者都挂了</p>
+<p>如果存活的执行者中存在第二个阶段“提交”消息，那么协调者继续提交事务；如果存活的执行者中存在第二个阶段“回滚”消息或者第一阶段的“中止”消息，那么协调者继续回滚事务。</p>
+<p>如果存活的执行者都是第一个阶段“同意”状态，新的协调者是无法判断事务应该怎么操作，完全由宕机的执行者的状态决定，其他的执行者也需要阻塞等待它启动后再操作。</p>
+</blockquote>
+<h2 id="3PC（三阶段提交）"><a href="#3PC（三阶段提交）" class="headerlink" title="3PC（三阶段提交）"></a>3PC（三阶段提交）</h2><p>针对2PC中的缺点，在3PC中增加了一个环节，感觉非常像DoubleWrite技术：</p>
+<ul>
+<li>CanCommit<ul>
+<li>协调者向执行者发送CanCommit消息；</li>
+<li>执行者收到CanCommit消息，根据自身情况返回YES或者NO；</li>
+</ul>
+</li>
+<li>PreCommit<ul>
+<li>所有执行者返回的是YES<ul>
+<li>协调者向所有执行者发送PreCommit消息；</li>
+<li>执行者收到PreCommit消息，将数据写入日志，不提交事务；</li>
+<li>执行者发送YES或者NO给协调者；</li>
+</ul>
+</li>
+<li>部分执行者返回NO或者超时<ul>
+<li>协调者向所有执行者发送“中止”消息；</li>
+<li>执行者收到“中止”消息之后，中止事务执行；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>DoCommit<ul>
+<li>收到部分NO消息<ul>
+<li>协调者向所有执行者发送“中止”消息；</li>
+<li>执行者收到“中止”消息后，执行事务的回滚，释放资源，向协调者发送“完成”消息；</li>
+<li>协调者接受到所有“完成”消息后，将事务变为中止；</li>
+</ul>
+</li>
+<li>收到全部YES消息<ul>
+<li>协调者将事务变为提交，向所有执行者发送DoCommit消息；</li>
+<li>执行者收到DoCommit消息后，完成事务提交，向协调者发送“完成”消息；</li>
+<li>协调者接受到所有“完成”消息后，将事务变为完成；</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>继续来看2PC可能遇到的协调者与执行者都宕机的情况：</p>
+<blockquote>
+<p>令人失望的是，存活的执行者都是PreCommit时，也不能完全避免数据不一致的出现，但是由于已经发送过CanCommit，所以大概率是可以commit的。</p>
+</blockquote>
+<h2 id="PAXOS"><a href="#PAXOS" class="headerlink" title="PAXOS"></a>PAXOS</h2><p>据说Google Chubby的Mike Burrows讲过：</p>
+<blockquote>
+<p>There is only one consensus protocol, and that’s Paxos” – all other approaches are just broken versions of Paxos.</p>
+</blockquote>
+<p>既然这么牛，我们要一定要好好学习！可以先看下文章：<a href="http://www.jdon.com/artichect/paxos.html" target="_blank" rel="external">分布式系统Paxos算法</a>（<font color="lightgrey">不管内容怎么样，动态图绝对是良心之作</font>👍）。根据网上的各种讲解来看复杂度还是蛮高的，但细究下来核心思想很像我们小学就知道的<a href="https://baike.baidu.com/item/%E6%8A%BD%E5%B1%89%E5%8E%9F%E7%90%86/233776?fr=aladdin&amp;fromid=731656&amp;fromtitle=%E9%B8%BD%E5%B7%A2%E5%8E%9F%E7%90%86" target="_blank" rel="external">鸽巢原理</a>，言归正传来看算法。Paxos要解决的问题是：</p>
+<blockquote>
+<p>在不可靠的网络环境中，分布式系统如何达成一致的决议？</p>
+</blockquote>
+<p>算法涉及两个角色：</p>
+<ul>
+<li>$Proposer$：提议发起者；</li>
+<li>$Acceptor$：提议批准者；</li>
+</ul>
+<p>Basic-Paxos算法的流程如下，其中1、2、3、4为准备阶段，5、6、7为提交阶段：</p>
+<p><a href="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/3.png" target="_blank" rel="external"><img src="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/3.png" alt="img"></a></p>
+<p>在并发的情况下可能会出现活锁：</p>
+<p><a href="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/4.png" target="_blank" rel="external"><img src="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/4.png" alt="img"></a></p>
+<p>Basic-Paxos的一些问题：</p>
+<blockquote>
+<p>问题一：Basic-Paxos中的单值问题</p>
+<p>从上面的流程图中看到，在第(3)步中返回的是$Return(acceptedProposal,acceptedValue)$。从目的上来看是没有问题：</p>
+<ul>
+<li>如果之前已经达成一致，在其他人Prepare时会把之前的结果带上，这样最终的结果就是一致的；</li>
+</ul>
+<p>然而，如果仅仅是一个值，那实际的使用场景是什么？选取Leader？</p>
+<p>问题二：每次都要两个阶段的话就有比较大的网络开销</p>
+<p>每次请求都要分成两个阶段，中间需要大量的网络开销，必然会导致较长的RT。</p>
+</blockquote>
+<p>回头再来看流程中的第(7)步，当得到$result=n$说明已经对$value$达成一致，如果：</p>
+<blockquote>
+<p>该机器继续$Accept(n+1,value_{n+1})$ ，结果会怎么样？</p>
+</blockquote>
+<p>在$Acceptor$逻辑没有变化的时候，可能有两种情况：</p>
+<blockquote>
+<p>情况一：更新成功</p>
+<p>可能此时所有$Acceptor$本地保存的$minProposal$还仍旧是$n$，这样就满足成功的条件了。不停地更新，这样整个集群就可以得到一个一致的日志序列，也就可以得到一致的多值。</p>
+<p>情况二：更新失败</p>
+<p>当有其他的$Proposer$又做了$Prepare(n+x)$，这样就会更新失败。</p>
+</blockquote>
+<p>开心的是发现Paxos貌似天然已经支持了多值，忧伤的是只要有$Prepare$持续提交就可能打破。简单的防止打破的思路：</p>
+<blockquote>
+<p>通过类似心跳的东西，使得达成一致的$Proposer$与$Accepter$达成默契，在一段时间内只接受该$Proposer$的提议。</p>
+</blockquote>
+<h2 id="RAFT"><a href="#RAFT" class="headerlink" title="RAFT"></a>RAFT</h2><h2 id="主备"><a href="#主备" class="headerlink" title="主备"></a>主备</h2><h2 id="选主"><a href="#选主" class="headerlink" title="选主"></a>选主</h2><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://www.infoq.com/cn/articles/cap-twelve-years-later-how-the-rules-have-changed" target="_blank" rel="external">CAP理论十二年回顾：”规则”变了</a></li>
+<li><a href="http://www.hollischuang.com/archives/681" target="_blank" rel="external">关于分布式事务、两阶段提交协议、三阶提交协议</a></li>
+<li><a href="http://www.jdon.com/artichect/paxos.html" target="_blank" rel="external">分布式系统Paxos算法</a></li>
+<li><a href="https://www.cnblogs.com/cchust/p/5617989.html" target="_blank" rel="external">分布式一致性算法–Paxos</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzI4NDMyNTU2Mw==&amp;mid=2247483695&amp;idx=1&amp;sn=91ea422913fc62579e020e941d1d059e#rd" target="_blank" rel="external">微信自研生产级paxos类库PhxPaxos实现原理介绍</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/21466932" target="_blank" rel="external">Paxos理论介绍(2): Multi-Paxos与Leader</a></li>
+</ul>
+<h2 id="RAFT-1"><a href="#RAFT-1" class="headerlink" title="RAFT"></a>RAFT</h2><h2 id="主备-1"><a href="#主备-1" class="headerlink" title="主备"></a>主备</h2><h2 id="选主-1"><a href="#选主-1" class="headerlink" title="选主"></a>选主</h2><h1 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h1><h1 id="参考-1"><a href="#参考-1" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://www.infoq.com/cn/articles/cap-twelve-years-later-how-the-rules-have-changed" target="_blank" rel="external">CAP理论十二年回顾：”规则”变了</a></li>
+<li><a href="http://www.hollischuang.com/archives/681" target="_blank" rel="external">关于分布式事务、两阶段提交协议、三阶提交协议</a></li>
+<li><a href="http://www.jdon.com/artichect/paxos.html" target="_blank" rel="external">分布式系统Paxos算法</a></li>
+<li><a href="https://www.cnblogs.com/cchust/p/5617989.html" target="_blank" rel="external">分布式一致性算法–Paxos</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzI4NDMyNTU2Mw==&amp;mid=2247483695&amp;idx=1&amp;sn=91ea422913fc62579e020e941d1d059e#rd" target="_blank" rel="external">微信自研生产级paxos类库PhxPaxos实现原理介绍</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/21466932" target="_blank" rel="external">Paxos理论介绍(2): Multi-Paxos与Leader</a></li>
+<li>​</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/分布式/" rel="tag">#分布式</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/11/cluster-management/" rel="next" title="集群管理">
+                <i class="fa fa-chevron-left"></i> 集群管理
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本理论和套路"><span class="nav-number">2.</span> <span class="nav-text">基本理论和套路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CAP理论"><span class="nav-number">2.1.</span> <span class="nav-text">CAP理论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一致性哈希"><span class="nav-number">2.2.</span> <span class="nav-text">一致性哈希</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2PC（二阶段提交）"><span class="nav-number">2.3.</span> <span class="nav-text">2PC（二阶段提交）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3PC（三阶段提交）"><span class="nav-number">2.4.</span> <span class="nav-text">3PC（三阶段提交）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PAXOS"><span class="nav-number">2.5.</span> <span class="nav-text">PAXOS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAFT"><span class="nav-number">2.6.</span> <span class="nav-text">RAFT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主备"><span class="nav-number">2.7.</span> <span class="nav-text">主备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选主"><span class="nav-number">2.8.</span> <span class="nav-text">选主</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RAFT-1"><span class="nav-number">4.1.</span> <span class="nav-text">RAFT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主备-1"><span class="nav-number">4.2.</span> <span class="nav-text">主备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选主-1"><span class="nav-number">4.3.</span> <span class="nav-text">选主</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结-1"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考-1"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2018/05/12/distributed-theory/';
+      var disqus_title = "常见分布式概念和理论";
+      var disqus_url = 'http://yoursite.com/2018/05/12/distributed-theory/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
