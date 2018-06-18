@@ -109,7 +109,8 @@
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/2.png">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/3.png">
 <meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/4.png">
-<meta property="og:updated_time" content="2018-05-12T14:38:49.000Z">
+<meta property="og:image" content="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/5.png">
+<meta property="og:updated_time" content="2018-06-18T08:15:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常见分布式概念和理论">
 <meta name="twitter:description" content="写在前面在分布式的环境中，往往将一个服务器或者服务器上运行的进程称为一个节点，节点和节点之间通过网络互联。运行过程中可能遇到的异常有：
@@ -541,12 +542,9 @@
 <p>问题二：每次都要两个阶段的话就有比较大的网络开销</p>
 <p>每次请求都要分成两个阶段，中间需要大量的网络开销，必然会导致较长的RT。</p>
 </blockquote>
-<p>回头再来看流程中的第(7)步，当得到$result=n$说明已经对$value$达成一致，如果：</p>
+<p>回头再来看流程中的第(7)步，当得到$result=n$说明已经对$value$达成一致，那么：</p>
 <blockquote>
 <p>该机器继续$Accept(n+1,value_{n+1})$ ，结果会怎么样？</p>
-</blockquote>
-<p>在$Acceptor$逻辑没有变化的时候，可能有两种情况：</p>
-<blockquote>
 <p>情况一：更新成功</p>
 <p>可能此时所有$Acceptor$本地保存的$minProposal$还仍旧是$n$，这样就满足成功的条件了。不停地更新，这样整个集群就可以得到一个一致的日志序列，也就可以得到一致的多值。</p>
 <p>情况二：更新失败</p>
@@ -556,22 +554,42 @@
 <blockquote>
 <p>通过类似心跳的东西，使得达成一致的$Proposer$与$Accepter$达成默契，在一段时间内只接受该$Proposer$的提议。</p>
 </blockquote>
-<h2 id="RAFT"><a href="#RAFT" class="headerlink" title="RAFT"></a>RAFT</h2><h2 id="主备"><a href="#主备" class="headerlink" title="主备"></a>主备</h2><h2 id="选主"><a href="#选主" class="headerlink" title="选主"></a>选主</h2><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="http://www.infoq.com/cn/articles/cap-twelve-years-later-how-the-rules-have-changed" target="_blank" rel="external">CAP理论十二年回顾：”规则”变了</a></li>
-<li><a href="http://www.hollischuang.com/archives/681" target="_blank" rel="external">关于分布式事务、两阶段提交协议、三阶提交协议</a></li>
-<li><a href="http://www.jdon.com/artichect/paxos.html" target="_blank" rel="external">分布式系统Paxos算法</a></li>
-<li><a href="https://www.cnblogs.com/cchust/p/5617989.html" target="_blank" rel="external">分布式一致性算法–Paxos</a></li>
-<li><a href="https://mp.weixin.qq.com/s?__biz=MzI4NDMyNTU2Mw==&amp;mid=2247483695&amp;idx=1&amp;sn=91ea422913fc62579e020e941d1d059e#rd" target="_blank" rel="external">微信自研生产级paxos类库PhxPaxos实现原理介绍</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/21466932" target="_blank" rel="external">Paxos理论介绍(2): Multi-Paxos与Leader</a></li>
+<h2 id="RAFT"><a href="#RAFT" class="headerlink" title="RAFT"></a>RAFT</h2><p>和Paxos一样都是解决分布式中的一致性问题，优势在于：</p>
+<ul>
+<li>理解更简单</li>
+<li>实现更容易（<font color="lightgrey">论文中甚至贴出了伪代码</font>）</li>
 </ul>
-<h2 id="RAFT-1"><a href="#RAFT-1" class="headerlink" title="RAFT"></a>RAFT</h2><h2 id="主备-1"><a href="#主备-1" class="headerlink" title="主备"></a>主备</h2><h2 id="选主-1"><a href="#选主-1" class="headerlink" title="选主"></a>选主</h2><h1 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h1><h1 id="参考-1"><a href="#参考-1" class="headerlink" title="参考"></a>参考</h1><ul>
+<p>还完全不了解同学的可以看下<a href="http://thesecretlivesofdata.com/raft/" target="_blank" rel="external">这里</a>（<font color="lightgrey">再次感慨别人写文章的精神，这效果做的非常棒</font>👍👍）。进入正题，每个节点在Raft中分为三种角色：</p>
+<ul>
+<li>$Leader$</li>
+<li>$Follower$</li>
+<li>$Candidate$</li>
+</ul>
+<p>每个节点拥有两个定时器：</p>
+<ul>
+<li>选举定时器：超时后$Follower$变成$Candidate$并发起选举；</li>
+<li>心跳定时器：$Leader$定时向所有节点发送心跳消息，其他节点收到心跳后重置选举定时器，抑制了选举的发生；</li>
+</ul>
+<p>节点状态变化如下：</p>
+<p><img src="http://oncm4c1fl.bkt.clouddn.com/image/distributed-theory/5.png" alt="img"></p>
+<p>总体过程和Paxos很像，细节在后面单独开个文章来写。</p>
+<h2 id="租约机制"><a href="#租约机制" class="headerlink" title="租约机制"></a>租约机制</h2><p>利用Paxos或者Raft能很好地做到强一致，但是<font color="red">延迟大且对$Leader$的压力也很大</font>。租约的思路是：</p>
+<blockquote>
+<p>每次从$Leader$获取到的是一个有期限的锁。</p>
+</blockquote>
+<p>具体来看：</p>
+<ul>
+<li>租约的颁发者：颁发租约之后，在这段时间内，不会再给其他的申请者颁发租约；</li>
+<li>租约的申请者：收到租约后，在这段时间内可以放心使用，不用担心其他申请者和自己产生竞争；</li>
+</ul>
+<p>在gfs、oceanbase、hadoop等分布式系统中有很多租约的使用。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="http://www.infoq.com/cn/articles/cap-twelve-years-later-how-the-rules-have-changed" target="_blank" rel="external">CAP理论十二年回顾：”规则”变了</a></li>
 <li><a href="http://www.hollischuang.com/archives/681" target="_blank" rel="external">关于分布式事务、两阶段提交协议、三阶提交协议</a></li>
 <li><a href="http://www.jdon.com/artichect/paxos.html" target="_blank" rel="external">分布式系统Paxos算法</a></li>
 <li><a href="https://www.cnblogs.com/cchust/p/5617989.html" target="_blank" rel="external">分布式一致性算法–Paxos</a></li>
 <li><a href="https://mp.weixin.qq.com/s?__biz=MzI4NDMyNTU2Mw==&amp;mid=2247483695&amp;idx=1&amp;sn=91ea422913fc62579e020e941d1d059e#rd" target="_blank" rel="external">微信自研生产级paxos类库PhxPaxos实现原理介绍</a></li>
 <li><a href="https://zhuanlan.zhihu.com/p/21466932" target="_blank" rel="external">Paxos理论介绍(2): Multi-Paxos与Leader</a></li>
-<li>​</li>
 </ul>
 
       
@@ -731,7 +749,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本理论和套路"><span class="nav-number">2.</span> <span class="nav-text">基本理论和套路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CAP理论"><span class="nav-number">2.1.</span> <span class="nav-text">CAP理论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一致性哈希"><span class="nav-number">2.2.</span> <span class="nav-text">一致性哈希</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2PC（二阶段提交）"><span class="nav-number">2.3.</span> <span class="nav-text">2PC（二阶段提交）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3PC（三阶段提交）"><span class="nav-number">2.4.</span> <span class="nav-text">3PC（三阶段提交）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PAXOS"><span class="nav-number">2.5.</span> <span class="nav-text">PAXOS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAFT"><span class="nav-number">2.6.</span> <span class="nav-text">RAFT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主备"><span class="nav-number">2.7.</span> <span class="nav-text">主备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选主"><span class="nav-number">2.8.</span> <span class="nav-text">选主</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RAFT-1"><span class="nav-number">4.1.</span> <span class="nav-text">RAFT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主备-1"><span class="nav-number">4.2.</span> <span class="nav-text">主备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选主-1"><span class="nav-number">4.3.</span> <span class="nav-text">选主</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结-1"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考-1"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本理论和套路"><span class="nav-number">2.</span> <span class="nav-text">基本理论和套路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CAP理论"><span class="nav-number">2.1.</span> <span class="nav-text">CAP理论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一致性哈希"><span class="nav-number">2.2.</span> <span class="nav-text">一致性哈希</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2PC（二阶段提交）"><span class="nav-number">2.3.</span> <span class="nav-text">2PC（二阶段提交）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3PC（三阶段提交）"><span class="nav-number">2.4.</span> <span class="nav-text">3PC（三阶段提交）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PAXOS"><span class="nav-number">2.5.</span> <span class="nav-text">PAXOS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAFT"><span class="nav-number">2.6.</span> <span class="nav-text">RAFT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#租约机制"><span class="nav-number">2.7.</span> <span class="nav-text">租约机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>

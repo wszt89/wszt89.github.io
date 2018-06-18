@@ -86,7 +86,7 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="wsztrush">
-<meta property="og:url" content="http://yoursite.com/tags/golang/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/Golang/index.html">
 <meta property="og:site_name" content="wsztrush">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="wsztrush">
@@ -110,10 +110,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/golang/"/>
+  <link rel="canonical" href="http://yoursite.com/tags/Golang/"/>
 
 
-  <title> 标签: golang | wsztrush </title>
+  <title> 标签: Golang | wsztrush </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
@@ -235,7 +235,7 @@
   <div id="posts" class="posts-collapse">
     <div class="collection-title">
       <h2 >
-        golang
+        Golang
         <small>标签</small>
       </h2>
     </div>
@@ -248,37 +248,9 @@
 
       <h1 class="post-title">
         
-            <a class="post-title-link" href="/2017/10/11/golang-net/" itemprop="url">
+            <a class="post-title-link" href="/2017/08/28/golang-first/" itemprop="url">
               
-                <span itemprop="name">Golang网络编程</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-11T19:16:15+08:00"
-              content="2017-10-11" >
-          10-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/06/14/golang-grammar/" itemprop="url">
-              
-                <span itemprop="name">Golang：语法</span>
+                <span itemprop="name">Golang的第一次尝试</span>
               
             </a>
         
@@ -286,9 +258,9 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-14T08:18:40+08:00"
-              content="2017-06-14" >
-          06-14
+              datetime="2017-08-28T10:20:08+08:00"
+              content="2017-08-28" >
+          08-28
         </time>
       </div>
 
@@ -493,7 +465,7 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'wsztrush';
-      var disqus_identifier = 'tags/golang/index.html';
+      var disqus_identifier = 'tags/Golang/index.html';
       var disqus_title = "";
       var disqus_url = '';
 
@@ -639,6 +611,38 @@
     $(function() {
       var Counter = AV.Object.extend("Counter");
       if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
+leancloud_visitors').length == 1) {
         addCount(Counter);
       } else if ($('.post-title-link').length > 1) {
         showTime(Counter);
