@@ -1,0 +1,860 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编程,AOP," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="问题复现处理场景：
+
+用AOP拦截方法，打印执行耗时、异常信息等。
+
+做法传统，先定义Annotation：
+12345@Inherited@Retention(RetentionPolicy.RUNTIME)@Target(ElementType.METHOD)public @interface TestAnnotation &amp;#123;&amp;#125;
+再定义处理类：
+12345678910111">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用AOP时的代理问题记录">
+<meta property="og:url" content="http://yoursite.com/2018/10/08/aop-1/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="问题复现处理场景：
+
+用AOP拦截方法，打印执行耗时、异常信息等。
+
+做法传统，先定义Annotation：
+12345@Inherited@Retention(RetentionPolicy.RUNTIME)@Target(ElementType.METHOD)public @interface TestAnnotation &amp;#123;&amp;#125;
+再定义处理类：
+12345678910111">
+<meta property="og:updated_time" content="2018-10-14T07:33:15.688Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用AOP时的代理问题记录">
+<meta name="twitter:description" content="问题复现处理场景：
+
+用AOP拦截方法，打印执行耗时、异常信息等。
+
+做法传统，先定义Annotation：
+12345@Inherited@Retention(RetentionPolicy.RUNTIME)@Target(ElementType.METHOD)public @interface TestAnnotation &amp;#123;&amp;#125;
+再定义处理类：
+12345678910111">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/08/aop-1/"/>
+
+
+  <title> 使用AOP时的代理问题记录 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用AOP时的代理问题记录
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-10-08T15:37:46+08:00" content="2018-10-08">
+              2018-10-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/10/08/aop-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/08/aop-1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/10/08/aop-1/" class="leancloud_visitors" data-flag-title="使用AOP时的代理问题记录">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="问题复现"><a href="#问题复现" class="headerlink" title="问题复现"></a>问题复现</h1><p>处理场景：</p>
+<blockquote>
+<p>用AOP拦截方法，打印执行耗时、异常信息等。</p>
+</blockquote>
+<p>做法传统，先定义Annotation：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Inherited</span></div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Target</span>(ElementType.METHOD)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> TestAnnotation &#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再定义处理类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Aspect</span></div><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestAspect</span> </span>&#123;</div><div class="line">    <span class="meta">@Pointcut</span>(<span class="string">"@annotation(com.cainiao.was.adapter.TestAnnotation)"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testAnnotation</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Around</span>(<span class="string">"@annotation(testAnnotation)"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">aroundTestAnnotation</span><span class="params">(ProceedingJoinPoint proceedingJoinPoint, TestAnnotation testAnnotation)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        <span class="keyword">return</span> proceedingJoinPoint.proceed();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后在需要拦截的方法上加上注解（<font color="lightgrey">没有实现接口</font>）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WmpInventoryAdapter</span> </span>&#123;</div><div class="line">    <span class="meta">@TestAnnotation</span></div><div class="line">    <span class="function"><span class="keyword">public</span> List&lt;InventoryDTO&gt; <span class="title">queryInventoryList</span><span class="params">(InventoryInfoQueryTO query)</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务代码</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>此时意外出现了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Caused by: org.springframework.beans.factory.BeanNotOfRequiredTypeException: Bean named &apos;wmpInventoryAdapter&apos; is expected to be of type &apos;com.cainiao.was.adapter.WmpInventoryAdapter&apos; but was actually of type &apos;com.sun.proxy.$Proxy249&apos;</div><div class="line">    at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:378)</div><div class="line">    at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)</div><div class="line">    at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:522)</div><div class="line">    at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)</div><div class="line">    at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:627)</div><div class="line">    at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:169)</div><div class="line">    at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)</div><div class="line">    at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessPropertyValues(CommonAnnotationBeanPostProcessor.java:318)</div></pre></td></tr></table></figure>
+<h1 id="查找原因"><a href="#查找原因" class="headerlink" title="查找原因"></a>查找原因</h1><p>开始调试入口方法（<font color="lightgrey">AbstractAutowireCapableBeanFactory</font>）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">applyBeanPostProcessorsAfterInitialization</span><span class="params">(Object existingBean, String beanName)</span> <span class="keyword">throws</span> BeansException </span>&#123;</div><div class="line">    Object result = existingBean;</div><div class="line">    <span class="keyword">for</span> (BeanPostProcessor beanProcessor : getBeanPostProcessors()) &#123;</div><div class="line">        result = beanProcessor.postProcessAfterInitialization(result, beanName);</div><div class="line">        <span class="keyword">if</span> (result == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span> result;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>出错的过程：</p>
+<ul>
+<li>AnnotationAwareAspectJAutoProxyCreator使用CGLIB生成子类；</li>
+<li>BeanNameAutoProxyCreator（<font color="lightgrey">应用内自定义的</font>）处理后，生成<code>java.lang.reflect.Proxy</code>的子类，从这里开始歪了🤔；</li>
+</ul>
+<p>直接调试生成代理的地方（<font color="lightgrey">AbstractAutoProxyCreator</font>）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">createProxy</span><span class="params">(Class&lt;?&gt; beanClass, String beanName, Object[] specificInterceptors, TargetSource targetSource)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.beanFactory <span class="keyword">instanceof</span> ConfigurableListableBeanFactory) &#123;</div><div class="line">        AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) <span class="keyword">this</span>.beanFactory, beanName, beanClass);</div><div class="line">    &#125;</div><div class="line">    ProxyFactory proxyFactory = <span class="keyword">new</span> ProxyFactory();</div><div class="line">    proxyFactory.copyFrom(<span class="keyword">this</span>);</div><div class="line">    <span class="keyword">if</span> (!proxyFactory.isProxyTargetClass()) &#123;</div><div class="line">        <span class="keyword">if</span> (shouldProxyTargetClass(beanClass, beanName)) &#123;</div><div class="line">            proxyFactory.setProxyTargetClass(<span class="keyword">true</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            evaluateProxyInterfaces(beanClass, proxyFactory);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);</div><div class="line">    <span class="keyword">for</span> (Advisor advisor : advisors) &#123;</div><div class="line">        proxyFactory.addAdvisor(advisor);</div><div class="line">    &#125;</div><div class="line">    proxyFactory.setTargetSource(targetSource);</div><div class="line">    customizeProxyFactory(proxyFactory);</div><div class="line">    proxyFactory.setFrozen(<span class="keyword">this</span>.freezeProxy);</div><div class="line">    <span class="keyword">if</span> (advisorsPreFiltered()) &#123;</div><div class="line">        proxyFactory.setPreFiltered(<span class="keyword">true</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> proxyFactory.getProxy(getProxyClassLoader());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>发现<code>proxyFactory.isProxyTargetClass()=false</code>，解析得到的接口是：</p>
+<ul>
+<li>org.springframework.aop.SpringProxy</li>
+<li>org.springframework.aop.framework.Advised</li>
+<li>org.springframework.cglib.proxy.Factory</li>
+</ul>
+<p>没有配置proxyTargetClass，导致Spring优先使用接口的方式创建代理。修改配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"adapterInterceptor"</span> <span class="attr">class</span>=<span class="string">"org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"proxyTargetClass"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line">    <span class="comment">&lt;!--  --&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>修改后启动成功。</p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>问题解决了，但是又多了个疑问，CGLIB不能对代理类继续创建代理类，<font color="red">那Spring中如何实现多次代理？</font>找到创建代理代码（<font color="lightgrey">CglibAopProxy</font>）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getProxy</span><span class="params">(ClassLoader classLoader)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Class&lt;?&gt; rootClass = <span class="keyword">this</span>.advised.getTargetClass();</div><div class="line">        Class&lt;?&gt; proxySuperClass = rootClass;</div><div class="line">        <span class="comment">// 判断是否为CGLIB生成的代理类(是否包含$$)</span></div><div class="line">        <span class="keyword">if</span> (ClassUtils.isCglibProxyClass(rootClass)) &#123;</div><div class="line">            <span class="comment">// 代理类的父类一定是原生的类。</span></div><div class="line">            proxySuperClass = rootClass.getSuperclass();</div><div class="line">            Class&lt;?&gt;[] additionalInterfaces = rootClass.getInterfaces();</div><div class="line">            <span class="keyword">for</span> (Class&lt;?&gt; additionalInterface : additionalInterfaces) &#123;</div><div class="line">                <span class="keyword">this</span>.advised.addInterface(additionalInterface);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        validateClassIfNecessary(proxySuperClass, classLoader);</div><div class="line">        </div><div class="line">        <span class="comment">// 配置CGLIB Enhancer</span></div><div class="line">        Enhancer enhancer = createEnhancer();</div><div class="line">        <span class="keyword">if</span> (classLoader != <span class="keyword">null</span>) &#123;</div><div class="line">            enhancer.setClassLoader(classLoader);</div><div class="line">            <span class="keyword">if</span> (classLoader <span class="keyword">instanceof</span> SmartClassLoader &amp;&amp;((SmartClassLoader) classLoader).isClassReloadable(proxySuperClass)) &#123;</div><div class="line">                enhancer.setUseCache(<span class="keyword">false</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 设置父类为实际目标的类型，也就是说未代理对象创建了多个代理类，而不是一层一层代理。</span></div><div class="line">        enhancer.setSuperclass(proxySuperClass);</div><div class="line">        enhancer.setInterfaces(AopProxyUtils.completeProxiedInterfaces(<span class="keyword">this</span>.advised));</div><div class="line">        enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);</div><div class="line">        enhancer.setStrategy(newClassLoaderAwareUndeclaredThrowableStrategy(classLoader));</div><div class="line"></div><div class="line">        Callback[] callbacks = getCallbacks(rootClass);</div><div class="line">        Class&lt;?&gt;[] types = <span class="keyword">new</span> Class&lt;?&gt;[callbacks.length];</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> x = <span class="number">0</span>; x &lt; types.length; x++) &#123;</div><div class="line">            types[x] = callbacks[x].getClass();</div><div class="line">        &#125;</div><div class="line">        enhancer.setCallbackFilter(<span class="keyword">new</span> ProxyCallbackFilter(<span class="keyword">this</span>.advised.getConfigurationOnlyCopy(), <span class="keyword">this</span>.fixedInterceptorMap, <span class="keyword">this</span>.fixedInterceptorOffset));</div><div class="line">        enhancer.setCallbackTypes(types);</div><div class="line">        <span class="comment">// 创建代理类</span></div><div class="line">        <span class="keyword">return</span> createProxyClassAndInstance(enhancer, callbacks);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>设置代理对象中的回调方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">createProxyClassAndInstance</span><span class="params">(Enhancer enhancer, Callback[] callbacks)</span> </span>&#123;</div><div class="line">    Class&lt;?&gt; proxyClass = enhancer.createClass();</div><div class="line">    Object proxyInstance = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">if</span> (objenesis.isWorthTrying()) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            proxyInstance = objenesis.newInstance(proxyClass, enhancer.getUseCache());</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable ex) &#123;&#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (proxyInstance == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            proxyInstance = (<span class="keyword">this</span>.constructorArgs != <span class="keyword">null</span> ?proxyClass.getConstructor(<span class="keyword">this</span>.constructorArgTypes).newInstance(<span class="keyword">this</span>.constructorArgs) : proxyClass.newInstance());</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable ex) &#123;&#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 设置Callback方法。</span></div><div class="line">    ((Factory) proxyInstance).setCallbacks(callbacks);</div><div class="line">    <span class="keyword">return</span> proxyInstance;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在调用方法时会一次调用各个拦截方法（<font color="lightgrey">DynamicAdvisedInterceptor</font>）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object proxy, Method method, Object[] args, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">    Object oldProxy = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">boolean</span> setProxyContext = <span class="keyword">false</span>;</div><div class="line">    Class&lt;?&gt; targetClass = <span class="keyword">null</span>;</div><div class="line">    Object target = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.advised.exposeProxy) &#123;</div><div class="line">            oldProxy = AopContext.setCurrentProxy(proxy);</div><div class="line">            setProxyContext = <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">        target = getTarget();</div><div class="line">        <span class="keyword">if</span> (target != <span class="keyword">null</span>) &#123;</div><div class="line">            targetClass = target.getClass();</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 找到对象是否有多次代理</span></div><div class="line">        <span class="comment">// 如果有多次代理，先执行之前代理的方法，否则只执行本代理的方法(有点像递归了)</span></div><div class="line">        List&lt;Object&gt; chain = <span class="keyword">this</span>.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);</div><div class="line">        Object retVal;</div><div class="line">        <span class="keyword">if</span> (chain.isEmpty() &amp;&amp; Modifier.isPublic(method.getModifiers())) &#123;</div><div class="line">            Object[] argsToUse = AopProxyUtils.adaptArgumentsIfNecessary(method, args);</div><div class="line">            retVal = methodProxy.invoke(target, argsToUse);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            retVal = <span class="keyword">new</span> CglibMethodInvocation(proxy, target, method, args, targetClass, chain, methodProxy).proceed();</div><div class="line">        &#125;</div><div class="line">        retVal = processReturnType(proxy, target, method, retVal);</div><div class="line">        <span class="keyword">return</span> retVal;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        <span class="keyword">if</span> (target != <span class="keyword">null</span>) &#123;</div><div class="line">            releaseTarget(target);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (setProxyContext) &#123;</div><div class="line">            AopContext.setCurrentProxy(oldProxy);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>现在Spring越来越复杂，对于AOP的场景尽量不要创建太多的<code>AutoProxyCreator</code>，另外避免使用低级别的API，高层次的封装会稳一点（<font color="lightgrey">最近直接使用method.invoke导致异常被包装也给别人挖了坑</font>😂）。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编程/" rel="tag">#编程</a>
+          
+            <a href="/tags/AOP/" rel="tag">#AOP</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/18/rust-ownership/" rel="next" title="RUST的所有权和生命周期">
+                <i class="fa fa-chevron-left"></i> RUST的所有权和生命周期
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">47</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">61</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题复现"><span class="nav-number">1.</span> <span class="nav-text">问题复现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#查找原因"><span class="nav-number">2.</span> <span class="nav-text">查找原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他"><span class="nav-number">3.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2018/10/08/aop-1/';
+      var disqus_title = "使用AOP时的代理问题记录";
+      var disqus_url = 'http://yoursite.com/2018/10/08/aop-1/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

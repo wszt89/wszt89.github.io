@@ -1,0 +1,898 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编程,rust," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="写在前面在决定学习RUST时，非常有吸引的一个地方在于内存安全。倒不是完全是对自己的c/c++功底不自信：
+
+当很多人协作完成一个功能，由于每个人的状态、经验各不相同，非常有可能写出来不安全的代码。而查找和修复问题的成本是极大的。
+
+RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权就放弃学习RUST吧🤔）。
+智能指针在C++中也尝试用解决内存不安全的问题：
+12345678910voi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RUST的所有权和生命周期">
+<meta property="og:url" content="http://yoursite.com/2018/06/18/rust-ownership/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="写在前面在决定学习RUST时，非常有吸引的一个地方在于内存安全。倒不是完全是对自己的c/c++功底不自信：
+
+当很多人协作完成一个功能，由于每个人的状态、经验各不相同，非常有可能写出来不安全的代码。而查找和修复问题的成本是极大的。
+
+RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权就放弃学习RUST吧🤔）。
+智能指针在C++中也尝试用解决内存不安全的问题：
+12345678910voi">
+<meta property="og:updated_time" content="2018-08-01T19:50:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RUST的所有权和生命周期">
+<meta name="twitter:description" content="写在前面在决定学习RUST时，非常有吸引的一个地方在于内存安全。倒不是完全是对自己的c/c++功底不自信：
+
+当很多人协作完成一个功能，由于每个人的状态、经验各不相同，非常有可能写出来不安全的代码。而查找和修复问题的成本是极大的。
+
+RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权就放弃学习RUST吧🤔）。
+智能指针在C++中也尝试用解决内存不安全的问题：
+12345678910voi">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/18/rust-ownership/"/>
+
+
+  <title> RUST的所有权和生命周期 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                RUST的所有权和生命周期
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-06-18T16:17:25+08:00" content="2018-06-18">
+              2018-06-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/06/18/rust-ownership/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/18/rust-ownership/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/06/18/rust-ownership/" class="leancloud_visitors" data-flag-title="RUST的所有权和生命周期">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>在决定学习RUST时，非常有吸引的一个地方在于<font color="red">内存安全</font>。倒不是完全是对自己的c/c++功底不自信：</p>
+<blockquote>
+<p>当很多人协作完成一个功能，由于每个人的状态、经验各不相同，非常有可能写出来不安全的代码。而查找和修复问题的成本是极大的。</p>
+</blockquote>
+<p>RUST尝试在编译时刻暴露所有可能的问题（<font color="lightgrey">如果搞不懂所有权就放弃学习RUST吧🤔</font>）。</p>
+<h1 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h1><p>在C++中也尝试用解决内存不安全的问题：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">remodel</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> &amp; str)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> * ps = <span class="keyword">new</span> <span class="built_in">std</span>::<span class="built_in">string</span>(str);</div><div class="line">    <span class="comment">// ...</span></div><div class="line">    <span class="keyword">if</span> (weird_thing())</div><div class="line">        <span class="keyword">throw</span> exception();</div><div class="line">    str = *ps; </div><div class="line">    <span class="keyword">delete</span> ps; <span class="comment">// 释放内存</span></div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这段代码的问题在于：</p>
+<blockquote>
+<p>当weird_thing()返回true，分配在堆上的内存ps无法释放（<font color="lightgrey">因为没有走到delete语句</font>）。</p>
+</blockquote>
+<p>通过在<font color="red">栈</font>上分配对象对指针进行包装，当跳出方法后执行析构函数并释放内存：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">remodel</span> <span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> &amp; str)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">auto_ptr</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; ps (<span class="keyword">new</span> <span class="built_in">std</span>::<span class="built_in">string</span>(str))；</div><div class="line">    <span class="comment">// ...</span></div><div class="line">    <span class="keyword">if</span> (weird_thing ())</div><div class="line">        <span class="keyword">throw</span> exception()； </div><div class="line">    str = *ps； </div><div class="line">    <span class="comment">// delete ps； NO LONGER NEEDED</span></div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>但是智能指针能解决所有的问题吗？比如指针是不是有可能在多个地方被delete等等。</p>
+<h1 id="所有权"><a href="#所有权" class="headerlink" title="所有权"></a>所有权</h1><p>核心思想在于：</p>
+<blockquote>
+<p>每个值或对象，在同一时间<font color="red">有且仅有</font>一个所有者，当离开作用域之后对象被销毁并回收内存。</p>
+</blockquote>
+<p>下面来看一些例子：</p>
+<ul>
+<li>理解什么是所有权；</li>
+<li>在什么情况下会因为所有权报错，以及如何改正；</li>
+</ul>
+<p>变量绑定会导致所有权转移，老的变量不再拥有所有权，用它来访问会报错：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</div><div class="line">    <span class="keyword">let</span> v1 = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]; <span class="comment">// 此时v1拥有所有权</span></div><div class="line">    <span class="keyword">let</span> v2 = v1; <span class="comment">// 对象的所有权交给v2，v2不再拥有所有权</span></div><div class="line">    <span class="built_in">println!</span>(<span class="string">"&#123;:?&#125;"</span>, v1); <span class="comment">// 这里会报错</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再看一个类似的代码（<font color="lightgrey">增加了作用域的概念</font>）：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</div><div class="line">    <span class="keyword">let</span> a = <span class="built_in">String</span>::from(<span class="string">"book"</span>);</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">let</span> b = a; <span class="comment">// 所有权给了b，在作用域结束后，将其释放。</span></div><div class="line">    &#125;</div><div class="line">    <span class="built_in">println!</span>(<span class="string">"a = '&#123;&#125;'"</span>, a); <span class="comment">// 没有所有权了，不能访问。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当一个对象实例的部分成员所有权发生了转移，那么整个实例便无法再使用：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Foo</span></span> &#123;</div><div class="line">    s1: <span class="built_in">String</span>,</div><div class="line">    s2: <span class="built_in">String</span>,</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">impl</span> Foo &#123;</div><div class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">print</span></span>(&amp;<span class="keyword">self</span>) -&gt; <span class="built_in">String</span> &#123;</div><div class="line">        <span class="keyword">let</span> <span class="keyword">mut</span> temp = <span class="built_in">String</span>::new();</div><div class="line">        temp.push_str(&amp;<span class="keyword">self</span>.s1);</div><div class="line">        temp.push_str(&amp;<span class="keyword">self</span>.s2);</div><div class="line">        <span class="keyword">return</span> temp;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</div><div class="line">    <span class="keyword">let</span> v = Foo &#123;</div><div class="line">        s1: <span class="string">"hello"</span>.to_string(),</div><div class="line">        s2: <span class="string">"world"</span>.to_string(),</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">let</span> part1 = v.s1; <span class="comment">// s1的所有权发生了转移</span></div><div class="line">    <span class="built_in">println!</span>(<span class="string">"&#123;&#125;"</span>, part1);</div><div class="line"></div><div class="line">    <span class="built_in">println!</span>(<span class="string">"&#123;&#125;"</span>, v.print()); <span class="comment">// 再次使用v会报错。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当类型实现了Copy特性以后，执行变量绑定实际上执行了一个拷贝动作，而不是所有权转移：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Foo</span></span> &#123;</div><div class="line">    data: <span class="keyword">i32</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">impl</span> <span class="built_in">Clone</span> <span class="keyword">for</span> Foo &#123;</div><div class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">clone</span></span>(&amp;<span class="keyword">self</span>) -&gt; Foo &#123;</div><div class="line">        Foo &#123; data: <span class="keyword">self</span>.data &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">impl</span> <span class="built_in">Copy</span> <span class="keyword">for</span> Foo &#123;&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</div><div class="line">    <span class="keyword">let</span> v1 = Foo &#123; data: <span class="number">0</span> &#125;;</div><div class="line">    <span class="keyword">let</span> v2 = v1;</div><div class="line">    <span class="built_in">println!</span>(<span class="string">"&#123;:?&#125;"</span>, v1.data);</div><div class="line">    <span class="built_in">println!</span>(<span class="string">"&#123;:?&#125;"</span>, v2.data);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h1><p>对象只能有一个所有权，但是可以有多个引用，遵循下面规则：</p>
+<ul>
+<li>只能对可变变量<code>mut</code>创建可变引用<code>&amp;mut</code>；</li>
+<li>同时只允许存在一个可变引用<code>&amp;mut</code>，<font color="red">或</font>存在多个不可变引用<code>&amp;</code>；</li>
+<li>当有引用存在时，不允许拥有者进行<font color="red">释放或修改</font>；</li>
+<li>引用的生命周期不能超过拥有者的生命周期；</li>
+</ul>
+<p>当集合中的对象创建了引用，整个集合不能再修改（<font color="lightgrey">隐隐感觉对写代码非常不友好</font>）：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</div><div class="line">    <span class="keyword">let</span> <span class="keyword">mut</span> data = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</div><div class="line">    <span class="keyword">let</span> x = &amp;data[<span class="number">0</span>];</div><div class="line">    data.push(<span class="number">4</span>); <span class="comment">// 报错</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对象的部分成员创建引用也有类似的效果：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Foo</span></span> &#123;</div><div class="line">    s1: <span class="built_in">String</span>,</div><div class="line">    s2: <span class="built_in">String</span>,</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">impl</span> Foo &#123;</div><div class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">print</span></span>(&amp;<span class="keyword">self</span>) -&gt; <span class="built_in">String</span> &#123;</div><div class="line">        <span class="keyword">let</span> <span class="keyword">mut</span> temp = <span class="built_in">String</span>::new();</div><div class="line">        temp.push_str(&amp;<span class="keyword">self</span>.s1);</div><div class="line">        temp.push_str(&amp;<span class="keyword">self</span>.s2);</div><div class="line">        <span class="keyword">return</span> temp;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</div><div class="line">    <span class="keyword">let</span> <span class="keyword">mut</span> v = Foo &#123;</div><div class="line">        s1: <span class="string">"1"</span>.to_string(),</div><div class="line">        s2: <span class="string">"1"</span>.to_string(),</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">let</span> part1 = &amp;v.s1;</div><div class="line"></div><div class="line">    v = Foo &#123;</div><div class="line">        s1: <span class="string">"2"</span>.to_string(),</div><div class="line">        s2: <span class="string">"2"</span>.to_string(),</div><div class="line">    &#125;; <span class="comment">// 报错。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p>在RUST中会自动为代码计算生命周期（<font color="lightgrey">在代码块级别通过分析作用域能得到非常准确的结果</font>），不需要繁琐地一点点人工标记：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> x = <span class="number">0</span>;</div><div class="line"><span class="keyword">let</span> z;</div><div class="line"><span class="keyword">let</span> y = &amp;x;</div><div class="line">z = y;</div></pre></td></tr></table></figure>
+<p>解析得到的生命周期如下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">'a</span>: &#123;</div><div class="line">    <span class="keyword">let</span> x: <span class="keyword">i32</span> = <span class="number">0</span>;</div><div class="line">    <span class="symbol">'b</span>: &#123;</div><div class="line">        <span class="keyword">let</span> z: &amp;<span class="symbol">'b</span> <span class="keyword">i32</span>;</div><div class="line">        <span class="symbol">'c</span>: &#123;</div><div class="line">            <span class="keyword">let</span> y: &amp;<span class="symbol">'b</span> <span class="keyword">i32</span> = &amp;<span class="symbol">'b</span> x;</div><div class="line">            z = y;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>默认函数的生命周期的补全规则是：</p>
+<ul>
+<li>如果入参只有一个生命周期，那么返回值也指定为该生命周期；</li>
+<li>入参有<code>&amp;self</code>或<code>&amp;mut self</code>，那么返回值也指定为其对应的生命周期；</li>
+</ul>
+<p>合法的例子：</p>
+<ul>
+<li><code>fn print(s: &amp;str);</code>=&gt; <code>fn print&lt;&#39;a&gt;(s: &amp;&#39;a str);</code></li>
+<li><code>fn debug(lvl: usize, s: &amp;str);</code>=&gt;<code>fn debug&lt;&#39;a&gt;(lvl: usize, s: &amp;&#39;a str);</code></li>
+<li><code>fn substr(s: &amp;str, until: usize) -&gt; &amp;str;</code>=&gt;<code>fn substr&lt;&#39;a&gt;(s: &amp;&#39;a str, until: usize) -&gt; &amp;&#39;a str;</code></li>
+<li><code>fn get_mut(&amp;mut self) -&gt; &amp;mut T;</code>=&gt;<code>fn get_mut&lt;&#39;a&gt;(&amp;&#39;a mut self) -&gt; &amp;&#39;a mut T;</code></li>
+<li><code>fn args&lt;T: ToCStr&gt;(&amp;mut self, args: &amp;[T]) -&gt; &amp;mut Command</code>=&gt;<code>fn args&lt;&#39;a, &#39;b, T: ToCStr&gt;(&amp;&#39;a mut self, args: &amp;&#39;b [T]) -&gt; &amp;&#39;a mut Command</code></li>
+<li><code>fn new(buf: &amp;mut [u8]) -&gt; BufWriter;</code>=&gt;<code>fn new&lt;&#39;a&gt;(buf: &amp;&#39;a mut [u8]) -&gt; BufWriter&lt;&#39;a&gt;</code></li>
+</ul>
+<p>非法的例子：</p>
+<ul>
+<li><code>fn get_str() -&gt; &amp;str;</code></li>
+<li><code>fn frob(s: &amp;str, t: &amp;str) -&gt; &amp;str;</code></li>
+</ul>
+<p>那么下面的函数：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">as_str</span></span>(data: &amp;<span class="keyword">u32</span>) -&gt; &amp;<span class="keyword">str</span> &#123;</div><div class="line">    <span class="keyword">let</span> s = <span class="built_in">format!</span>(<span class="string">"&#123;&#125;"</span>, data);</div><div class="line">    &amp;s</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>解析得到的生命周期如下（<font color="lightgrey">返回值是一个引用，生命周期大于拥有者的生命周期，所以会报错</font>）：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">as_str</span></span>&lt;<span class="symbol">'a</span>&gt;(data: &amp;<span class="symbol">'a</span> <span class="keyword">u32</span>) -&gt; &amp;<span class="symbol">'a</span> <span class="keyword">str</span> &#123;</div><div class="line">    <span class="symbol">'b</span>: &#123;</div><div class="line">        <span class="keyword">let</span> s = <span class="built_in">format!</span>(<span class="string">"&#123;&#125;"</span>, data);</div><div class="line">        <span class="keyword">return</span> &amp;<span class="symbol">'a</span> s;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://www.cnblogs.com/lanxuezaipiao/p/4132096.html" target="_blank" rel="external">C++智能指针简单剖析</a></li>
+<li><a href="http://lotabout.me/2016/rust-lifetime/" target="_blank" rel="external">理解 Rust 中的生命周期</a></li>
+<li><a href="https://doc.rust-lang.org/nomicon/ownership.html" target="_blank" rel="external">Ownership and Lifetimes</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编程/" rel="tag">#编程</a>
+          
+            <a href="/tags/rust/" rel="tag">#rust</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/12/distributed-theory/" rel="next" title="常见分布式概念和理论">
+                <i class="fa fa-chevron-left"></i> 常见分布式概念和理论
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/08/aop-1/" rel="prev" title="使用AOP时的代理问题记录">
+                使用AOP时的代理问题记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">47</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">61</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#智能指针"><span class="nav-number">2.</span> <span class="nav-text">智能指针</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#所有权"><span class="nav-number">3.</span> <span class="nav-text">所有权</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#引用"><span class="nav-number">4.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生命周期"><span class="nav-number">5.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2018/06/18/rust-ownership/';
+      var disqus_title = "RUST的所有权和生命周期";
+      var disqus_url = 'http://yoursite.com/2018/06/18/rust-ownership/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
