@@ -1,0 +1,987 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="画图," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="在很久之前接触过dot和graphviz，当时觉得用dsl来画图的想法太牛了，非常好玩，也仅仅停留在好玩上。现在工作上在做自动化的东西，如果能有简单的方法实现可视化帮助还是蛮大的：
+
+是不是可以将拓扑结构翻译成dot，然后用graphviz来生成svg，一切看起来很完美🤔
+
+玩和用有很大差别的！这里把相关的文档学习一些并梳理，希望后面可以发挥作用吧。语法定义如下：
+123456789101112">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dot语法">
+<meta property="og:url" content="http://yoursite.com/2018/10/16/dot/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="在很久之前接触过dot和graphviz，当时觉得用dsl来画图的想法太牛了，非常好玩，也仅仅停留在好玩上。现在工作上在做自动化的东西，如果能有简单的方法实现可视化帮助还是蛮大的：
+
+是不是可以将拓扑结构翻译成dot，然后用graphviz来生成svg，一切看起来很完美🤔
+
+玩和用有很大差别的！这里把相关的文档学习一些并梳理，希望后面可以发挥作用吧。语法定义如下：
+123456789101112">
+<meta property="og:updated_time" content="2018-11-19T08:35:41.311Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dot语法">
+<meta name="twitter:description" content="在很久之前接触过dot和graphviz，当时觉得用dsl来画图的想法太牛了，非常好玩，也仅仅停留在好玩上。现在工作上在做自动化的东西，如果能有简单的方法实现可视化帮助还是蛮大的：
+
+是不是可以将拓扑结构翻译成dot，然后用graphviz来生成svg，一切看起来很完美🤔
+
+玩和用有很大差别的！这里把相关的文档学习一些并梳理，希望后面可以发挥作用吧。语法定义如下：
+123456789101112">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/16/dot/"/>
+
+
+  <title> Dot语法 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Dot语法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-10-16T21:18:01+08:00" content="2018-10-16">
+              2018-10-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/10/16/dot/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/16/dot/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/10/16/dot/" class="leancloud_visitors" data-flag-title="Dot语法">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在很久之前接触过dot和graphviz，当时觉得用dsl来画图的想法太牛了，非常好玩，也仅仅停留在好玩上。现在工作上在做自动化的东西，如果能有简单的方法实现可视化帮助还是蛮大的：</p>
+<blockquote>
+<p>是不是可以将拓扑结构翻译成dot，然后用graphviz来生成svg，一切看起来很完美🤔</p>
+</blockquote>
+<p>玩和用有很大差别的！这里把相关的文档学习一些并梳理，希望后面可以发挥作用吧。语法定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">graph       :   [ strict ] (graph | digraph) [ ID ] &apos;&#123;&apos; stmt_list &apos;&#125;&apos;</div><div class="line">stmt_list   :   [ stmt [ &apos;;&apos; ] stmt_list ]</div><div class="line">stmt        :   node_stmt</div><div class="line">            |   edge_stmt</div><div class="line">            |   attr_stmt</div><div class="line">            |   ID &apos;=&apos; ID</div><div class="line">            |   subgraph</div><div class="line">attr_stmt   :   (graph | node | edge) attr_list</div><div class="line">attr_list   :   &apos;[&apos; [ a_list ] &apos;]&apos; [ attr_list ]</div><div class="line">a_list      :   ID &apos;=&apos; ID [ (&apos;;&apos; | &apos;,&apos;) ] [ a_list ]</div><div class="line">edge_stmt   :   (node_id | subgraph) edgeRHS [ attr_list ]</div><div class="line">edgeRHS     :   edgeop (node_id | subgraph) [ edgeRHS ]</div><div class="line">node_stmt   :   node_id [ attr_list ]</div><div class="line">node_id     :   ID [ port ]</div><div class="line">port        :   &apos;:&apos; ID [ &apos;:&apos; compass_pt ]</div><div class="line">            |   &apos;:&apos; compass_pt</div><div class="line">subgraph    :   [ subgraph [ ID ] ] &apos;&#123;&apos; stmt_list &apos;&#125;&apos;</div><div class="line">compass_pt  :   (n | ne | e | se | s | sw | w | nw | c | _)</div></pre></td></tr></table></figure>
+<p>推荐使用VSCode配合插件来测试，非常方便。</p>
+<h1 id="属性整理"><a href="#属性整理" class="headerlink" title="属性整理"></a>属性整理</h1><p>全部的参考<a href="http://www.graphviz.org/doc/info/attrs.html" target="_blank" rel="external">Node, Edge and Graph Attributes</a>，作用对象表示为：<strong>E</strong>（edges）、<strong>N</strong>（nodes）、<strong>G</strong>（root graph）、<strong>S</strong>（subgraphs）、<strong>C</strong>（cluster subgraphs）：</p>
+<ul>
+<li><code>arrowhead(E)</code>：箭头形状，取值：<a href="http://www.graphviz.org/doc/info/attrs.html#k:arrowType" target="_blank" rel="external">arrowType</a>，类似<code>arrowtail</code>；</li>
+<li><code>arrowsize(E)</code>：箭头大小，取值（0~1.0）；</li>
+<li><code>bgcolor(GC)</code>：背景颜色，可以是纯色<a href="http://www.graphviz.org/doc/info/attrs.html#k:color" target="_blank" rel="external">color</a>或者渐变色<a href="http://www.graphviz.org/doc/info/attrs.html#k:colorList" target="_blank" rel="external">colorList</a>；</li>
+<li><code>clusterrank(G)</code>：设置为<code>local</code>（<font color="lightgrey">默认值</font>）后，cluster开头的subgraph会增加边框；</li>
+<li><code>color(ENC)</code>：颜色，一般是边框，<code>fillcolor(NEG)</code>是内部颜色；</li>
+<li><code>colorscheme(ENCG)</code>：指定颜色的方案，在指定颜色时可以使用<code>color=1</code>的方式，会方便很多；不指定也会有一套默认的颜色方案；</li>
+<li><code>compound(G)</code>：设置<code>true</code>后，可在cluster之间连线；</li>
+<li><code>concentrate(G)</code>：设置<code>true</code>后，会将重复的连线进行合并；</li>
+<li><code>constraint(E)</code>：设置为<code>false</code>后，这条边不会用来考虑节点的排序，节点的排序只依赖其他的边；</li>
+<li><code>decorate(E)</code>：</li>
+<li><code>dim(G)</code>：</li>
+<li><code>dimen(G)</code>：</li>
+<li><code>dir(E)</code>：指定边的方向，可以的值有<font color="blue">forward</font>、<font color="blue">back</font>、<font color="blue">both</font>、<font color="blue">none</font>;</li>
+<li><code>diredgeconstraints(G)</code>：</li>
+<li><code>distortion(N)</code>：影响多边形的形状，上面大or下面大；</li>
+<li><code>dpi(G)</code>：每英寸的像素数量，调节生成图片的清晰度；</li>
+<li><code>edgeURL、edgehref(E)</code>：链接；</li>
+<li><code>edgetarget(E)</code>：</li>
+<li><code>edgetooltip(E)</code>：</li>
+<li><code>epsilon(E)</code>：迭代算法用到的一个参数，中止条件，一般应该用不到；</li>
+<li><code>esep(G)</code>：</li>
+<li><code>fixedsize(N)</code>：如果设置为<font color="blue">false</font>，节点的大小会设置为刚好放下里面的内容，否则会严格按照给定的<font color="blue">width</font>和<font color="blue">height</font>来绘制；</li>
+<li><code>fontcolor(ENGC)</code>：文字颜色；</li>
+<li><code>fontname(ENGC)</code>：字体名称；</li>
+<li><code>fontnames(G)</code>：字体名称列表，挑最先能匹配到的字体来用；</li>
+<li><code>fontpath(G)</code>：字体文件路径；</li>
+<li><code>fontsize(ENGC)</code>：文字大小；</li>
+<li><code>forcelabels(G)</code>：</li>
+<li><code>gradientangle(NCG)</code>：</li>
+<li><code>group(N)</code>：</li>
+<li><code>headURL(E)</code>：</li>
+<li><code>head_lp(E)</code>：</li>
+<li><code>headclip(E)</code>：</li>
+<li><code>headhref(E)</code>：</li>
+<li><code>headlabel(E)</code>：</li>
+<li><code>headport(E)</code>：</li>
+<li><code>headtarget(E)</code>：</li>
+<li><code>headtooltip(E)</code>：</li>
+<li><code>height(N)</code>：</li>
+<li><code>href(GCNE)</code>：</li>
+<li><code>id(GCNE)</code>：</li>
+<li><code>image(N)</code>：</li>
+<li><code>imagepath(G)</code>：</li>
+<li><code>imagepos(N)</code>：</li>
+<li><code>imagescale(N)</code>：</li>
+<li><code>inputscale(G)</code>：</li>
+<li><code>label(ENGC)</code>：</li>
+<li><code>labelURL(E)</code>：</li>
+<li><code>label_scheme(G)</code>：</li>
+<li><code>labelangle(E)</code>：</li>
+<li><code>labeldistance(E)</code>：</li>
+<li><code>labelfloat(E)</code>：</li>
+<li><code>labelfontcolor(E)</code>：</li>
+<li><code>labelfontname(E)</code>：</li>
+<li><code>labelfontsize(E)</code>：</li>
+<li><code>labelhref(E)</code>：</li>
+<li><code>labeljust(GC)</code>：</li>
+<li><code>labelloc(NGC)</code>：</li>
+<li><code>labeltarget(E)</code>：</li>
+<li><code>labeltooltip(E)</code>：</li>
+<li><code>labelscape(E)</code>：</li>
+<li><code>layer(ENC)</code>：</li>
+<li><code>layerlistsep(G)</code>：</li>
+<li><code>layers(G)</code>：</li>
+<li><code>layerselect(G)</code>：</li>
+<li><code>layersep(G)</code>：</li>
+<li><code>layout(G)</code>：</li>
+<li><code>len(E)</code>：</li>
+<li><code>levels(G)</code>：</li>
+<li><code>levelsgap(G)</code>：</li>
+<li><code>lhead(E)</code>：</li>
+<li><code>lheight(GC)</code>：</li>
+<li><code>lp(EGC)</code>：</li>
+<li><code>ltail(E)</code>：</li>
+<li><code>lwidth(GC)</code>：</li>
+<li><code>margin(NCG)</code>：</li>
+<li><code>maxiter(G)</code>：</li>
+<li><code>mclimit(G)</code>：</li>
+<li><code>mindist(G)</code>：</li>
+<li><code>minlen(E)</code>：</li>
+<li><code>mode(G)</code>：</li>
+<li><code>model(G)</code>：</li>
+<li><code>mosek(G)</code>：</li>
+<li><code>newrank(G)</code>：</li>
+<li><code>nodesep(G)</code>：</li>
+<li><code>nojustfy(GCNE)</code>：</li>
+<li><code>normalize(G)</code>：</li>
+<li><code>notranslate(G)</code>：</li>
+<li><code>nslimit(G)</code>：</li>
+<li><code>ordering(GN)</code>：</li>
+<li><code>orientation(N)</code>：</li>
+<li><code>outputorder(G)</code>：</li>
+<li><code>overlap(G)</code>：</li>
+<li><code>overlap_scaling(G)</code>：</li>
+<li><code>overlap_shrink(G)</code>：</li>
+<li><code>pack(G)</code>：</li>
+<li><code>packmode(G)</code>：</li>
+<li><code>pad(G)</code>：</li>
+<li><code>page(G)</code>：</li>
+<li><code>pagedir(G)</code>：</li>
+<li><code>pencolor(C)</code>：</li>
+<li><code>penwidth(CNE)</code>：</li>
+<li><code>peripheris(NC)</code>：</li>
+<li><code>pin(N)</code>：</li>
+<li><code>pos(EN)</code>：</li>
+<li><code>quadtree(G)</code>：</li>
+<li><code>quantum(G)</code>：</li>
+<li><code>rank(S)</code>：</li>
+<li><code>rankdir(G)</code>：</li>
+<li><code>ranksep(G)</code>：</li>
+<li><code>ratio(G)</code>：</li>
+<li><code>rects(N)</code>：</li>
+<li><code>regular(N)</code>：</li>
+<li><code>remincross(G)</code>：</li>
+<li><code>repulsiveforce(G)</code>：</li>
+<li><code>resolution(G)</code>：</li>
+<li><code>root(GN)</code>：</li>
+<li><code>rotate(G)</code>：</li>
+<li><code>rotation(G)</code>：</li>
+<li><code>samehead(E)</code>：</li>
+<li><code>sametail(E)</code>：</li>
+<li><code>samplepoints(N)</code>：</li>
+<li><code>scale(G)</code>：</li>
+<li><code>searchsize(G)</code>：</li>
+<li><code>sep(G)</code>：</li>
+<li><code>shape(G)</code>：</li>
+<li><code>shapefile(N)</code>：</li>
+<li><code>showboxes(ENG)</code>：</li>
+<li><code>sides(N)</code>：</li>
+<li><code>size(G)</code>：</li>
+<li><code>skew(N)</code>：</li>
+<li><code>smoothing(G)</code>：</li>
+<li><code>sortv(GCN)</code>：</li>
+<li><code>splines(G)</code>：</li>
+<li><code>start(G)</code>：</li>
+<li><code>style(ENCG)</code>：</li>
+<li><code>stylesheet(G)</code>：</li>
+<li><code>tailURL(E)</code>：</li>
+<li><code>tail_lp(E)</code>：</li>
+<li><code>tail_clip(E)</code>：</li>
+<li><code>tailhref(E)</code>：</li>
+<li><code>taillabel(E)</code>：</li>
+<li><code>tailport(E)</code>：</li>
+<li><code>tailtarget(E)</code>：</li>
+<li><code>tailtooltip(E)</code>：</li>
+<li><code>target(ENGC)</code>：</li>
+<li><code>tooltip(NEC)</code>：</li>
+<li><code>truecolor(G)</code>：</li>
+<li><code>vertices(N)</code>：</li>
+<li><code>viewport(G)</code>：</li>
+<li><code>voro_margin(G)</code>：</li>
+<li><code>weight(E)</code>：</li>
+<li><code>width(N)</code>：</li>
+<li><code>xdotversion(G)</code>：</li>
+<li><code>xlabel(EN)</code>：</li>
+<li><code>xlp(NE)</code>：</li>
+<li><code>z(N)</code>：</li>
+</ul>
+<h1 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h1><p><a href="https://renenyffenegger.ch/notes/tools/Graphviz/examples/index" target="_blank" rel="external">https://renenyffenegger.ch/notes/tools/Graphviz/examples/index</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/画图/" rel="tag">#画图</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/08/aop-1/" rel="next" title="使用AOP时的代理问题记录">
+                <i class="fa fa-chevron-left"></i> 使用AOP时的代理问题记录
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/27/linux-introduction-1/" rel="prev" title="Linux基础(1)">
+                Linux基础(1) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#属性整理"><span class="nav-number">1.</span> <span class="nav-text">属性整理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DEMO"><span class="nav-number">2.</span> <span class="nav-text">DEMO</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2018/10/16/dot/';
+      var disqus_title = "Dot语法";
+      var disqus_url = 'http://yoursite.com/2018/10/16/dot/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
