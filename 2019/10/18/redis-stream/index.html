@@ -1,0 +1,934 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="写在前面在Redis5.0里面加入了Stream的特性，想尝试一下。内部已经有MetaQ了，但是感觉好像还不够灵活，现在
+
+
+通常是用一个集群来消费一个Topic，如果想把数据同步到一个机器
+
+
+功能读写：
+
+
+XADD：唯一的向Stream中插入数据的命令，传入多个KEY-VALUE，返回Stream ID（递增唯一键，可以手工指定）：
+XADD key ID field string [fie">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis Stream">
+<meta property="og:url" content="http://yoursite.com/2019/10/18/redis-stream/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="写在前面在Redis5.0里面加入了Stream的特性，想尝试一下。内部已经有MetaQ了，但是感觉好像还不够灵活，现在
+
+
+通常是用一个集群来消费一个Topic，如果想把数据同步到一个机器
+
+
+功能读写：
+
+
+XADD：唯一的向Stream中插入数据的命令，传入多个KEY-VALUE，返回Stream ID（递增唯一键，可以手工指定）：
+XADD key ID field string [fie">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E5%AD%97%E5%85%B8%E6%A0%91.svg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E5%9F%BA%E6%95%B0%E6%A0%91.svg">
+<meta property="og:updated_time" content="2019-11-08T02:07:13.388Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis Stream">
+<meta name="twitter:description" content="写在前面在Redis5.0里面加入了Stream的特性，想尝试一下。内部已经有MetaQ了，但是感觉好像还不够灵活，现在
+
+
+通常是用一个集群来消费一个Topic，如果想把数据同步到一个机器
+
+
+功能读写：
+
+
+XADD：唯一的向Stream中插入数据的命令，传入多个KEY-VALUE，返回Stream ID（递增唯一键，可以手工指定）：
+XADD key ID field string [fie">
+<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E5%AD%97%E5%85%B8%E6%A0%91.svg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/18/redis-stream/"/>
+
+
+  <title> Redis Stream | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Redis Stream
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2019-10-18T19:28:53+08:00" content="2019-10-18">
+              2019-10-18
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/10/18/redis-stream/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/10/18/redis-stream/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2019/10/18/redis-stream/" class="leancloud_visitors" data-flag-title="Redis Stream">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>在Redis5.0里面加入了Stream的特性，想尝试一下。内部已经有MetaQ了，但是感觉好像还不够灵活，现在</p>
+<blockquote>
+<ol>
+<li>通常是用一个集群来消费一个Topic，如果想把数据同步到一个机器</li>
+</ol>
+</blockquote>
+<h1 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h1><p>读写：</p>
+<blockquote>
+<ul>
+<li><font color="blue">XADD</font>：唯一的向Stream中插入数据的命令，传入多个KEY-VALUE，返回Stream ID（递增唯一键，可以手工指定）：<ul>
+<li><code>XADD key ID field string [field string ...]</code></li>
+<li><code>XADD mystream * name Sara surname OConnor</code></li>
+<li><code>XADD mystream * field1 value1 field2 value2 field3 value3</code></li>
+<li><code>XADD mystream MAXLEN ~ 1000 * ... entry fields here ...</code>（设置最大长度）</li>
+</ul>
+</li>
+<li><font color="blue">XLEN</font>：Stream中的数量，Stream不存在时返回0；</li>
+<li><font color="blue">XRANGE</font>：根据Stream ID返回一定范围内记录（闭区间）；<ul>
+<li><code>XRANGE key start end [COUNT count]</code></li>
+<li><code>XRANGE writers - + COUNT 2</code></li>
+<li><code>XRANGE somestream 1526985054069 1526985055069</code>（仅使用Stream ID的第一部分）</li>
+<li><code>XRANGE mystream 1526984818136-0 1526984818136-0</code></li>
+</ul>
+</li>
+<li><font color="blue">XREVRANGE</font>：XRANGE的倒序；</li>
+<li><font color="blue">XREAD</font>：支持从一个或多个流中读取数据，且支持阻塞；<ul>
+<li><code>XREAD [COUNT count] [BLOCK milliseconds] STREAMS key [key ...] id [id ...]</code></li>
+<li><code>XREAD COUNT 2 STREAMS mystream writers 0-0 0-0</code>（同时从两个流里面拉数据）</li>
+<li><code>XREAD BLOCK 1000 STREAMS mystream 1526999626221-0</code></li>
+<li><code>XREAD BLOCK 5000 COUNT 100 STREAMS mystream $</code>（阻塞等待新的消息）</li>
+</ul>
+</li>
+<li><font color="blue">XTRIM</font>：把Stream里面老的数据删掉；<ul>
+<li><code>XTRIM key MAXLEN [~] count</code></li>
+</ul>
+</li>
+<li><font color="blue">XDEL</font>：指定删除数据；</li>
+</ul>
+</blockquote>
+<p>组相关：</p>
+<blockquote>
+<ul>
+<li><font color="blue">XGROUP</font>：<ul>
+<li><code>XGROUP [CREATE key groupname id-or-$] [SETID key groupname id-or-$] [DESTROY key groupname] [DELCONSUMER key groupname consumername]</code></li>
+</ul>
+</li>
+<li>XPENDING</li>
+<li>XREADGROUP</li>
+<li>XCLAIM</li>
+<li>XACK</li>
+</ul>
+</blockquote>
+<p>其他：</p>
+<blockquote>
+<ul>
+<li>XINFO</li>
+</ul>
+</blockquote>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><p>下载后安装，修改redis.conf（不然远程连不上）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#bind 127.0.0.1</div><div class="line">protected-mode no</div></pre></td></tr></table></figure>
+<p>然后就可以启动服务了<code>./redis-server ../redis.conf</code>。 </p>
+<h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><p>需要的Maven依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.lettuce<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lettuce-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>5.2.0.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.redisson<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>redisson-all<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>3.9.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>其中：</p>
+<blockquote>
+<ul>
+<li>没有<code>redisson</code>会报错<font color="red">java.lang.NoClassDefFoundError: reactor/core/scheduler/Schedulers</font>，而依赖<code>io.projectreactor:reactor-core</code>和springboot 1.5好像又冲突了🤔</li>
+<li>据说lettuce比jedis性能更高：<ul>
+<li>jedis是直连模式，且非线程安全；</li>
+<li>lettuce基于netty，且线程安全；</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h2 id="开始撸代码"><a href="#开始撸代码" class="headerlink" title="开始撸代码"></a>开始撸代码</h2><p>在lettuce比较新的版本里面对Redis 5的接口有封装，方法名字跟Redis命令长差不多：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">test</span><span class="params">(<span class="keyword">int</span> count)</span> </span>&#123;</div><div class="line">    RedisClient client = RedisClient.create(RedisURI.create(<span class="string">"xx.xx.xx.xx"</span>, <span class="number">6379</span>));</div><div class="line">    StatefulRedisConnection&lt;String, String&gt; connection = client.connect();</div><div class="line">    RedisCommands&lt;String, String&gt; commands = connection.sync();</div><div class="line">    <span class="keyword">long</span> start = System.currentTimeMillis();</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">        String ret = commands.xadd(<span class="string">"my_stream_0001"</span>, Collections.singletonMap(<span class="string">""</span> + i, <span class="string">""</span> + i));</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="string">"COST:"</span> + (System.currentTimeMillis() - start);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>还没撸代码，</p>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>核心的结构：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> streamID &#123;</div><div class="line">    <span class="keyword">uint64_t</span> ms;        <span class="comment">/* Unix time in milliseconds. */</span></div><div class="line">    <span class="keyword">uint64_t</span> seq;       <span class="comment">/* Sequence number. */</span></div><div class="line">&#125; streamID;</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> stream &#123;</div><div class="line">    rax *rax;               <span class="comment">/* The radix tree holding the stream. */</span></div><div class="line">    <span class="keyword">uint64_t</span> length;        <span class="comment">/* Number of elements inside this stream. */</span></div><div class="line">    streamID last_id;       <span class="comment">/* Zero if there are yet no items. */</span></div><div class="line">    rax *cgroups;           <span class="comment">/* Consumer groups dictionary: name -&gt; streamCG */</span></div><div class="line">&#125; stream;</div></pre></td></tr></table></figure>
+<h2 id="基数树"><a href="#基数树" class="headerlink" title="基数树"></a>基数树</h2><p>基数树（<font color="lightgrey">或者叫压缩前缀树</font>）用来做前缀匹配比较快，先看一个字典树（<font color="lightgrey">前缀树</font>）的例子：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E5%AD%97%E5%85%B8%E6%A0%91.svg" alt=""></p>
+<p>其中包含的字符串有：</p>
+<blockquote>
+<ul>
+<li>ABD</li>
+<li>ABE</li>
+<li>ACFGH</li>
+<li>ACFGI</li>
+</ul>
+</blockquote>
+<p>很简单但也很强大：</p>
+<blockquote>
+<ul>
+<li>能够快速的检索</li>
+<li>自带排序：通过每一层有序地遍历就可以顺序的输出</li>
+</ul>
+</blockquote>
+<p>也有缺点：</p>
+<blockquote>
+<ul>
+<li>访问存储的次数太多，如果结构保存在磁盘上就跪下了</li>
+<li>指针占用了不少空间</li>
+</ul>
+</blockquote>
+<p>基数树则是用一个非常简单的道理做了一个非常简单的优化：</p>
+<blockquote>
+<p>如果子节点是父节点唯一的子节点，那么该子节点可以与其父节点合并。实际在操作时并不是合并，而是构建时分裂。</p>
+</blockquote>
+<p>压缩后如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E5%9F%BA%E6%95%B0%E6%A0%91.svg" alt=""></p>
+<h2 id="XADD"><a href="#XADD" class="headerlink" title="XADD"></a>XADD</h2><p>TODO</p>
+<h2 id="XREAD"><a href="#XREAD" class="headerlink" title="XREAD"></a>XREAD</h2><p>TODO</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://redis.io/topics/streams-intro" target="_blank" rel="external">https://redis.io/topics/streams-intro</a></li>
+<li><a href="https://redis.io/commands/xgroup" target="_blank" rel="external">https://redis.io/commands/xgroup</a></li>
+<li><a href="https://github.com/redisson/redisson/wiki/目录" target="_blank" rel="external">REDISSON WIKI</a></li>
+<li><a href="https://github.com/antirez/redis/blob/unstable/src/t_stream.c" target="_blank" rel="external">https://github.com/antirez/redis/blob/unstable/src/t_stream.c</a></li>
+<li><a href="http://mysql.taobao.org/monthly/2019/04/03/" target="_blank" rel="external">Redis · 引擎特性 · radix tree 源码解析</a></li>
+<li><a href="https://blog.csdn.net/zanpengfei/article/details/86518824" target="_blank" rel="external">Redis-紧凑列表源码原理分析</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag">#redis</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/03/reinforcement-learning/" rel="next" title="强化学习">
+                <i class="fa fa-chevron-left"></i> 强化学习
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">63</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#功能"><span class="nav-number">2.</span> <span class="nav-text">功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#启动服务"><span class="nav-number">3.1.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖"><span class="nav-number">3.2.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始撸代码"><span class="nav-number">3.3.</span> <span class="nav-text">开始撸代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">4.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据结构"><span class="nav-number">4.1.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基数树"><span class="nav-number">4.2.</span> <span class="nav-text">基数树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XADD"><span class="nav-number">4.3.</span> <span class="nav-text">XADD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XREAD"><span class="nav-number">4.4.</span> <span class="nav-text">XREAD</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2019/10/18/redis-stream/';
+      var disqus_title = "Redis Stream";
+      var disqus_url = 'http://yoursite.com/2019/10/18/redis-stream/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
