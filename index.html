@@ -276,6 +276,25 @@
           </span>
 
           
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
 
           
             
@@ -316,16 +335,17 @@
       
         
           
-          写在前面在Redis5.0里面加入了Stream的特性，想尝试一下。内部已经有MetaQ了，但是感觉好像还不够灵活，现在
+          写在前面消息中间件内部用的都是MetaQ，非常标准的生产、消费的用法，但是感觉有几点不太方便（这几点可能普通场景确实没什么必要）：
 
 
-通常是用一个集群来消费一个Topic，如果想把数据同步到一个机器
+能够根据时间消费过去的消息；
+能阻塞读；
+能方便地增加或减少Topic；
+性能高；
+能方便地把数据发送到指定的Topic；
 
 
-功能读写：
-
-
-XADD：唯一的向Stream中插入数据的命令，传入多个KEY-VALUE，返回Stre
+总体来说：做性能比较高的队列，可以方
           ...
 
           <div class="post-more-link text-center">

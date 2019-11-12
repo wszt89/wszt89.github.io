@@ -84,49 +84,53 @@
 
 
 
-<meta name="description" content="写在前面在Redis5.0里面加入了Stream的特性，想尝试一下。内部已经有MetaQ了，但是感觉好像还不够灵活，现在
+<meta name="description" content="写在前面消息中间件内部用的都是MetaQ，非常标准的生产、消费的用法，但是感觉有几点不太方便（这几点可能普通场景确实没什么必要）：
 
 
-通常是用一个集群来消费一个Topic，如果想把数据同步到一个机器
+能够根据时间消费过去的消息；
+能阻塞读；
+能方便地增加或减少Topic；
+性能高；
+能方便地把数据发送到指定的Topic；
 
 
-功能读写：
-
-
-XADD：唯一的向Stream中插入数据的命令，传入多个KEY-VALUE，返回Stream ID（递增唯一键，可以手工指定）：
-XADD key ID field string [fie">
+总体来说：做性能比较高的队列，可以方便的把增量数据中转到各个节点上。网上逛发现Redis 5的Stream貌似看起来挺符合的。
+功能读写">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis Stream">
 <meta property="og:url" content="http://yoursite.com/2019/10/18/redis-stream/index.html">
 <meta property="og:site_name" content="wsztrush">
-<meta property="og:description" content="写在前面在Redis5.0里面加入了Stream的特性，想尝试一下。内部已经有MetaQ了，但是感觉好像还不够灵活，现在
+<meta property="og:description" content="写在前面消息中间件内部用的都是MetaQ，非常标准的生产、消费的用法，但是感觉有几点不太方便（这几点可能普通场景确实没什么必要）：
 
 
-通常是用一个集群来消费一个Topic，如果想把数据同步到一个机器
+能够根据时间消费过去的消息；
+能阻塞读；
+能方便地增加或减少Topic；
+性能高；
+能方便地把数据发送到指定的Topic；
 
 
-功能读写：
-
-
-XADD：唯一的向Stream中插入数据的命令，传入多个KEY-VALUE，返回Stream ID（递增唯一键，可以手工指定）：
-XADD key ID field string [fie">
+总体来说：做性能比较高的队列，可以方便的把增量数据中转到各个节点上。网上逛发现Redis 5的Stream貌似看起来挺符合的。
+功能读写">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.svg">
 <meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E5%AD%97%E5%85%B8%E6%A0%91.svg">
 <meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E5%9F%BA%E6%95%B0%E6%A0%91.svg">
-<meta property="og:updated_time" content="2019-11-08T02:07:13.388Z">
+<meta property="og:updated_time" content="2019-11-12T12:39:02.516Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis Stream">
-<meta name="twitter:description" content="写在前面在Redis5.0里面加入了Stream的特性，想尝试一下。内部已经有MetaQ了，但是感觉好像还不够灵活，现在
+<meta name="twitter:description" content="写在前面消息中间件内部用的都是MetaQ，非常标准的生产、消费的用法，但是感觉有几点不太方便（这几点可能普通场景确实没什么必要）：
 
 
-通常是用一个集群来消费一个Topic，如果想把数据同步到一个机器
+能够根据时间消费过去的消息；
+能阻塞读；
+能方便地增加或减少Topic；
+性能高；
+能方便地把数据发送到指定的Topic；
 
 
-功能读写：
-
-
-XADD：唯一的向Stream中插入数据的命令，传入多个KEY-VALUE，返回Stream ID（递增唯一键，可以手工指定）：
-XADD key ID field string [fie">
-<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E5%AD%97%E5%85%B8%E6%A0%91.svg">
+总体来说：做性能比较高的队列，可以方便的把增量数据中转到各个节点上。网上逛发现Redis 5的Stream貌似看起来挺符合的。
+功能读写">
+<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.svg">
 
 
 
@@ -308,6 +312,25 @@ XADD key ID field string [fie">
           </span>
 
           
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
 
           
             
@@ -346,12 +369,17 @@ XADD key ID field string [fie">
       
 
       
-        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>在Redis5.0里面加入了Stream的特性，想尝试一下。内部已经有MetaQ了，但是感觉好像还不够灵活，现在</p>
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>消息中间件内部用的都是MetaQ，非常标准的生产、消费的用法，但是感觉有几点不太方便（<font color="lightgrey">这几点可能普通场景确实没什么必要</font>）：</p>
 <blockquote>
-<ol>
-<li>通常是用一个集群来消费一个Topic，如果想把数据同步到一个机器</li>
-</ol>
+<ul>
+<li>能够根据时间消费过去的消息；</li>
+<li>能阻塞读；</li>
+<li>能方便地增加或减少Topic；</li>
+<li>性能高；</li>
+<li>能方便地把数据发送到指定的Topic；</li>
+</ul>
 </blockquote>
+<p>总体来说：<font color="blue">做性能比较高的队列，可以方便的把增量数据中转到各个节点上</font>。网上逛发现Redis 5的Stream貌似看起来挺符合的。</p>
 <h1 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h1><p>读写：</p>
 <blockquote>
 <ul>
@@ -385,23 +413,38 @@ XADD key ID field string [fie">
 <li><font color="blue">XDEL</font>：指定删除数据；</li>
 </ul>
 </blockquote>
-<p>组相关：</p>
+<p>组相关（<font color="lightgrey">暂时用不到先简单记下</font>）：</p>
 <blockquote>
 <ul>
-<li><font color="blue">XGROUP</font>：<ul>
+<li><font color="blue">XGROUP</font><ul>
 <li><code>XGROUP [CREATE key groupname id-or-$] [SETID key groupname id-or-$] [DESTROY key groupname] [DELCONSUMER key groupname consumername]</code></li>
 </ul>
 </li>
-<li>XPENDING</li>
-<li>XREADGROUP</li>
-<li>XCLAIM</li>
-<li>XACK</li>
+<li><font color="blue">XPENDING</font><ul>
+<li><code>XPENDING key group [start end count] [consumer]</code></li>
+</ul>
+</li>
+<li><font color="blue">XREADGROUP</font><ul>
+<li><code>XREADGROUP GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] ID [ID ...]</code></li>
+</ul>
+</li>
+<li><font color="blue">XCLAIM</font><ul>
+<li><code>XCLAIM key group consumer min-idle-time ID [ID ...] [IDLE ms] [TIME ms-unix-time] [RETRYCOUNT count] [FORCE] [JUSTID]</code></li>
+</ul>
+</li>
+<li><font color="blue">XACK</font><ul>
+<li><code>XACK key group ID [ID ...]</code></li>
+</ul>
+</li>
 </ul>
 </blockquote>
 <p>其他：</p>
 <blockquote>
 <ul>
-<li>XINFO</li>
+<li><font color="blue">XINFO</font><ul>
+<li><code>XINFO [CONSUMERS key groupname] [GROUPS key] [STREAM key] [HELP]</code></li>
+</ul>
+</li>
 </ul>
 </blockquote>
 <h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><p>下载后安装，修改redis.conf（不然远程连不上）：</p>
@@ -422,9 +465,15 @@ XADD key ID field string [fie">
 </blockquote>
 <h2 id="开始撸代码"><a href="#开始撸代码" class="headerlink" title="开始撸代码"></a>开始撸代码</h2><p>在lettuce比较新的版本里面对Redis 5的接口有封装，方法名字跟Redis命令长差不多：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">test</span><span class="params">(<span class="keyword">int</span> count)</span> </span>&#123;</div><div class="line">    RedisClient client = RedisClient.create(RedisURI.create(<span class="string">"xx.xx.xx.xx"</span>, <span class="number">6379</span>));</div><div class="line">    StatefulRedisConnection&lt;String, String&gt; connection = client.connect();</div><div class="line">    RedisCommands&lt;String, String&gt; commands = connection.sync();</div><div class="line">    <span class="keyword">long</span> start = System.currentTimeMillis();</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">        String ret = commands.xadd(<span class="string">"my_stream_0001"</span>, Collections.singletonMap(<span class="string">""</span> + i, <span class="string">""</span> + i));</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="string">"COST:"</span> + (System.currentTimeMillis() - start);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>还没撸代码，</p>
-<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>核心的结构：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> streamID &#123;</div><div class="line">    <span class="keyword">uint64_t</span> ms;        <span class="comment">/* Unix time in milliseconds. */</span></div><div class="line">    <span class="keyword">uint64_t</span> seq;       <span class="comment">/* Sequence number. */</span></div><div class="line">&#125; streamID;</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> stream &#123;</div><div class="line">    rax *rax;               <span class="comment">/* The radix tree holding the stream. */</span></div><div class="line">    <span class="keyword">uint64_t</span> length;        <span class="comment">/* Number of elements inside this stream. */</span></div><div class="line">    streamID last_id;       <span class="comment">/* Zero if there are yet no items. */</span></div><div class="line">    rax *cgroups;           <span class="comment">/* Consumer groups dictionary: name -&gt; streamCG */</span></div><div class="line">&#125; stream;</div></pre></td></tr></table></figure>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>对Redis整体的执行流程还不懂，先针对Stream部分硬着头皮看看吧，大概能看明白点的地方先做个笔记😂</p>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.svg" alt=""></p>
+<p>说明：</p>
+<blockquote>
+<ul>
+<li>每个listpack都有一个<code>master entry</code>来存储所有的<code>field</code>，后面的消息如果有相同的<code>field</code>就不需要再次存储了（<font color="lightgrey">既灵活又省空间</font>）;</li>
+<li>保存新消息时会找到最后一个<code>rax node</code>并拿到对应的<code>listpack</code>，如果可以的话共用同一个<code>listpack</code>。所以就导致了<code>listpack</code>可能存在多个消息（<font color="lightgrey">为了减少内存的碎片？</font>）；</li>
+</ul>
+</blockquote>
 <h2 id="基数树"><a href="#基数树" class="headerlink" title="基数树"></a>基数树</h2><p>基数树（<font color="lightgrey">或者叫压缩前缀树</font>）用来做前缀匹配比较快，先看一个字典树（<font color="lightgrey">前缀树</font>）的例子：</p>
 <p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E5%AD%97%E5%85%B8%E6%A0%91.svg" alt=""></p>
 <p>其中包含的字符串有：</p>
@@ -456,8 +505,24 @@ XADD key ID field string [fie">
 </blockquote>
 <p>压缩后如下图：</p>
 <p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis-stream/%E5%9F%BA%E6%95%B0%E6%A0%91.svg" alt=""></p>
-<h2 id="XADD"><a href="#XADD" class="headerlink" title="XADD"></a>XADD</h2><p>TODO</p>
-<h2 id="XREAD"><a href="#XREAD" class="headerlink" title="XREAD"></a>XREAD</h2><p>TODO</p>
+<h2 id="XREAD"><a href="#XREAD" class="headerlink" title="XREAD"></a>XREAD</h2><p>比较好奇<code>BLOCK</code>是怎么实现的，入口在<code>xreadCommand</code>方法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">xreadCommand</span><span class="params">(client *c)</span> </span>&#123;</div><div class="line">    <span class="comment">// ....</span></div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; streams_count; i++) &#123;</div><div class="line">        robj *o = lookupKeyRead(c-&gt;db,c-&gt;argv[streams_arg+i]);</div><div class="line">        <span class="keyword">if</span> (o == <span class="literal">NULL</span>) <span class="keyword">continue</span>;</div><div class="line">        stream *s = o-&gt;ptr;</div><div class="line">        streamID *gt = ids+i;</div><div class="line">        <span class="keyword">int</span> serve_synchronously = <span class="number">0</span>;</div><div class="line"></div><div class="line">        <span class="comment">// 判断是否有数据，如果有数据则设置 serve_synchronously = 1</span></div><div class="line">        <span class="keyword">if</span> (groups) &#123;</div><div class="line">            <span class="keyword">if</span> (gt-&gt;ms != UINT64_MAX || gt-&gt;seq != UINT64_MAX) &#123;</div><div class="line">                serve_synchronously = <span class="number">1</span>;</div><div class="line">                serve_history = <span class="number">1</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                streamID *last = &amp;groups[i]-&gt;last_id;</div><div class="line">                <span class="keyword">if</span> (s-&gt;length &amp;&amp; (streamCompareID(&amp;s-&gt;last_id, last) &gt; <span class="number">0</span>)) &#123;</div><div class="line">                    serve_synchronously = <span class="number">1</span>;</div><div class="line">                    *gt = *last;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">if</span> (s-&gt;length &amp;&amp; (streamCompareID(&amp;s-&gt;last_id, gt) &gt; <span class="number">0</span>)) &#123;</div><div class="line">                serve_synchronously = <span class="number">1</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (serve_synchronously) &#123;</div><div class="line">            <span class="comment">// ....</span></div><div class="line"></div><div class="line">            <span class="comment">// 根据范围读取数据</span></div><div class="line">            streamReplyWithRange(c,s,&amp;start,<span class="literal">NULL</span>,count,<span class="number">0</span>,</div><div class="line">                                 groups ? groups[i] : <span class="literal">NULL</span>,</div><div class="line">                                 consumer, flags, &amp;spi);</div><div class="line">            <span class="keyword">if</span> (groups) server.dirty++;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">  </div><div class="line">    <span class="comment">// 如果能读到数据（多个流里面随便有点就行），就不会到这里了</span></div><div class="line">    <span class="keyword">if</span> (timeout != <span class="number">-1</span>) &#123;</div><div class="line">        <span class="comment">// ...</span></div><div class="line"></div><div class="line">        <span class="comment">// 把客户端与相应的事件关联（同时保存参数）</span></div><div class="line">        blockForKeys(c, BLOCKED_STREAM, c-&gt;argv+streams_arg, streams_count,</div><div class="line">                     timeout, <span class="literal">NULL</span>, ids);</div><div class="line"></div><div class="line">        <span class="comment">// ...</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>大概的步骤是：</p>
+<blockquote>
+<ul>
+<li>判断是否已经有数据能读了；<ul>
+<li>有，<code>streamReplyWithRange</code>直接返回数据（如果同时在读多个流，只要有一个流里面有数据就会返回）；</li>
+<li>无，把客户端挂起来；</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h2 id="XADD"><a href="#XADD" class="headerlink" title="XADD"></a>XADD</h2><p>再来看消息的写入：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">xaddCommand</span><span class="params">(client *c)</span> </span>&#123;</div><div class="line">    <span class="comment">/* ... */</span></div><div class="line">    <span class="comment">/* 保存数据 */</span></div><div class="line">    <span class="keyword">if</span> (streamAppendItem(s,c-&gt;argv+field_pos,(c-&gt;argc-field_pos)/<span class="number">2</span>,</div><div class="line">        &amp;id, id_given ? &amp;id : <span class="literal">NULL</span>) == C_ERR) &#123;</div><div class="line">        addReplyError(c,<span class="string">"The ID specified in XADD is equal or smaller than the "</span></div><div class="line">                        <span class="string">"target stream top item"</span>);</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    addReplyStreamID(c,&amp;id);</div><div class="line"></div><div class="line">    signalModifiedKey(c-&gt;db,c-&gt;argv[<span class="number">1</span>]);</div><div class="line">    notifyKeyspaceEvent(NOTIFY_STREAM,<span class="string">"xadd"</span>,c-&gt;argv[<span class="number">1</span>],c-&gt;db-&gt;id);</div><div class="line">    server.dirty++;</div><div class="line"></div><div class="line">    <span class="comment">/* 当数量超过限制，开始删除数据 */</span></div><div class="line">    <span class="keyword">if</span> (maxlen &gt;= <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (streamTrimByLength(s,maxlen,approx_maxlen)) &#123;</div><div class="line">            notifyKeyspaceEvent(NOTIFY_STREAM,<span class="string">"xtrim"</span>,c-&gt;argv[<span class="number">1</span>],c-&gt;db-&gt;id);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (approx_maxlen) streamRewriteApproxMaxlen(c,s,maxlen_arg_idx);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/* ... */</span></div><div class="line"></div><div class="line">    <span class="comment">/* 通知阻塞读的客户端 */</span></div><div class="line">    <span class="keyword">if</span> (server.blocked_clients_by_type[BLOCKED_STREAM])</div><div class="line">        signalKeyAsReady(c-&gt;db, c-&gt;argv[<span class="number">1</span>]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中：</p>
+<blockquote>
+<p>数据结构处理的核心逻辑在<code>streamAppendItem</code>里面，可以对照上面的数据结构来看；</p>
+</blockquote>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://redis.io/topics/streams-intro" target="_blank" rel="external">https://redis.io/topics/streams-intro</a></li>
 <li><a href="https://redis.io/commands/xgroup" target="_blank" rel="external">https://redis.io/commands/xgroup</a></li>
@@ -465,6 +530,8 @@ XADD key ID field string [fie">
 <li><a href="https://github.com/antirez/redis/blob/unstable/src/t_stream.c" target="_blank" rel="external">https://github.com/antirez/redis/blob/unstable/src/t_stream.c</a></li>
 <li><a href="http://mysql.taobao.org/monthly/2019/04/03/" target="_blank" rel="external">Redis · 引擎特性 · radix tree 源码解析</a></li>
 <li><a href="https://blog.csdn.net/zanpengfei/article/details/86518824" target="_blank" rel="external">Redis-紧凑列表源码原理分析</a></li>
+<li><a href="https://yuedu.163.com/book_reader/0596f3786a8e4196aeaf4d531b67323f_4/99baef0bc9fb4f4ca764d285eb03bd32_4" target="_blank" rel="external">Redis 5设计与源码分析</a></li>
+<li><a href="http://czrzchao.com/redisSourceBPOP" target="_blank" rel="external">redis源码解读(十):阻塞命令实现</a></li>
 </ul>
 
       
@@ -624,7 +691,7 @@ XADD key ID field string [fie">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#功能"><span class="nav-number">2.</span> <span class="nav-text">功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#启动服务"><span class="nav-number">3.1.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖"><span class="nav-number">3.2.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始撸代码"><span class="nav-number">3.3.</span> <span class="nav-text">开始撸代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">4.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据结构"><span class="nav-number">4.1.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基数树"><span class="nav-number">4.2.</span> <span class="nav-text">基数树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XADD"><span class="nav-number">4.3.</span> <span class="nav-text">XADD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XREAD"><span class="nav-number">4.4.</span> <span class="nav-text">XREAD</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#写在前面"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#功能"><span class="nav-number">2.</span> <span class="nav-text">功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#启动服务"><span class="nav-number">3.1.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖"><span class="nav-number">3.2.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始撸代码"><span class="nav-number">3.3.</span> <span class="nav-text">开始撸代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">4.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据结构"><span class="nav-number">4.1.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基数树"><span class="nav-number">4.2.</span> <span class="nav-text">基数树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XREAD"><span class="nav-number">4.3.</span> <span class="nav-text">XREAD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XADD"><span class="nav-number">4.4.</span> <span class="nav-text">XADD</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
