@@ -1,0 +1,1613 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mysql," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="整体MySQL是单进程多线程、可插拔、分层的数据库系统，支持的存储引擎有InnoDB（默认）、MyISAM等等。有些概念容易混淆，比如：
+
+数据库：文件集合；
+实例：进程、内存等，一个实例可以操作多个数据库；
+
+再比如：
+
+连接：物理概念；
+会话：实例中的逻辑概念，类似一个上下文的东西；
+
+整体分层为：
+
+事务特征：
+
+A(原子性)：都做或者都不做，不能只做一部分；
+C(持久性)：不能丢数据；
+I">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MYSQL">
+<meta property="og:url" content="http://yoursite.com/2020/04/20/mysql/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="整体MySQL是单进程多线程、可插拔、分层的数据库系统，支持的存储引擎有InnoDB（默认）、MyISAM等等。有些概念容易混淆，比如：
+
+数据库：文件集合；
+实例：进程、内存等，一个实例可以操作多个数据库；
+
+再比如：
+
+连接：物理概念；
+会话：实例中的逻辑概念，类似一个上下文的东西；
+
+整体分层为：
+
+事务特征：
+
+A(原子性)：都做或者都不做，不能只做一部分；
+C(持久性)：不能丢数据；
+I">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/01.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/05.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/07.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/08.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/27.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/19.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/09.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/12.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/13.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/22.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/29.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/14.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/20.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/26.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/04.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/10.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/11.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/23.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/15.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/24.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/25.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/28.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/17.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/30.png">
+<meta property="og:updated_time" content="2020-05-21T06:49:08.985Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MYSQL">
+<meta name="twitter:description" content="整体MySQL是单进程多线程、可插拔、分层的数据库系统，支持的存储引擎有InnoDB（默认）、MyISAM等等。有些概念容易混淆，比如：
+
+数据库：文件集合；
+实例：进程、内存等，一个实例可以操作多个数据库；
+
+再比如：
+
+连接：物理概念；
+会话：实例中的逻辑概念，类似一个上下文的东西；
+
+整体分层为：
+
+事务特征：
+
+A(原子性)：都做或者都不做，不能只做一部分；
+C(持久性)：不能丢数据；
+I">
+<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/20/mysql/"/>
+
+
+  <title> MYSQL | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MYSQL
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-20T08:18:52+08:00" content="2020-04-20">
+              2020-04-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/20/mysql/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/20/mysql/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/20/mysql/" class="leancloud_visitors" data-flag-title="MYSQL">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="整体"><a href="#整体" class="headerlink" title="整体"></a>整体</h1><p>MySQL是<font color="red">单进程多线程、可插拔、分层</font>的数据库系统，支持的存储引擎有InnoDB（默认）、MyISAM等等。有些概念容易混淆，比如：</p>
+<ul>
+<li><code>数据库</code>：文件集合；</li>
+<li><code>实例</code>：进程、内存等，一个实例可以操作多个数据库；</li>
+</ul>
+<p>再比如：</p>
+<ul>
+<li><code>连接</code>：物理概念；</li>
+<li><code>会话</code>：实例中的逻辑概念，类似一个上下文的东西；</li>
+</ul>
+<p>整体分层为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/01.png" alt=""></p>
+<p>事务特征：</p>
+<ul>
+<li><code>A(原子性)</code>：都做或者都不做，不能只做一部分；</li>
+<li><code>C(持久性)</code>：不能丢数据；</li>
+<li><code>I(隔离性)</code>：事务之间的可见性；</li>
+<li><code>D(一致性)</code>：终极目标？</li>
+</ul>
+<p>通过事务操作数据的两种方式：</p>
+<ul>
+<li><code>自动提交</code>：每次执行都是一个事务；</li>
+<li><code>手动提交(autocommit)</code>：通过begin/commit/rollback来控制事务的开始、提交和回滚；</li>
+</ul>
+<p>多个事务同时读取和修改数据时遇到的问题有：</p>
+<ul>
+<li><code>脏读</code>：读到其他事务没有提交的数据；</li>
+<li><code>幻读</code>：同一个事务中，多次读数据有增减；</li>
+<li><code>不可重读</code>：同一个事务中，多次读数据有修改；</li>
+</ul>
+<p>事务的隔离级别有：</p>
+<ul>
+<li><code>RU(读未提交)</code>：存在脏读；</li>
+<li><code>RC(读已提交)</code>：解决脏读，存在幻读、不可重读；</li>
+<li><code>RR(可重复读,默认)</code>：解决脏读、不可重读，存在幻读；</li>
+<li><code>Serializable(串行化)</code>：问题都解决了，但是性能不太好；</li>
+</ul>
+<p>在MySQL8中查看和修改隔离级别的方法是：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 查看</span></div><div class="line"><span class="keyword">select</span> @@global.transaction_isolation,@@transaction_isolation;</div><div class="line"></div><div class="line"><span class="comment">-- 修改：会话 or 全局</span></div><div class="line"><span class="comment">-- RU : READ UNCOMMITTED</span></div><div class="line"><span class="comment">-- RC : READ COMMITTED</span></div><div class="line"><span class="comment">-- RR : REPEATABLE READ</span></div><div class="line"><span class="comment">-- S  : SERIALIZABLE</span></div><div class="line"><span class="keyword">set</span> <span class="keyword">session</span> <span class="keyword">transaction</span> <span class="keyword">isolation</span> <span class="keyword">level</span> <span class="keyword">read</span> committed;</div><div class="line"><span class="keyword">set</span> <span class="keyword">global</span> <span class="keyword">transaction</span> <span class="keyword">isolation</span> <span class="keyword">level</span> <span class="keyword">read</span> committed;</div></pre></td></tr></table></figure>
+<h1 id="客户端连接池"><a href="#客户端连接池" class="headerlink" title="客户端连接池"></a>客户端连接池</h1><p>客户端通过一个连接访问MySQL是阻塞式的，在发出请求后需要等返回才能执行后面的操作。如果只有一个连接：</p>
+<blockquote>
+<p>数据库的操作变成串行，明显不行。</p>
+</blockquote>
+<p>如果每次请求都创建一个连接：</p>
+<blockquote>
+<p>连接数多了本身会占用资源，同时连接的创建和销毁也有系统开销。</p>
+</blockquote>
+<p>最好的办法是用个池子管理连接：</p>
+<blockquote>
+<p>不够用了，创建新连接，但是有上限。在连接空闲的时候会销毁多余的连接池，把资源释放出来。</p>
+</blockquote>
+<p>常用的连接池有Druid，除了管理连接外，还有丰富的监控、安全等功能。</p>
+<h1 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h1><p>对传过来的操作语句执行词法分析和语法分析，同时判断是否有语法错误等等。</p>
+<h1 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h1><p>对语法树转换成查询树后，做优化来达到最优的执行效率。</p>
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><p>整体：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/05.png" alt=""></p>
+<p>两种类型的优化：</p>
+<ul>
+<li><code>逻辑优化</code>：找到SQL语句更高效的等价变换；<ul>
+<li>等价谓词重写：name LIKE ‘abc%’ =&gt; name &gt;= ‘abc’ AND name &lt; ‘abd’；</li>
+<li>WHERE和HAVING条件化简；</li>
+<li>关联优化：比如外连接消除、连接消除等；</li>
+</ul>
+</li>
+<li><code>物理优化</code>：对执行方式的进行评估，选择代价最小的；<ul>
+<li>单表扫描算法；</li>
+<li>索引；</li>
+<li>多表连接算法；</li>
+</ul>
+</li>
+</ul>
+<h2 id="EXPLAIN"><a href="#EXPLAIN" class="headerlink" title="EXPLAIN"></a>EXPLAIN</h2><p>使用EXPLAIN模拟优化器执行SQL语句，从而知道会被如何执行：</p>
+<ul>
+<li><code>id</code>：如果是子查询会变大，否则相同；<font color="red">相同时执行顺序由上至下</font>；</li>
+<li><code>select_type</code>：查询类型；<ul>
+<li><code>SIMPLE</code>：普通查询，不包含子查询和UNION；</li>
+<li><code>PRIMARY</code>：最外层查询；</li>
+<li><code>SUBQUERY</code>：子查询；</li>
+<li><code>DERVIED</code>：子查询被标记为衍生，MySQL会把结果放在临时表中；</li>
+<li><code>UNION</code>：在UNION后面的查询；</li>
+<li><code>UNION RESULT</code>：UNION的结果；</li>
+</ul>
+</li>
+<li><code>table</code>：表；</li>
+<li><code>partitions</code></li>
+<li><code>type</code>：类型，<font color="red">从上到下由快变慢</font><ul>
+<li><code>system</code>：只有一条记录的？</li>
+<li><code>const</code>：走主键索引，一次访问就能找到数据；</li>
+<li><code>eq_ref</code>：单键走唯一索引，查询里面是等于；</li>
+<li><code>ref</code>：单键走普通索引；</li>
+<li><code>range</code>：使用索引检索一定范围的行，对应的查询是BETWEEN、IN、大于、小于等；</li>
+<li><code>index</code>：扫描索引；</li>
+<li><code>all</code>：全表扫描；</li>
+</ul>
+</li>
+<li><code>possible_keys</code>：可能用到的索引；</li>
+<li><code>key</code>：实际使用的索引；</li>
+<li><code>key_len</code>：索引中使用的字节数，越短越好（根据表定义计算得到）；</li>
+<li><code>ref</code>：索引中被使用的项；</li>
+<li><code>rows</code>：根据表统计信息及选择的索引，估算找到所需记录需要读取的行数，<font color="red">越小越好</font>；</li>
+<li><code>filtered</code></li>
+<li><code>Extra</code>：重要的额外信息；<ul>
+<li><code>Using filesort</code>：无法利用索引完成排序，对数据使用外部的索引排序；</li>
+<li><code>Using temporary</code>：临时表；</li>
+<li><code>Using index</code>：覆盖索引，不需要回表；</li>
+<li><code>Using where</code>：需要WHERE条件过滤；</li>
+<li><code>distinct</code>：优化distinct操作，在找到第一匹配的元组后即停止找同样值的动作；</li>
+</ul>
+</li>
+</ul>
+<p>对索引的选择做干预可以使用<font color="red">FORCE INDEX、INGORE INDEX</font>。</p>
+<h2 id="常见SQL优化写法"><a href="#常见SQL优化写法" class="headerlink" title="常见SQL优化写法"></a>常见SQL优化写法</h2><p>通常来讲走到索引就胜利了，那么首先要避免走不到索引的写法：</p>
+<ul>
+<li>在索引上使用函数或者运算符；</li>
+<li>WHERE LIKE ‘%_’；</li>
+<li>WHERE使用索引后ORDER BY就不会再使用了，因为只会用一个索引；</li>
+<li>隐式转换失败；</li>
+<li>NOT IN和NOT EXISTS；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>IS NULL、IS NOT NULL、!= </p>
+<p><font color="red">可能走到索引</font>，在MySQL根据统计数据分析，如果走索引是划算的话也会走索引，可能以前的版本不行。</p>
+</blockquote>
+<hr>
+<p>针对LIMIT可以使用子查询优化：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 优化前</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">limit</span> m,n </div><div class="line"><span class="comment">-- 优化后</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> <span class="keyword">id</span> <span class="keyword">in</span> (<span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">limit</span> m,n)</div></pre></td></tr></table></figure>
+<p>优化前的执行流程：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/07.png" alt=""></p>
+<p>优化后的执行流程：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/08.png" alt=""></p>
+<h1 id="InnoDB"><a href="#InnoDB" class="headerlink" title="InnoDB"></a>InnoDB</h1><p>在MySQL Server和InnoDB之间的交互（读和写）是一条一条来的，你实现了API也可以搞个存储引擎：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/27.png" alt=""></p>
+<p>InnoDB的结构如下：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/19.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>读写的数据都在Buffer Pool，如果没有会从磁盘的文件读进来，Buffer Pool使用LRU算法管理。</p>
+<p>磁盘的读写全部通过AIO完成。</p>
+</blockquote>
+<h2 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h2><p>磁盘上的文件包含：</p>
+<ul>
+<li><code>ibdata1</code>：共享表空间，放Double Write Buffer和Change Buffer；</li>
+<li><code>temporary</code>：临时表空间；</li>
+<li><code>普通表空间</code><ul>
+<li><code>.frm</code>：表结构；</li>
+<li><code>.idb</code>：数据和索引；</li>
+</ul>
+</li>
+<li><code>redo logs</code></li>
+<li><code>undo logs</code></li>
+</ul>
+<p>数据记录组织方式为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/09.png" alt=""></p>
+<p>其中：</p>
+<ul>
+<li><code>表空间</code></li>
+<li><code>段</code>：数据段、索引段、回滚段等；</li>
+<li><code>区</code>：64个<font color="red">连续</font>的页，这样可以搞预读、顺序读等等，提升性能；</li>
+<li><code>页</code>：最小IO单位，一般是16KB；</li>
+</ul>
+<p>部分文件格式（Compact、Redundant）中对于VARCHAR等类型只有前面的部分数据存储在数据页，剩余的存储在溢出页上，而其他格式选择全部存储在溢出页上：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/12.png" alt=""></p>
+<p>页中里面的存储格式为（User Records才是真正的记录）：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/13.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>在页内部记录并不是根据主键顺序排序的，而是从左往右找到空的就插进去。根据B+树并不会直接找到记录，而是所在的页。由于页会被加载进内存，那么随便怎么玩都很快了。</p>
+</blockquote>
+<h3 id="Double-Write机制"><a href="#Double-Write机制" class="headerlink" title="Double Write机制"></a>Double Write机制</h3><p>数据库IO的单位是16KB，文件系统的是4KB，磁盘的一般是521B，于是可能有问题（非常有意思的一个点）：</p>
+<blockquote>
+<p>写16KB的Page时，写了2KB后断电，<font color="red">导致部分写失败，重启后无法恢复</font>。</p>
+</blockquote>
+<p>解法：</p>
+<ul>
+<li><code>正常写入</code><ul>
+<li>脏页需要刷出时，先复制到Double Write Buffer；</li>
+<li>Double Write Buffer顺序写入共享表空间，顺序写性能很高；</li>
+<li>将脏页写回磁盘，离散写；</li>
+</ul>
+</li>
+<li><code>异常恢复</code><ul>
+<li>从共享表空间找到副本，将其复制到表空间；</li>
+</ul>
+</li>
+</ul>
+<p>如图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/22.png" alt=""></p>
+<p>查看Double Write执行情况：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">show</span> <span class="keyword">global</span> <span class="keyword">status</span> <span class="keyword">like</span> <span class="string">'%dblwr%'</span>;</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>思考下为啥日志不需要Double Write？</p>
+</blockquote>
+<h2 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h2><p>在修改Page时会记录日志：</p>
+<ul>
+<li><code>redo</code>：保证事务的持久性；即使数据在内存里面还没有刷到磁盘上，也可以通过回放redo日志来复原数据；两个文件循环使用；</li>
+<li><code>undo</code>：保证实物的原子性和实现MVCC；通过undo可以看到某个版本的修改；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>日志先于数据落盘：<font color="red">Write Ahead Log（WAL）</font>，日志是磁盘顺序写，性能很好。</p>
+</blockquote>
+<h3 id="和binlog的区别"><a href="#和binlog的区别" class="headerlink" title="和binlog的区别"></a>和binlog的区别</h3><p>在MySQL中会用binlog记录所有对数据的修改操作，bnlog和redo的区别在于：</p>
+<ul>
+<li>binlog是mysql的，而redo log是innodb的；</li>
+<li>binlog是逻辑日志，redo log像是物理日志；</li>
+<li>binlog在事务提交后一次性写入，redo log在事务执行过程中写入；</li>
+<li>binlog写满或重启后产生新的文件，redo log循环使用；</li>
+<li>binlog也可以做数据恢复，更多的是主从复制，redo log主要做故障恢复；</li>
+</ul>
+<h3 id="格式和管理"><a href="#格式和管理" class="headerlink" title="格式和管理"></a>格式和管理</h3><p>在REDO日志中记录了一个Page上需要修改记录的偏移量、修改的字段及字段值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">（Page ID，Record Offset，(Filed 1, Value 1) … (Filed i, Value i) … )</div></pre></td></tr></table></figure>
+<p>管理格式为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/29.png" alt=""></p>
+<h3 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h3><p>保证数据持久性的几种玩法：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/14.png" alt=""></p>
+<p>ARIES算法用到的数据及其关系：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/20.png" alt=""></p>
+<p>ARIES算法的步骤：</p>
+<ul>
+<li><code>Normal</code>：<ul>
+<li>写数据前先写redo和undo日志，每个日志有递增序列号LSN；</li>
+<li>数据页上有最新的LSN，判断新旧及幂等；</li>
+<li>定期做Checkpoint，减少恢复时需要回放的数据量，在Checkpoint过程中仍有事务在执行；</li>
+</ul>
+</li>
+<li><code>Recover</code>：<ul>
+<li>分析从哪个LSN开始恢复、哪些事务没有提交；</li>
+<li>通过redo来恢复数据；</li>
+<li>通过undo来回滚事务；</li>
+</ul>
+</li>
+</ul>
+<h3 id="Checkpoint"><a href="#Checkpoint" class="headerlink" title="Checkpoint"></a>Checkpoint</h3><p>不是所有的redo日志都是必须的：</p>
+<blockquote>
+<p>如果很久之前的事务对应的页都刷过磁盘了，那么相应的redo日志已经没有存在的必要。</p>
+</blockquote>
+<p>于是得到日志的生命周期：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/26.png" alt=""></p>
+<p>执行时机：</p>
+<ul>
+<li><code>Sharp</code><ul>
+<li>关闭数据库时执行；</li>
+</ul>
+</li>
+<li><code>Fuzzy</code><ul>
+<li>Master Thread每秒或者每十秒异步刷出一定数量的脏页；</li>
+<li>Page Cleaner Thread检查LRU中是否有足够的空闲页，没有则刷出一些脏页；</li>
+<li>重做日志满了，刷出脏页来释放日志；</li>
+<li>脏页太多；</li>
+</ul>
+</li>
+</ul>
+<h3 id="刷盘"><a href="#刷盘" class="headerlink" title="刷盘"></a>刷盘</h3><p>参数innodb_flush_log_at_trx_commit可以控制日志写盘的方式：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/04.png" alt=""></p>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>聚集索引（有且仅有一个）存储格式为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/10.png" alt=""></p>
+<p>辅助索引存储格式为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/11.png" alt=""></p>
+<p>使用B+树而不用B树的原因是：</p>
+<blockquote>
+<p>所有的数据都存储在叶子节点，同时叶子节点使用双向链表串起来，这样有利于<font color="red">范围遍历、扫表</font>。</p>
+</blockquote>
+<h3 id="自适应哈希索引（AHI）"><a href="#自适应哈希索引（AHI）" class="headerlink" title="自适应哈希索引（AHI）"></a>自适应哈希索引（AHI）</h3><p>存储引擎会监控表的二级索引上的查找，如果存在热点数据，会通过建立哈希索引加速查找速度：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/23.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>仅适用于特定查询，系统自动处理，无法人工干预。</p>
+</blockquote>
+<h3 id="MRR"><a href="#MRR" class="headerlink" title="MRR"></a>MRR</h3><p>Multi-Range Read优化的目的是<font color="red">减少磁盘的随机访问</font>：</p>
+<ul>
+<li>将辅助索引查到的键值放入缓存，此时是根据辅助索引排序，对聚集索引可能是随机的；</li>
+<li>根据RowID排序；</li>
+<li>根据RowID顺序来访问实际的数据；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>属于MySQL层面做的优化，跟InnoDB关系不大吧。</p>
+</blockquote>
+<h3 id="ICP"><a href="#ICP" class="headerlink" title="ICP"></a>ICP</h3><p>Index Condition Pushdown同样是优化查询：</p>
+<blockquote>
+<p>在取索引的同时判断是否可以在WHERE条件上过滤，不需要查出来数据后再过滤。在EXPLAIN里面可以看到<font color="red">Using index condition</font>。</p>
+</blockquote>
+<p>举个例子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> people</div><div class="line"><span class="keyword">WHERE</span> zipcode = <span class="string">'95054'</span></div><div class="line">    <span class="keyword">AND</span> lastname <span class="keyword">LIKE</span> <span class="string">'%etrunia%'</span></div><div class="line">    <span class="keyword">AND</span> address <span class="keyword">LIKE</span> <span class="string">'%Main Street%'</span></div></pre></td></tr></table></figure>
+<p>表上存在联合索引zipcode + lastname + address，在优化之前的执行逻辑为：</p>
+<blockquote>
+<p>MySQL根据索引依次从InnoDB找到zipcode=’95054’的记录，然后判断是否满足WHERE条件。</p>
+</blockquote>
+<p>而在优化有的执行逻辑为：</p>
+<blockquote>
+<p>在InnoDB中会找到zipcode=’95054’的索引，并利用索引判断是否满足WHERE条件，只把满足条件的记录返回给MySQL。</p>
+</blockquote>
+<h2 id="多版本并发控制（MVCC）"><a href="#多版本并发控制（MVCC）" class="headerlink" title="多版本并发控制（MVCC）"></a>多版本并发控制（MVCC）</h2><ul>
+<li><code>数据记录</code><ul>
+<li><code>DB_TRX_ID</code>：事务ID（递增）；</li>
+<li><code>DB_ROLL_PTR</code>：回滚地址信息，找到上个版本的数据；</li>
+</ul>
+</li>
+<li><code>事务管理</code>：保存活跃事务列表；</li>
+<li><code>ReadView</code><ul>
+<li><code>m_ids</code>：正在执行的事务列表（不可见）；</li>
+<li><code>m_up_limit_id</code>：可见的提交事务的上限；</li>
+<li><code>m_low_limit_id</code>：不可见、未开启事务的下限；</li>
+</ul>
+</li>
+</ul>
+<p>逻辑如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/15.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>对于<font color="red">快照读</font>，RR开始的时候创建一个ReadView，而RC在每次查询都会创建新的ReadView。</p>
+</blockquote>
+<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><ul>
+<li><code>Buffer Pool</code></li>
+<li><code>Change Buffer</code></li>
+<li><code>Log Buffer</code></li>
+<li><code>锁</code></li>
+<li><code>Double Write Buffer</code></li>
+<li><code>自适应哈希索引</code></li>
+</ul>
+<h3 id="Buffer-Pool"><a href="#Buffer-Pool" class="headerlink" title="Buffer Pool"></a>Buffer Pool</h3><p>以页为单位缓存数据和索引，加速数据访问，使用变体的LRU算法进行管理：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/24.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>和普通的LRU不太一样，目的是解决问题：</p>
+<font color="red">预读失效</font>
+
+<ul>
+<li><code>描述</code>：提前把页读到内存，但是MySQL并没有从页中读取数据；</li>
+<li><code>解法</code>：被预读的页放到老年代的头部，如果不被访问会更快的淘汰掉，不会影响新生代里面真正热的数据；</li>
+</ul>
+<font color="red">缓冲池污染</font>
+
+<ul>
+<li><code>描述</code>：某个SQL做了全表扫描把缓存池里面的数据都刷出去了；</li>
+<li><code>解法</code>：插在老年代头部的页，即使被立即访问也不会到新生代的同步，在停留一定时间后再移动到新生代头部；</li>
+</ul>
+</blockquote>
+<h3 id="Change-Buffer"><a href="#Change-Buffer" class="headerlink" title="Change Buffer"></a>Change Buffer</h3><p>如果表上存在<font color="red">非唯一的二级索引</font>，更新数据（IDU）时索引页不在内存，并不会立即把页读进来，而是将变化缓存起来，后面异步批量读、刷：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/25.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>可以配置针对那些写操作进行缓存，以及写缓存的大小。</p>
+</blockquote>
+<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><p>普遍的锁的分类有：</p>
+<ul>
+<li><code>乐观锁</code> or <code>悲观锁</code></li>
+<li><code>共享锁</code> or <code>排他锁</code>：共享锁之间兼容，其他三种情况都不兼容；</li>
+</ul>
+<p>在数据库上看事务和锁的信息可以使用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">show</span> <span class="keyword">engine</span> <span class="keyword">innodb</span> <span class="keyword">status</span>;</div></pre></td></tr></table></figure>
+<p>和锁相关的系统表：</p>
+<ul>
+<li>sys.innodb_lock_waits</li>
+<li>information_schema.processlist</li>
+<li>performance_schema.data_locks</li>
+<li>information_schema.innodb_trx</li>
+</ul>
+<h3 id="二阶段锁（2PL）"><a href="#二阶段锁（2PL）" class="headerlink" title="二阶段锁（2PL）"></a>二阶段锁（2PL）</h3><p>加锁的一个原则是Two-Phase Locking：</p>
+<blockquote>
+<p>分为加锁阶段和解锁阶段，而且<font color="red">两个阶段不相交</font>：加锁阶段不解锁，解锁阶段不加锁。</p>
+</blockquote>
+<p>如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/28.png" alt=""></p>
+<h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>共享锁/S和排他锁/X</td>
+<td>类似读写锁</td>
+</tr>
+<tr>
+<td>意向锁/IS/IX</td>
+<td>表锁<br>—<br>在加S锁前需要先加IS锁，同样加X锁前需要先加IX锁<br>—<br><font color="red">可以快速检查表锁和行锁的冲突</font>，否则表加S时需要遍历行上是否有X锁</td>
+</tr>
+<tr>
+<td>记录锁/Record Lock</td>
+<td>锁定辅助索引和聚集索引，防止记录的并发修改<br>—<br><code>S,REC_NOT_GAP</code>和<code>X,REC_NOT_GAP</code></td>
+</tr>
+<tr>
+<td>间隙锁/Gap Lock</td>
+<td>锁住一个区间，防止其他事务在这个区间插入，<font color="red">仅阻塞INSERT</font>；记在下个记录上，范围是到前一个记录<br>—<br><code>S,GAP</code>和<code>X,GAP</code></td>
+</tr>
+<tr>
+<td>临键锁/Next-Key Lock</td>
+<td>记录锁+间隙锁<br>—<br><code>S</code>和<code>X</code></td>
+</tr>
+<tr>
+<td>插入意向锁/Insert Intention Lock</td>
+<td>在INSERT前加锁，锁定的单个位置，插入<font color="red">同一区间、不同的位置</font>不需要互相等待，提升插入性能<br>—<br>与间隙锁互斥<br>—<br><code>S,GAP,INSERT_INTENTION</code>和<code>X,GAP,INSERT_INTENTION</code></td>
+</tr>
+<tr>
+<td>自增锁/AUTO-INC Lock</td>
+<td>表锁，用来处理自增键，<font color="red">不需要等到事务结束就可以释放锁</font>，提升性能</td>
+</tr>
+</tbody>
+</table>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>表：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`ttt`</span> (</div><div class="line">  <span class="string">`id`</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">  <span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</div><div class="line">  <span class="string">`code`</span> <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</div><div class="line">  <span class="string">`value`</span> <span class="built_in">int</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</div><div class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</div><div class="line">  <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> <span class="string">`uk_code`</span> (<span class="string">`code`</span>),</div><div class="line">  <span class="keyword">KEY</span> <span class="string">`idx_name`</span> (<span class="string">`name`</span>)</div><div class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_0900_ai_ci</div></pre></td></tr></table></figure>
+<p>数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">+----+------+------+-------+</div><div class="line">| id | name | code | value |</div><div class="line">+----+------+------+-------+</div><div class="line">|  1 | a    | a    |  NULL |</div><div class="line">|  2 | a    | b    |  NULL |</div><div class="line">|  3 | c    | c    |  NULL |</div><div class="line">+----+------+------+-------+</div></pre></td></tr></table></figure>
+<h4 id="CASE-1：RR-唯一索引-UPDATE"><a href="#CASE-1：RR-唯一索引-UPDATE" class="headerlink" title="CASE 1：RR + 唯一索引 + UPDATE"></a>CASE 1：RR + 唯一索引 + UPDATE</h4><p>SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> ttt <span class="keyword">set</span> <span class="keyword">value</span> = <span class="number">0</span> <span class="keyword">where</span> code = <span class="string">'a'</span>;</div></pre></td></tr></table></figure>
+<p>锁：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+-----------+</div><div class="line">| ENGINE | ENGINE_LOCK_ID                    | ENGINE_TRANSACTION_ID | THREAD_ID | EVENT_ID | OBJECT_SCHEMA | OBJECT_NAME | PARTITION_NAME | SUBPARTITION_NAME | INDEX_NAME | OBJECT_INSTANCE_BEGIN | LOCK_TYPE | LOCK_MODE     | LOCK_STATUS | LOCK_DATA |</div><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+-----------+</div><div class="line">| INNODB | 4761287208:1059:140186508893432   |                  2143 |        48 |      118 | test          | ttt         | NULL           | NULL              | NULL       |       140186508893432 | TABLE     | IX            | GRANTED     | NULL      |</div><div class="line">| INNODB | 4761287208:2:6:2:140186524807704  |                  2143 |        48 |      118 | test          | ttt         | NULL           | NULL              | uk_code    |       140186524807704 | RECORD    | X,REC_NOT_GAP | GRANTED     | &apos;a&apos;, 1    |</div><div class="line">| INNODB | 4761287208:2:4:18:140186524808048 |                  2143 |        48 |      118 | test          | ttt         | NULL           | NULL              | PRIMARY    |       140186524808048 | RECORD    | X,REC_NOT_GAP | GRANTED     | 1         |</div><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+-----------+</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>唯一键在<font color="red">等值</font>更新时，只会加行锁。</p>
+</blockquote>
+<p>SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ttt <span class="keyword">where</span> code &gt; <span class="string">'a'</span> <span class="keyword">and</span> code &lt; <span class="string">'b'</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>在uk_code索引上加临键锁<code>(&#39;a&#39;, &#39;b&#39;]</code>：<font color="red">范围查询时，唯一索引会给满足条件的记录以及第一个不满足条件的记录加临键锁</font>。</p>
+</blockquote>
+<h4 id="CASE-2：RR-主键-UPDATE"><a href="#CASE-2：RR-主键-UPDATE" class="headerlink" title="CASE 2：RR + 主键 + UPDATE"></a>CASE 2：RR + 主键 + UPDATE</h4><p>SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> ttt <span class="keyword">set</span> <span class="keyword">value</span> = <span class="number">0</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">1</span>;</div></pre></td></tr></table></figure>
+<p>锁：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+-----------+</div><div class="line">| ENGINE | ENGINE_LOCK_ID                    | ENGINE_TRANSACTION_ID | THREAD_ID | EVENT_ID | OBJECT_SCHEMA | OBJECT_NAME | PARTITION_NAME | SUBPARTITION_NAME | INDEX_NAME | OBJECT_INSTANCE_BEGIN | LOCK_TYPE | LOCK_MODE     | LOCK_STATUS | LOCK_DATA |</div><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+-----------+</div><div class="line">| INNODB | 4761287208:1059:140186508893432   |                  2145 |        48 |      122 | test          | ttt         | NULL           | NULL              | NULL       |       140186508893432 | TABLE     | IX            | GRANTED     | NULL      |</div><div class="line">| INNODB | 4761287208:2:4:19:140186524807704 |                  2145 |        48 |      122 | test          | ttt         | NULL           | NULL              | PRIMARY    |       140186524807704 | RECORD    | X,REC_NOT_GAP | GRANTED     | 1         |</div><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+-----------+</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>根据主键更新只会加意向锁和行锁，锁的数量已经算最少了，在有唯一性保证时都不会加间隙锁。</p>
+</blockquote>
+<h4 id="CASE-3：RR-非唯一索引-UPDATE"><a href="#CASE-3：RR-非唯一索引-UPDATE" class="headerlink" title="CASE 3：RR + 非唯一索引 + UPDATE"></a>CASE 3：RR + 非唯一索引 + UPDATE</h4><p>SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ttt <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">'a'</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p>锁：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+-----------+</div><div class="line">| ENGINE | ENGINE_LOCK_ID                    | ENGINE_TRANSACTION_ID | THREAD_ID | EVENT_ID | OBJECT_SCHEMA | OBJECT_NAME | PARTITION_NAME | SUBPARTITION_NAME | INDEX_NAME | OBJECT_INSTANCE_BEGIN | LOCK_TYPE | LOCK_MODE     | LOCK_STATUS | LOCK_DATA |</div><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+-----------+</div><div class="line">| INNODB | 4761287208:1059:140186508893432   |                  2209 |        52 |       26 | test          | ttt         | NULL           | NULL              | NULL       |       140186508893432 | TABLE     | IX            | GRANTED     | NULL      |</div><div class="line">| INNODB | 4761287208:2:5:2:140186524807704  |                  2209 |        52 |       26 | test          | ttt         | NULL           | NULL              | idx_name   |       140186524807704 | RECORD    | X             | GRANTED     | &apos;a&apos;, 1    |</div><div class="line">| INNODB | 4761287208:2:5:3:140186524807704  |                  2209 |        52 |       26 | test          | ttt         | NULL           | NULL              | idx_name   |       140186524807704 | RECORD    | X             | GRANTED     | &apos;a&apos;, 2    |</div><div class="line">| INNODB | 4761287208:2:4:16:140186524808048 |                  2209 |        52 |       26 | test          | ttt         | NULL           | NULL              | PRIMARY    |       140186524808048 | RECORD    | X,REC_NOT_GAP | GRANTED     | 2         |</div><div class="line">| INNODB | 4761287208:2:4:19:140186524808048 |                  2209 |        52 |       26 | test          | ttt         | NULL           | NULL              | PRIMARY    |       140186524808048 | RECORD    | X,REC_NOT_GAP | GRANTED     | 1         |</div><div class="line">| INNODB | 4761287208:2:5:5:140186524808392  |                  2209 |        52 |       26 | test          | ttt         | NULL           | NULL              | idx_name   |       140186524808392 | RECORD    | X,GAP         | GRANTED     | &apos;c&apos;, 3    |</div><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+-----------+</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>在索引index_name上的1、2加临键锁，锁定的范围是<code>(,&#39;a&#39;]</code>；在3加间隙锁，锁定的范围是<code>(&#39;a&#39;,&#39;c&#39;)</code>。在主键索引上1、2上加行锁。</p>
+<p>防止幻读，但是感觉锁的空间有点大了，比如<code>insert into ttt select 4, &#39;0&#39;, &#39;0&#39;, null;</code>也会被阻塞，但其实并没有产生幻读。</p>
+<p>保持简单、一致的锁定方式还是很合理的，即使锁定的范围大点影响应该也不大。</p>
+</blockquote>
+<p>SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ttt <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">'c'</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p>锁：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+------------------------+</div><div class="line">| ENGINE | ENGINE_LOCK_ID                    | ENGINE_TRANSACTION_ID | THREAD_ID | EVENT_ID | OBJECT_SCHEMA | OBJECT_NAME | PARTITION_NAME | SUBPARTITION_NAME | INDEX_NAME | OBJECT_INSTANCE_BEGIN | LOCK_TYPE | LOCK_MODE     | LOCK_STATUS | LOCK_DATA              |</div><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+------------------------+</div><div class="line">| INNODB | 4761287208:1059:140186508893432   |                  2212 |        52 |       32 | test          | ttt         | NULL           | NULL              | NULL       |       140186508893432 | TABLE     | IX            | GRANTED     | NULL                   |</div><div class="line">| INNODB | 4761287208:2:5:1:140186524807704  |                  2212 |        52 |       32 | test          | ttt         | NULL           | NULL              | idx_name   |       140186524807704 | RECORD    | X             | GRANTED     | supremum pseudo-record |</div><div class="line">| INNODB | 4761287208:2:5:5:140186524807704  |                  2212 |        52 |       32 | test          | ttt         | NULL           | NULL              | idx_name   |       140186524807704 | RECORD    | X             | GRANTED     | &apos;c&apos;, 3                 |</div><div class="line">| INNODB | 4761287208:2:4:20:140186524808048 |                  2212 |        52 |       32 | test          | ttt         | NULL           | NULL              | PRIMARY    |       140186524808048 | RECORD    | X,REC_NOT_GAP | GRANTED     | 3                      |</div><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+------------------------+</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>从索引最大值到无穷大的区间会有一个特殊的间隙锁：supremum pseudo-record。</p>
+</blockquote>
+<p>SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ttt <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">'b'</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>索引idx_name加间隙锁，范围是<code>(&#39;a&#39;,&#39;c&#39;)</code>：<font color="red">在等值查询时，如果记录不存在会把间隙锁加到下个记录上</font>。</p>
+</blockquote>
+<p>SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ttt <span class="keyword">where</span> <span class="keyword">name</span> &gt; <span class="string">'a'</span> <span class="keyword">and</span> <span class="keyword">name</span> &lt; <span class="string">'c'</span> <span class="keyword">for</span> <span class="keyword">update</span>;</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>索引idx_name加临键锁，范围是<code>(&#39;a&#39;,&#39;c&#39;]</code>：<font color="red">在范围查询时，在满足条件的索引以及第一个不满足条件的索引上加临键锁</font>。</p>
+</blockquote>
+<h4 id="CASE-4：RR-非唯一索引-DELETE-amp-INSERT"><a href="#CASE-4：RR-非唯一索引-DELETE-amp-INSERT" class="headerlink" title="CASE 4：RR + 非唯一索引 + DELETE&amp;INSERT"></a>CASE 4：RR + 非唯一索引 + DELETE&amp;INSERT</h4><table>
+<thead>
+<tr>
+<th>事务1</th>
+<th>事务2</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>begin;</code><br><code>delete from ttt where name = &#39;d&#39;;</code></td>
+<td></td>
+<td>获取间隙锁<code>(&#39;c&#39;, )​</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>begin;</code><br><code>delete from ttt where name = &#39;d&#39;;</code></td>
+<td>获取间隙锁<code>(&#39;c&#39;, )​</code></td>
+</tr>
+<tr>
+<td><code>insert into ttt select 4, &#39;d&#39;, &#39;d&#39;, 0;</code></td>
+<td></td>
+<td>阻塞等待间隙锁</td>
+</tr>
+<tr>
+<td></td>
+<td><code>insert into ttt select 4, &#39;d&#39;, &#39;d&#39;, 0;</code></td>
+<td>等待间隙锁，发现死锁</td>
+</tr>
+<tr>
+<td></td>
+<td>Deadlock found when trying to get lock; try restarting transaction</td>
+<td>回滚</td>
+</tr>
+</tbody>
+</table>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>在UDPATE/DELETE时会获取临键锁（<font color="red">锁行为和SELECT..FOR UPDATE基本一致</font>），在INSERT时尝试获取插入意向锁，和间隙锁互斥所以会阻塞。在事务2获取插入意向锁时发现环于是报死锁。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>事务1</th>
+<th>事务2</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>begin;</code><br><code>insert into ttt select 4, &#39;e&#39;, &#39;d&#39;, 0;</code></td>
+<td></td>
+<td>插入成功后变为行锁</td>
+</tr>
+<tr>
+<td></td>
+<td><code>begin;</code><br><code>insert into ttt select 5, &#39;d&#39;, &#39;e&#39;, 0;</code></td>
+<td>插入意向锁和行锁不冲突，不阻塞</td>
+</tr>
+<tr>
+<td></td>
+<td><code>delete from ttt where name = &#39;e&#39;;</code></td>
+<td>删除时获取临键锁，和行锁互斥，阻塞</td>
+</tr>
+</tbody>
+</table>
+<h4 id="CASE-5：RR-间隙锁合并"><a href="#CASE-5：RR-间隙锁合并" class="headerlink" title="CASE 5：RR + 间隙锁合并"></a>CASE 5：RR + 间隙锁合并</h4><p>数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+----+------+------+-------+</div><div class="line">| id | name | code | value |</div><div class="line">+----+------+------+-------+</div><div class="line">|  1 | a    | a    |  NULL |</div><div class="line">|  2 | a    | b    |  NULL |</div><div class="line">|  3 | c    | c    |  NULL |</div><div class="line">|  4 | e    | e    |  NULL |</div><div class="line">+----+------+------+-------+</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>事务1</th>
+<th>事务2</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>begin;</code><br><code>update ttt set value = 0 where name = &#39;b&#39;;</code></td>
+<td></td>
+<td>获的间隙锁<code>(&#39;a&#39;,&#39;c&#39;)</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>begin;</code><br><code>update ttt set value = 0 where name = &#39;d&#39;;</code></td>
+<td>获的间隙锁<code>(&#39;c&#39;,&#39;e&#39;)</code></td>
+</tr>
+</tbody>
+</table>
+<p>此时执行SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> ttt <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">'c'</span>;</div></pre></td></tr></table></figure>
+<p>事务1和事务2的间隙锁范围都会变为<code>(&#39;a&#39;,&#39;e&#39;)</code>，也就是在删除记录的时候，<font color="red">如果上面有间隙锁会移到后面的记录上</font>。</p>
+<h4 id="CASE-6：RC-唯一键-INSERT"><a href="#CASE-6：RC-唯一键-INSERT" class="headerlink" title="CASE 6：RC + 唯一键 + INSERT"></a>CASE 6：RC + 唯一键 + INSERT</h4><table>
+<thead>
+<tr>
+<th>事务1</th>
+<th>事务2</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>begin;</code><br><code>insert into ttt select 5, &#39;b&#39;, &#39;e&#39;, 0;</code></td>
+<td></td>
+<td>插入成功后获得行锁</td>
+</tr>
+<tr>
+<td></td>
+<td><code>begin;</code><br><code>insert into ttt select 6, &#39;b&#39;, &#39;e&#39;, 0;</code></td>
+<td>获取间隙锁，等待申请共享锁</td>
+</tr>
+<tr>
+<td><code>insert into ttt select 7, &#39;b&#39;, &#39;d&#39;, 0;</code></td>
+<td></td>
+<td>插入意向锁等待间隙锁，发现死锁</td>
+</tr>
+<tr>
+<td></td>
+<td>Deadlock found when trying to get lock; try restarting transaction</td>
+<td>回滚</td>
+</tr>
+</tbody>
+</table>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>如果事务2执行的是<code>delete from ttt where code = &#39;e&#39;;</code>并不会产生死锁：<font color="red">在DELETE时会等待写锁，且不会获取间隙锁</font>。</p>
+<p>针对唯一键索引的加锁流程：</p>
+<ul>
+<li>加S锁；</li>
+<li>加间隙锁和插入意向锁；</li>
+<li>S锁升级为X锁；</li>
+</ul>
+</blockquote>
+<h4 id="CASE-7：RR-更新是索引值"><a href="#CASE-7：RR-更新是索引值" class="headerlink" title="CASE 7：RR + 更新是索引值"></a>CASE 7：RR + 更新是索引值</h4><p>SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> ttt <span class="keyword">set</span> <span class="keyword">name</span> = <span class="string">'b'</span> <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">'c'</span>;</div></pre></td></tr></table></figure>
+<p>锁：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+------------------------+</div><div class="line">| ENGINE | ENGINE_LOCK_ID                    | ENGINE_TRANSACTION_ID | THREAD_ID | EVENT_ID | OBJECT_SCHEMA | OBJECT_NAME | PARTITION_NAME | SUBPARTITION_NAME | INDEX_NAME | OBJECT_INSTANCE_BEGIN | LOCK_TYPE | LOCK_MODE     | LOCK_STATUS | LOCK_DATA              |</div><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+------------------------+</div><div class="line">| INNODB | 4761287208:1059:140186508893432   |                  2276 |        52 |      106 | test          | ttt         | NULL           | NULL              | NULL       |       140186508893432 | TABLE     | IX            | GRANTED     | NULL                   |</div><div class="line">| INNODB | 4761287208:2:5:1:140186524807704  |                  2276 |        52 |      106 | test          | ttt         | NULL           | NULL              | idx_name   |       140186524807704 | RECORD    | X             | GRANTED     | supremum pseudo-record |</div><div class="line">| INNODB | 4761287208:2:5:5:140186524807704  |                  2276 |        52 |      106 | test          | ttt         | NULL           | NULL              | idx_name   |       140186524807704 | RECORD    | X             | GRANTED     | &apos;c&apos;, 3                 |</div><div class="line">| INNODB | 4761287208:2:4:30:140186524808048 |                  2276 |        52 |      106 | test          | ttt         | NULL           | NULL              | PRIMARY    |       140186524808048 | RECORD    | X,REC_NOT_GAP | GRANTED     | 3                      |</div><div class="line">| INNODB | 4761287208:2:5:6:140186524808392  |                  2276 |        52 |      106 | test          | ttt         | NULL           | NULL              | idx_name   |       140186524808392 | RECORD    | X,GAP         | GRANTED     | &apos;b&apos;, 3                 |</div><div class="line">+--------+-----------------------------------+-----------------------+-----------+----------+---------------+-------------+----------------+-------------------+------------+-----------------------+-----------+---------------+-------------+------------------------+</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<font color="red">TODO</font>
+
+
+
+</blockquote>
+<h3 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h3><p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/17.png" alt=""></p>
+<h3 id="隐式锁"><a href="#隐式锁" class="headerlink" title="隐式锁"></a>隐式锁</h3><p>为了降低锁的开销，采用延迟加锁机制，即隐式锁。</p>
+<p>在数据记录上会有隐藏列记录事务ID，当有事务对数据记录进行修改时，需要先判断记录上是否有隐式锁，即：<font color="red">记录上的事务ID是否为活动的事务</font>。</p>
+<p>如果有则为其创建真正的锁并等待，否则更新数据并写入自己的事务ID。</p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>有点像JVM上的偏向锁。</p>
+</blockquote>
+<h3 id="快照读和当前读"><a href="#快照读和当前读" class="headerlink" title="快照读和当前读"></a>快照读和当前读</h3><p>快照读指的是普通的SELECT，通过MVCC来保证隔离性。</p>
+<p>当前读是指读取最新的数据，在执行UPDATE/DELETE之前会有当前读，也可以直接用SELECT…FOR UPDATE来做当前读，会加锁来防止幻读。</p>
+<h3 id="自增和锁"><a href="#自增和锁" class="headerlink" title="自增和锁"></a>自增和锁</h3><table>
+<thead>
+<tr>
+<th>插入类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>insert-like</td>
+<td>所有插入语句：INSERT、REPLACE、INSERT…SELECT</td>
+</tr>
+<tr>
+<td>simple inserts</td>
+<td>插入前确定行数，不包含INSERT…ON DUPLICATE KEY UPDATE</td>
+</tr>
+<tr>
+<td>bulk inserts</td>
+<td>插入前不确定行数：INSERT…SELECT、LOAD DATA</td>
+</tr>
+<tr>
+<td>mixed-mode inserts</td>
+<td>主键部分确定、部分自增长：INSERT INTO t1(c1,c2) VALUES(1,’a’),(NULL,’b’)和INSERT…ON DUPLICATE KEY UPDATE</td>
+</tr>
+</tbody>
+</table>
+<p>通过参数innodb_autoinc_lock_mode控制自增：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>通过表锁（AUTO-INC Locking）实现自增<br>为了提高性能，在自增SQL执行完就把锁释放掉了（而不是事务结束后）</td>
+</tr>
+<tr>
+<td>1</td>
+<td>默认值<br>对于simple inserts通过互斥量（mutex）在内存中累加计数，对于bulk inserts还是采用表锁。如果已经使用了AUTO-INC Locking再执行simple inserts时，仍需要等锁释放</td>
+</tr>
+<tr>
+<td>2</td>
+<td>全部使用互斥量自增，性能最高，可能不连续<br>及时雨Statement-Base Replication会出现问题，应该使用Row-Base Replication</td>
+</tr>
+</tbody>
+</table>
+<h3 id="隔离级别和锁"><a href="#隔离级别和锁" class="headerlink" title="隔离级别和锁"></a>隔离级别和锁</h3><ul>
+<li><code>RC</code><ul>
+<li><code>快照读</code></li>
+<li><code>当前读</code>：对读取的记录加锁；</li>
+</ul>
+</li>
+<li><code>RR</code><ul>
+<li><code>快照读</code></li>
+<li><code>当前读</code>：对读取的记录加锁，同时对读取的范围加锁，新的满足查询条件的记录不能插入；</li>
+</ul>
+</li>
+<li><code>Serializable</code><ul>
+<li>退化为基于锁的并发控制，不区分快照读和当前读，所有的读操作均为当前读，读加S锁、写加X锁；</li>
+</ul>
+</li>
+</ul>
+<h1 id="主备"><a href="#主备" class="headerlink" title="主备"></a>主备</h1><p>把binlog同步到备机，然后用线程回放：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/mysql/30.png" alt=""></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://www.zsythink.net/archives/1233" target="_blank" rel="external">事务隔离级别</a></li>
+<li><a href="https://www.csdn.net/gather_2f/MtTaIg4sMzAwMS1ibG9n.html" target="_blank" rel="external">【mysql】串行化隔离级别</a></li>
+<li><a href="https://www.cnblogs.com/kismetv/p/10331633.html" target="_blank" rel="external">深入学习MySQL事务：ACID特性的实现原理</a></li>
+<li><a href="https://github.com/alibaba/druid/wiki/Druid连接池介绍" target="_blank" rel="external">Druid连接池介绍</a></li>
+<li><a href="https://draveness.me/mysql-innodb/" target="_blank" rel="external">『浅入浅出』MySQL 和 InnoDB</a></li>
+<li><a href="http://catkang.github.io/2019/01/16/crash-recovery.html" target="_blank" rel="external">数据库故障恢复机制的前世今生</a></li>
+<li><a href="http://mysql.taobao.org/monthly/2015/12/01/" target="_blank" rel="external">MySQL · 引擎特性 · InnoDB 事务子系统介绍</a></li>
+<li>优化<ol>
+<li><a href="https://blog.csdn.net/woshisap/article/details/42809955" target="_blank" rel="external">Mysql的等价谓词重写</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/56790651" target="_blank" rel="external">[玩转MySQL之六]MySQL查询优化器</a></li>
+<li><a href="https://blog.csdn.net/why15732625998/article/details/80388236" target="_blank" rel="external"><a href="一">MySQL高级</a> EXPLAIN用法和结果分析</a></li>
+</ol>
+</li>
+<li>索引<ol>
+<li><a href="https://juejin.im/post/5d5defc2518825591523a1db" target="_blank" rel="external">MySQL中IS NULL、IS NOT NULL、!=不能用索引？胡扯！</a></li>
+<li><a href="https://www.cnblogs.com/geaozhang/p/7252389.html" target="_blank" rel="external">InnoDB关键特性之自适应hash索引</a></li>
+<li><a href="http://mysql.taobao.org/monthly/2020/03/06/" target="_blank" rel="external">Database · 理论基础 · B link Tree</a></li>
+</ol>
+</li>
+<li>锁<ol>
+<li><a href="https://www.jianshu.com/p/13f5777966dd" target="_blank" rel="external">mysql 索引加锁分析</a></li>
+<li><a href="https://www.jianshu.com/p/27352449bcc0" target="_blank" rel="external">当前读与快照读</a></li>
+<li><a href="https://juejin.im/post/5b865859e51d4538e331ae9a" target="_blank" rel="external">论 MySql InnoDB 如何通过插入意向锁控制并发插入</a></li>
+<li><a href="http://mysql.taobao.org/monthly/2018/05/04/" target="_blank" rel="external">MySQL · 引擎分析 · InnoDB行锁分析</a></li>
+<li><a href="http://www.fanyilun.me/2017/04/20/MySQL%E5%8A%A0%E9%94%81%E5%88%86%E6%9E%90/" target="_blank" rel="external">MySQL加锁分析</a></li>
+</ol>
+</li>
+<li>MVCC<ol>
+<li><a href="https://cloud.tencent.com/developer/article/1488871" target="_blank" rel="external">InnoDB MVCC 详解</a></li>
+</ol>
+</li>
+<li>缓存<ol>
+<li><a href="https://blog.csdn.net/qq_36652619/article/details/88953065" target="_blank" rel="external">MySQL 之 InnoDB缓冲池（Buffer Pool）体系结构</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/63348794" target="_blank" rel="external">Change Buffer</a></li>
+<li><a href="https://juejin.im/post/5d11a79ee51d4555e372a624" target="_blank" rel="external">缓冲池(buffer pool)，这次彻底懂了！！！</a></li>
+<li><a href="https://juejin.im/post/5d1357b8f265da1b961314c0" target="_blank" rel="external">写缓冲(change buffer)，这次彻底懂了！！！</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1548043" target="_blank" rel="external">Buffer pool 详解</a></li>
+<li><a href="http://mysql.taobao.org/monthly/2020/02/02/" target="_blank" rel="external">MySQL · 引擎特性 · InnoDB Buffer Pool 浅析</a></li>
+</ol>
+</li>
+<li>恢复<ol>
+<li><a href="https://my.oschina.net/fileoptions/blog/2988622" target="_blank" rel="external">图解数据库Aries事务Recovery算法</a></li>
+</ol>
+</li>
+<li>日志<ol>
+<li><a href="http://mysql.taobao.org/monthly/2020/02/01/" target="_blank" rel="external">MySQL · 引擎特性 · 庖丁解InnoDB之REDO LOG</a></li>
+<li><a href="http://mysql.taobao.org/monthly/2019/03/03/" target="_blank" rel="external">MySQL · InnoDB · Redo log</a></li>
+<li><a href="http://mysql.taobao.org/monthly/2017/10/03/" target="_blank" rel="external">MySQL · 引擎特性 · InnoDB mini transation</a></li>
+<li><a href="http://mysql.taobao.org/monthly/2020/01/05/" target="_blank" rel="external">MySQL · 引擎特性 · InnoDB redo log 之 write ahead</a></li>
+<li><a href="http://mysql.taobao.org/monthly/2015/05/01/" target="_blank" rel="external">MySQL · 引擎特性 · InnoDB redo log漫游</a></li>
+<li><a href="https://juejin.im/entry/5ba0a254e51d450e735e4a1f" target="_blank" rel="external">详细分析MySQL事务日志(redo log和undo log)</a></li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag">#mysql</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/18/leetcode/" rel="next" title="算法">
+                <i class="fa fa-chevron-left"></i> 算法
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/spring/" rel="prev" title="SPRING">
+                SPRING <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#整体"><span class="nav-number">1.</span> <span class="nav-text">整体</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#客户端连接池"><span class="nav-number">2.</span> <span class="nav-text">客户端连接池</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析器"><span class="nav-number">3.</span> <span class="nav-text">分析器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优化器"><span class="nav-number">4.</span> <span class="nav-text">优化器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#流程"><span class="nav-number">4.1.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EXPLAIN"><span class="nav-number">4.2.</span> <span class="nav-text">EXPLAIN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见SQL优化写法"><span class="nav-number">4.3.</span> <span class="nav-text">常见SQL优化写法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#InnoDB"><span class="nav-number">5.</span> <span class="nav-text">InnoDB</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#存储"><span class="nav-number">5.1.</span> <span class="nav-text">存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Double-Write机制"><span class="nav-number">5.1.1.</span> <span class="nav-text">Double Write机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志"><span class="nav-number">5.2.</span> <span class="nav-text">日志</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#和binlog的区别"><span class="nav-number">5.2.1.</span> <span class="nav-text">和binlog的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#格式和管理"><span class="nav-number">5.2.2.</span> <span class="nav-text">格式和管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#恢复"><span class="nav-number">5.2.3.</span> <span class="nav-text">恢复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Checkpoint"><span class="nav-number">5.2.4.</span> <span class="nav-text">Checkpoint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#刷盘"><span class="nav-number">5.2.5.</span> <span class="nav-text">刷盘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引"><span class="nav-number">5.3.</span> <span class="nav-text">索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自适应哈希索引（AHI）"><span class="nav-number">5.3.1.</span> <span class="nav-text">自适应哈希索引（AHI）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MRR"><span class="nav-number">5.3.2.</span> <span class="nav-text">MRR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ICP"><span class="nav-number">5.3.3.</span> <span class="nav-text">ICP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多版本并发控制（MVCC）"><span class="nav-number">5.4.</span> <span class="nav-text">多版本并发控制（MVCC）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存"><span class="nav-number">5.5.</span> <span class="nav-text">内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Buffer-Pool"><span class="nav-number">5.5.1.</span> <span class="nav-text">Buffer Pool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Change-Buffer"><span class="nav-number">5.5.2.</span> <span class="nav-text">Change Buffer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁"><span class="nav-number">5.6.</span> <span class="nav-text">锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二阶段锁（2PL）"><span class="nav-number">5.6.1.</span> <span class="nav-text">二阶段锁（2PL）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型"><span class="nav-number">5.6.2.</span> <span class="nav-text">类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">5.6.3.</span> <span class="nav-text">测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CASE-1：RR-唯一索引-UPDATE"><span class="nav-number">5.6.3.1.</span> <span class="nav-text">CASE 1：RR + 唯一索引 + UPDATE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CASE-2：RR-主键-UPDATE"><span class="nav-number">5.6.3.2.</span> <span class="nav-text">CASE 2：RR + 主键 + UPDATE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CASE-3：RR-非唯一索引-UPDATE"><span class="nav-number">5.6.3.3.</span> <span class="nav-text">CASE 3：RR + 非唯一索引 + UPDATE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CASE-4：RR-非唯一索引-DELETE-amp-INSERT"><span class="nav-number">5.6.3.4.</span> <span class="nav-text">CASE 4：RR + 非唯一索引 + DELETE&INSERT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CASE-5：RR-间隙锁合并"><span class="nav-number">5.6.3.5.</span> <span class="nav-text">CASE 5：RR + 间隙锁合并</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CASE-6：RC-唯一键-INSERT"><span class="nav-number">5.6.3.6.</span> <span class="nav-text">CASE 6：RC + 唯一键 + INSERT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CASE-7：RR-更新是索引值"><span class="nav-number">5.6.3.7.</span> <span class="nav-text">CASE 7：RR + 更新是索引值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#兼容性"><span class="nav-number">5.6.4.</span> <span class="nav-text">兼容性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐式锁"><span class="nav-number">5.6.5.</span> <span class="nav-text">隐式锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快照读和当前读"><span class="nav-number">5.6.6.</span> <span class="nav-text">快照读和当前读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自增和锁"><span class="nav-number">5.6.7.</span> <span class="nav-text">自增和锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隔离级别和锁"><span class="nav-number">5.6.8.</span> <span class="nav-text">隔离级别和锁</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主备"><span class="nav-number">6.</span> <span class="nav-text">主备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2020/04/20/mysql/';
+      var disqus_title = "MYSQL";
+      var disqus_url = 'http://yoursite.com/2020/04/20/mysql/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

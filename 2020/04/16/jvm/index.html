@@ -1,0 +1,1129 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="jvm," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="平时写的代码都跑在Java虚拟机上，了解运行机制能帮助我们写出更优质、健壮的代码，遇到问题也能解决（比如调参什么的）。
+内存布局不同版本的内存布局是有差异的，但更多的是相似点：
+
+堆堆是内存中最大的一个区域，被所有线程共享，存放绝大部分（比如经过逃逸分析后对象可以分配在栈上）的实例对象、数据。
+不同的实现堆的结构不同，CMS的结构为：
+
+对象（新的+老的）在各个区域之间的流转为：
+
+G1的结构为：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚拟机基础">
+<meta property="og:url" content="http://yoursite.com/2020/04/16/jvm/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="平时写的代码都跑在Java虚拟机上，了解运行机制能帮助我们写出更优质、健壮的代码，遇到问题也能解决（比如调参什么的）。
+内存布局不同版本的内存布局是有差异的，但更多的是相似点：
+
+堆堆是内存中最大的一个区域，被所有线程共享，存放绝大部分（比如经过逃逸分析后对象可以分配在栈上）的实例对象、数据。
+不同的实现堆的结构不同，CMS的结构为：
+
+对象（新的+老的）在各个区域之间的流转为：
+
+G1的结构为：">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/00.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/04.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/03.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/02.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/05.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/09.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/10.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/11.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/07.png">
+<meta property="og:updated_time" content="2020-06-03T08:08:28.541Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="虚拟机基础">
+<meta name="twitter:description" content="平时写的代码都跑在Java虚拟机上，了解运行机制能帮助我们写出更优质、健壮的代码，遇到问题也能解决（比如调参什么的）。
+内存布局不同版本的内存布局是有差异的，但更多的是相似点：
+
+堆堆是内存中最大的一个区域，被所有线程共享，存放绝大部分（比如经过逃逸分析后对象可以分配在栈上）的实例对象、数据。
+不同的实现堆的结构不同，CMS的结构为：
+
+对象（新的+老的）在各个区域之间的流转为：
+
+G1的结构为：">
+<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/00.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/16/jvm/"/>
+
+
+  <title> 虚拟机基础 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                虚拟机基础
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-16T11:39:57+08:00" content="2020-04-16">
+              2020-04-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/16/jvm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/16/jvm/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/16/jvm/" class="leancloud_visitors" data-flag-title="虚拟机基础">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>平时写的代码都跑在Java虚拟机上，了解运行机制能帮助我们写出更优质、健壮的代码，遇到问题也能解决（比如调参什么的）。</p>
+<h1 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h1><h2 id="布局"><a href="#布局" class="headerlink" title="布局"></a>布局</h2><p>不同版本的内存布局是有差异的，但更多的是相似点：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/00.png" alt=""></p>
+<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p>堆是内存中最大的一个区域，被所有线程共享，存放绝大部分（<font color="grey">比如经过逃逸分析后对象可以分配在栈上</font>）的实例对象、数据。</p>
+<p>不同的实现堆的结构不同，CMS的结构为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/04.png" alt=""></p>
+<p>对象（<font color="grey">新的+老的</font>）在各个区域之间的流转为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/03.png" alt=""></p>
+<p>G1的结构为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/02.jpg" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>堆内存被切割为固定大小的Region。</p>
+<p>每个Region会被标记E、S、O，分别对应Eden、Surivor和Old。Humongous用来存放大对象，比如超过50%的对象，对象超过Region需要找多个连续的Humongous来存放。</p>
+</blockquote>
+<p>相关的参数配置：</p>
+<ul>
+<li><code>-Xms</code>：堆初始值；</li>
+<li><code>-Xmx</code>：堆最大值；</li>
+<li><code>-Xmn</code>：年轻代大小；</li>
+<li><code>-XX:SurvivorRatio</code>：新生代中，Survivor和Eden的比例；</li>
+<li><code>-XX:NewRatio</code>：新生代与老年代的比例；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>最大值和初始值一般配置成一样，避免来回变影响性能。</p>
+</blockquote>
+<h3 id="直接内存（堆外内存）"><a href="#直接内存（堆外内存）" class="headerlink" title="直接内存（堆外内存）"></a>直接内存（堆外内存）</h3><p>Direct Memory并不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存区域。底层通过调用系统的malloc方法来分配：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">UNSAFE_ENTRY(jlong, Unsafe_AllocateMemory0(JNIEnv *env, jobject unsafe, jlong size)) &#123;</div><div class="line">    <span class="keyword">size_t</span> sz = (<span class="keyword">size_t</span>)size;</div><div class="line">    assert(is_aligned(sz, HeapWordSize), <span class="string">"sz not aligned"</span>);</div><div class="line">    <span class="keyword">void</span>* x = os::<span class="built_in">malloc</span>(sz, mtOther);</div><div class="line">    <span class="keyword">return</span> addr_to_java(x);</div><div class="line">&#125; UNSAFE_END</div></pre></td></tr></table></figure>
+<p>用直接内存的好处是：</p>
+<blockquote>
+<p>堆内数据在读IO的时候，需要先把数据复制到直接内存，再从直接内存复制到堆内，而堆外则没有第2步操作。</p>
+</blockquote>
+<p>风险是：</p>
+<blockquote>
+<p>Unsafe分配的直接内存完全自行管理。</p>
+<p>ByteBuffer分配的内存，在FullGC的时候才会回收堆外内存，如果FullGC一直没有被触发（比如对象还不够多）则可能导致OOM。</p>
+</blockquote>
+<p>ByteBuffer回收的实现方式是利用<font color="blue">虚引用在垃圾回收时触发释放</font>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Deallocator</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Unsafe unsafe = Unsafe.getUnsafe();</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">long</span> address;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">long</span> size;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> capacity;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Deallocator</span><span class="params">(<span class="keyword">long</span> address, <span class="keyword">long</span> size, <span class="keyword">int</span> capacity)</span> </span>&#123;</div><div class="line">        <span class="keyword">assert</span> (address != <span class="number">0</span>);</div><div class="line">        <span class="keyword">this</span>.address = address;</div><div class="line">        <span class="keyword">this</span>.size = size;</div><div class="line">        <span class="keyword">this</span>.capacity = capacity;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (address == <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        unsafe.freeMemory(address);</div><div class="line">        address = <span class="number">0</span>;</div><div class="line">        Bits.unreserveMemory(size, capacity);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>相关的控制System.gc的参数有：</p>
+<ul>
+<li><code>-XX:ExplicitGCInvokesConcurrent</code>：打开后System.gc执行并行的、后台FullGC，提升执行的效率（CMS时有用）；</li>
+<li><code>-XX:DisableExplicitGC</code>：是否允许System.gc触发GC；</li>
+</ul>
+<h3 id="虚拟机栈和本地方法栈"><a href="#虚拟机栈和本地方法栈" class="headerlink" title="虚拟机栈和本地方法栈"></a>虚拟机栈和本地方法栈</h3><p>本地方法栈为native方法服务，也会抛出StackOverflowError和OutOfMemoryError。虚拟机栈描述的是Java方法执行的内存模型，每个方法执行都会创建一个<font color="blue">栈帧</font>：</p>
+<ul>
+<li><code>局部变量表</code>：存放方法参数和局部变量，在class文件的Code属性的max_locals中确定了该方法需要分配的最大局部变量表的容量；</li>
+<li><code>操作数栈</code>：执行过程中通过指令提取和写入数据；</li>
+<li><code>动态连接</code>：指向该栈帧所属方法的引用；</li>
+<li><code>方法返回值</code>：存放结果，然后把结果压入上个栈帧（也就是调用方法）；</li>
+</ul>
+<h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>作用可以看作是当前线程所执行的字节码的行号，线程私有，占用的空间很少。</p>
+<h3 id="元空间"><a href="#元空间" class="headerlink" title="元空间"></a>元空间</h3><p>之前在永久代存放类、方法的元数据以及常量池。被移除的原因是：</p>
+<ul>
+<li>PremGen的内存经常溢出，管理方式不科学；</li>
+<li>促进与JRockit的融合；</li>
+</ul>
+<p>有元空间后的变化是：</p>
+<blockquote>
+<p>类的元数据放到元空间（本地堆内存）做更灵活的控制，字符串常量等移动到堆内。另外，垃圾回收器<font color="blue">针对类的特定做回收，更高效</font>。</p>
+</blockquote>
+<p>相关参数有：</p>
+<ul>
+<li><code>-XX:MetaspaceSize</code>：初始值；</li>
+<li><code>-XX:MaxMetaspaceSize</code>：最大值；</li>
+<li><code>-XX:MinMetaspaceFreeRatio</code>：在GC后空闲比太小会扩容；</li>
+<li><code>-XX:MaxMetaspaceFreeRatio</code>：在GC后空闲比太大会缩容；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>在出现问题是可以使用<code>-XX:TraceClassLoading -XX:TraceClassUnloading</code>来追中频繁加载和卸载的类信息。</p>
+</blockquote>
+<h3 id="代码缓存"><a href="#代码缓存" class="headerlink" title="代码缓存"></a>代码缓存</h3><p>存放字节码编译成的本地代码，基本都是给JIT用的。</p>
+<h2 id="回收"><a href="#回收" class="headerlink" title="回收"></a>回收</h2><p>由于不需要程序员自己释放内存，所以在JVM中需要对没有用的对象进行回收，从概念上分：</p>
+<ul>
+<li><code>Minor GC</code>：新生代；</li>
+<li><code>Major GC</code>：老年代 + 方法区等；</li>
+<li><code>Full GC</code>：全部回收一遍；</li>
+</ul>
+<p>通过引用计数来识别是否还在用<font color="blue">无法处理循环引用</font>的问题，另一种办法是判断可达性，GC ROOT有：</p>
+<ul>
+<li>栈；</li>
+<li>线程；</li>
+<li>系统类加载器加载的对象；</li>
+</ul>
+<p>另外，不同类型的引用在回收时候的表现也不同：</p>
+<ul>
+<li><code>强引用</code>：不能回收；</li>
+<li><code>软引用</code>：OOM之前回收；</li>
+<li><code>弱引用</code>：只要GC就回收；</li>
+<li><code>虚引用</code>：不影响回收，作用仅仅是在回收时能收到通知；</li>
+</ul>
+<h3 id="回收算法"><a href="#回收算法" class="headerlink" title="回收算法"></a>回收算法</h3><p>不同算法的区别主要体现在对空闲内存的处理：</p>
+<ul>
+<li><code>标记-清理</code>：标记并释放不可达的对象，还在用的对象位置不变；</li>
+<li><code>标记-整理</code>：标记并释放不可达的对象，把还在用的对象复制到一边，减少碎片；</li>
+<li><code>复制</code>：把还在用的对象复制到另一块区域，原区域释放；</li>
+<li><code>分代搜集</code>：大部分对象寿命都很短，存活时间长的进入老年代，这些对象大概率会活很久，混在一起增加了回收的压力；</li>
+</ul>
+<p>下面是基于这些算法的各种回收器（回收器间可以组合）：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/05.png" alt=""></p>
+<p>不能随意组合的原因是：</p>
+<blockquote>
+<p>在实现时使用的GC框架不同，比如CMS和ParallelNew都用分代式GC框架，而G1觉得不好用自己重新搞个框架。</p>
+</blockquote>
+<h3 id="ParallelNew"><a href="#ParallelNew" class="headerlink" title="ParallelNew"></a>ParallelNew</h3><p>Serial收集器是串行版的复制算法，而ParallelNew则是并行版本。虽然会有STW，但是应该很短。</p>
+<h3 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h3><p>处理步骤：</p>
+<ul>
+<li><code>初始标记(STW)</code>：标记GC ROOT的下级（仅一级）；<ul>
+<li><code>GC (CMS Initial Mark)</code></li>
+</ul>
+</li>
+<li><code>并发标记</code>：继续标记所有关联对象，多线程但耗时较长；<ul>
+<li><code>CMS-concurrent-mark</code>：遍历老年代并标记活的对象，如果遍历过的对象引用被用户线程修改，则标记为<font color="blue">Dirty Card</font>；</li>
+<li><code>CMS-concurrent-preclean</code>：遍历<font color="blue">Dirty Card</font>对象并清除标记；</li>
+<li><code>CMS-concurrent-abortable-preclean</code>：并发预清理；</li>
+</ul>
+</li>
+<li><code>重新标记(STW)</code>：前面已经尽量标记了，但是很可能还有漏网之鱼，对应日志的<code>GC (CMS Final Remark)</code>；<ul>
+<li><code>YG occupancy</code>：年轻代占用情况；</li>
+<li><code>Rescan (parallel)</code>：扫描对象用时；</li>
+<li><code>weak refs processing</code>：弱引用；</li>
+<li><code>class unloading</code>：卸载无用的类；</li>
+<li><code>scrub symbol table</code>：清理符号表；</li>
+<li><code>scrub string table</code>：清理字符串表；</li>
+</ul>
+</li>
+<li><code>并发清除</code><ul>
+<li><code>CMS-concurrent-sweep</code>：清除对象；</li>
+<li><code>CMS-concurrent-reset</code>：重置回收器的内部数据结构；</li>
+</ul>
+</li>
+</ul>
+<p>常用参数有：</p>
+<ul>
+<li><code>-XX:+UseConcMarkSweepGC</code>：使用CMS；</li>
+<li><code>-XX:CMSMaxAbortablePrecleanTime</code>：设置abortable-preclean阶段的时间；</li>
+<li><code>-XX:+CMSClassUnloadingEnabled</code>：删除不再使用的类；</li>
+<li><code>-XX:CMSInitiatingOccupancyFraction</code>：触发GC的内存使用阈值；</li>
+<li><code>-XX:+UseCMSInitiatingOccupancyOnly</code>：只用设置的触发阈值，不需要自动调整；</li>
+<li><code>-XX:+ExplicitGCInvokesConcurrent</code>：在System.gc时触发并行回收；</li>
+<li><code>-XX:ParallelGCThreads</code>：并行处理线程数；</li>
+</ul>
+<h3 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h3><p>与CMS的流程整体流程比较像，但是由于在不同的Region间做<font color="blue">标记-整理</font>，所以不会有那么多的碎片。</p>
+<h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><p>虚拟机规范定义内存模型（JMM）来屏蔽不同硬件、操作系统之间的内存访问差异，定义工作内存和主内存：</p>
+<ul>
+<li><code>锁定</code>：lock&amp;unlock锁定和释放主存变量；</li>
+<li><code>读</code>：主存变量 - read -&gt; 主存 -&gt; load -&gt; 工作内存变量 -&gt; use -&gt; 执行引擎；</li>
+<li><code>写</code>：执行引擎 - assign -&gt; 工作内存变量 -&gt; store -&gt; 主存 -&gt; write -&gt; 主存变量；</li>
+</ul>
+<p>操作规则：</p>
+<ul>
+<li>read和load、store和write不能单独出现；</li>
+<li>线程不能丢掉最后的assign操作，即工作内存改变后必须同步回主存；而如果没有assign操作则不允许工作内存同步到主存；</li>
+<li>变量只能在主存中诞生；</li>
+<li>变量同时只能被单个线程lock；</li>
+<li>lock会清空工作内存变量，即重新执行load或者assign操作；unlock会先执行store、write；</li>
+</ul>
+<p>经常用到volatile，不仅保证可见性，还可以<font color="blue">禁止指令重排</font>，重排的作用是：</p>
+<blockquote>
+<p>CPU流水线作业，指令在流水线上一起跑更快，所以从执行时间上看不一定是写在前面的写完成。</p>
+</blockquote>
+<p>禁止重排的操作方式是<font color="blue">内存屏障</font>，分别为：</p>
+<ul>
+<li><code>LoadLoad</code></li>
+<li><code>StoreStore</code></li>
+<li><code>LoadStore</code></li>
+<li><code>StoreLoad</code></li>
+</ul>
+<p>对volatile写操作如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/09.png" alt=""></p>
+<p>写volatile读操作如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/10.png" alt=""></p>
+<h1 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h1><p>所有方法调用在Class文件中都是符号引用，而不是方法在实际运行时内存入口地址。对于<font color="blue">运行期不可改变的</font>会在类加载的解析阶段将符号引用转换为直接应用：</p>
+<ul>
+<li>静态方法；</li>
+<li>构造器方法；</li>
+<li>私有方法；</li>
+<li>父类方法；</li>
+<li>final修饰的方法；</li>
+</ul>
+<p>和重载（<font color="grey">Overload：方法相同但是类型不同</font>）相关的是<font color="blue">静态分派</font>：</p>
+<blockquote>
+<p>编译时，根据参数定义的类型来确定调用方法（可能遇到类型升级、装箱、拆箱等等），即确定方法签名。</p>
+</blockquote>
+<p>和重写（<font color="grey">Override：子类覆盖父类的方法</font>）相关的是<font color="blue">动态分派</font>：</p>
+<blockquote>
+<p>运行时，根据调用方的类型沿着继承关系找到匹配的方法。</p>
+</blockquote>
+<h1 id="类和对象"><a href="#类和对象" class="headerlink" title="类和对象"></a>类和对象</h1><h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><p>在对象头中包含的信息有：</p>
+<ul>
+<li><code>哈希值</code></li>
+<li><code>类型</code></li>
+<li><code>锁</code></li>
+<li><code>垃圾回收</code></li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/11.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>在对象被锁定时，hashcode会被移动到别的地方，释放锁后再回来。</p>
+</blockquote>
+<h3 id="指针压缩"><a href="#指针压缩" class="headerlink" title="指针压缩"></a>指针压缩</h3><p>通过<code>+UseCompressedOops</code>开启指针压缩，可以减少通过4字节表示引用（而不是8字节），减少内存消耗：</p>
+<ul>
+<li>Class属性的指针</li>
+<li>对象属性的指针</li>
+<li>对象数组中每个元素的指针</li>
+</ul>
+<p>其他的如：指向元空间、栈等指针的并不会被压缩。</p>
+<h2 id="Class文件结构"><a href="#Class文件结构" class="headerlink" title="Class文件结构"></a>Class文件结构</h2><p>包含的内容有：</p>
+<ul>
+<li><code>magic</code>：魔数，用来判定文件是否为一个可接受的Class文件，一种常用的小技巧；</li>
+<li><code>minor_version</code>：次版本号；</li>
+<li><code>major_version</code>：主版本号；</li>
+<li><code>constant_pool_count&amp;constant_pool</code>：常量池；</li>
+<li><code>assess_flags</code>：访问标志，比如public、abstract、final等等；</li>
+<li><code>this_class</code>：类索引（指向常量池）；</li>
+<li><code>super_class</code>：父类索引；</li>
+<li><code>interfaces_count&amp;interfaces</code>：实现的接口的索引；</li>
+<li><code>fields_count&amp;fields</code>：字段集合；</li>
+<li><code>methods_count&amp;methods</code>：方法集合，字节码是方法表的属性中的一个属性；</li>
+<li><code>attributes_count&amp;attributes</code>：属性集合；</li>
+</ul>
+<h2 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h2><p>类的生命周期包含：</p>
+<ul>
+<li><code>加载</code>：获取二进制数据并创建Class对象；</li>
+<li><code>连接</code><ul>
+<li><code>验证</code>：判断是否符合虚拟机要求，包含：文件格式、元数据、字节码和符号引用；</li>
+<li><code>准备</code>：为类变量分配内存并设置初始值（零值，和初始化时的操作不同）；</li>
+<li><code>解析</code>：符号引用转换为直接引用；</li>
+</ul>
+</li>
+<li><code>初始化</code>：执行赋值动作和static{}块；父类优先于子类执行；<font color="blue">虚拟机通过加锁保证初始化过程的多线程安全</font>；</li>
+<li><code>使用</code>；</li>
+<li><code>卸载</code>；</li>
+</ul>
+<p>虚拟机规范严格规定<font color="blue">有且只有</font>四种情况必须立即对类进行<font color="blue">初始化</font>：</p>
+<ul>
+<li>遇到指令<code>new</code>、<code>getstatic</code>、<code>putstatic</code>、<code>invokestatic</code>指令；</li>
+<li>对类进行反射调用；</li>
+<li>初始化子类时，如果父类还没有初始化，则需要先触发父类初始化；</li>
+<li>虚拟机启动时的主类；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>通过子类引用父类定义的静态字段，会触发父类的初始化，而不会触发子类的初始化。</p>
+</blockquote>
+<p>类加载器不仅可以加载类，还可以隔离类：</p>
+<blockquote>
+<p>即使Class来自相同文件，只要ClassLoader不同，则equals、isAssignableFrom等返回false，像是namespace的作用。</p>
+</blockquote>
+<p>类加载器从JVM的角度来看有两种：</p>
+<ul>
+<li>启动类加载器（Bootstrap ClassLoader），由C++实现；</li>
+<li>其他；</li>
+</ul>
+<p>从程序员角度看有三种：</p>
+<ul>
+<li><code>启动类加载器（Bootstrap ClassLoader）</code>：加载JAVA_HOME/lib目录和-Xbootclasspath参数指定路径中的类；</li>
+<li><code>扩展类加载器（Extension ClassLoader）</code>：加载JAVA_HOME/lib/ext或java.ext.dirs系统变量指定路径中的类；</li>
+<li><code>应用程序类加载器（Application ClassLoader）</code>：加载classpath上的类；</li>
+</ul>
+<p>类加载器有层次结构（<font color="grey">没有层次结构就全乱套了</font>）：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/jvm/07.png" alt=""></p>
+<p><font color="blue">双亲委派模式</font>的玩法在图上也比较清楚：</p>
+<blockquote>
+<p>优先把加载请求交给父类加载器，只有父类加载器无法完成时才自己加载。</p>
+</blockquote>
+<p>而双亲委派并非强制，有些情况下确实不能遵循这种玩法，所以经常被打破，比如：</p>
+<ul>
+<li>JNDI通过线程上下文类加载器去加载需要的SPI代码时，是父类加载器请求子类加载器完成类加载操作；</li>
+<li>OSGI；</li>
+</ul>
+<h2 id="序列化TODO"><a href="#序列化TODO" class="headerlink" title="序列化TODO"></a>序列化TODO</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://juejin.im/post/5e0708baf265da33c34e495b" target="_blank" rel="external">精美图文带你掌握 JVM 内存布局</a></li>
+<li><a href="https://juejin.im/post/5cb48201f265da03b0515294" target="_blank" rel="external">Java直接内存原理</a></li>
+<li><a href="https://www.jianshu.com/p/16ad5b10582d" target="_blank" rel="external">依赖包滥用System.gc()导致的Full GC</a></li>
+<li><a href="https://juejin.im/post/5cb48201f265da03b0515294" target="_blank" rel="external">Java直接内存原理</a></li>
+<li><a href="https://www.cnblogs.com/duanxz/p/6089485.html" target="_blank" rel="external">Java堆外内存之三：堆外内存回收方法</a></li>
+<li><a href="https://www.cnblogs.com/duanxz/p/6089421.html" target="_blank" rel="external">Java堆外内存之六：堆外内存溢出问题排查</a></li>
+<li><a href="https://www.sczyh30.com/posts/Java/jvm-metaspace/" target="_blank" rel="external">深入探究 JVM | 探秘 Metaspace</a></li>
+<li><a href="https://www.cnblogs.com/duanxz/p/3520829.html" target="_blank" rel="external">Metaspace 之一：Metaspace整体介绍（永久代被替换原因、元空间特点、元空间内存查看分析方法）</a></li>
+<li><a href="http://lovestblog.cn/blog/2016/10/29/metaspace/" target="_blank" rel="external">JVM源码分析之Metaspace解密</a></li>
+<li><a href="https://ricstudio.top/archives/jvmgcknowledge#43--concurrent-mark-and-sweep-cms" target="_blank" rel="external">万字精美图文带你掌握JVM垃圾回收</a></li>
+<li><a href="https://www.jianshu.com/p/ba768d8e9fec" target="_blank" rel="external">理解CMS GC日志</a></li>
+<li><a href="https://www.cnblogs.com/ncy1/articles/9380046.html" target="_blank" rel="external">终于有人把Java内存模型说清楚了！</a></li>
+<li><a href="http://www.luyixian.cn/news_show_23746.aspx" target="_blank" rel="external">java内存模型之先行发生原则</a></li>
+<li><a href="https://www.jianshu.com/p/3d38cba67f8b" target="_blank" rel="external">Java对象头详解</a></li>
+</ol>
+<p><a href="https://juejin.im/post/5ed6f54e518825433a57bbb5" target="_blank" rel="external">https://juejin.im/post/5ed6f54e518825433a57bbb5</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jvm/" rel="tag">#jvm</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/13/computer-system-base/" rel="next" title="计算机体系基础">
+                <i class="fa fa-chevron-left"></i> 计算机体系基础
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/18/leetcode/" rel="prev" title="算法">
+                算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#内存"><span class="nav-number">1.</span> <span class="nav-text">内存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#布局"><span class="nav-number">1.1.</span> <span class="nav-text">布局</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#堆"><span class="nav-number">1.1.1.</span> <span class="nav-text">堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#直接内存（堆外内存）"><span class="nav-number">1.1.2.</span> <span class="nav-text">直接内存（堆外内存）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机栈和本地方法栈"><span class="nav-number">1.1.3.</span> <span class="nav-text">虚拟机栈和本地方法栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#程序计数器"><span class="nav-number">1.1.4.</span> <span class="nav-text">程序计数器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元空间"><span class="nav-number">1.1.5.</span> <span class="nav-text">元空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码缓存"><span class="nav-number">1.1.6.</span> <span class="nav-text">代码缓存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回收"><span class="nav-number">1.2.</span> <span class="nav-text">回收</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回收算法"><span class="nav-number">1.2.1.</span> <span class="nav-text">回收算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ParallelNew"><span class="nav-number">1.2.2.</span> <span class="nav-text">ParallelNew</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CMS"><span class="nav-number">1.2.3.</span> <span class="nav-text">CMS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#G1"><span class="nav-number">1.2.4.</span> <span class="nav-text">G1</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存模型"><span class="nav-number">1.3.</span> <span class="nav-text">内存模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行"><span class="nav-number">2.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类和对象"><span class="nav-number">3.</span> <span class="nav-text">类和对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对象"><span class="nav-number">3.1.</span> <span class="nav-text">对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#指针压缩"><span class="nav-number">3.1.1.</span> <span class="nav-text">指针压缩</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Class文件结构"><span class="nav-number">3.2.</span> <span class="nav-text">Class文件结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载机制"><span class="nav-number">3.3.</span> <span class="nav-text">类加载机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化TODO"><span class="nav-number">3.4.</span> <span class="nav-text">序列化TODO</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2020/04/16/jvm/';
+      var disqus_title = "虚拟机基础";
+      var disqus_url = 'http://yoursite.com/2020/04/16/jvm/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

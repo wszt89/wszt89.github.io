@@ -1,0 +1,1462 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="分布式," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="协议、算法和玩法2PC数据库的分布式事务貌似是利用二阶段协议来做的：
+
+准备阶段
+协调者发起事务；
+参与者根据协调者的信息判断，能做则写REDO和UNDO，但是不提交；不能做则返回；
+
+
+提交阶段
+协调者根据返回或超时，发起提交或回滚；
+参与者执行提交或回滚；
+
+
+
+如图：
+
+问题：
+
+协调者挂了，参与者没挂
+选出新的协调者，和所有的参与者做一次交互，就知道协调者挂之前的状态，不会导致不一致；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式基础">
+<meta property="og:url" content="http://yoursite.com/2020/04/28/distributed/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="协议、算法和玩法2PC数据库的分布式事务貌似是利用二阶段协议来做的：
+
+准备阶段
+协调者发起事务；
+参与者根据协调者的信息判断，能做则写REDO和UNDO，但是不提交；不能做则返回；
+
+
+提交阶段
+协调者根据返回或超时，发起提交或回滚；
+参与者执行提交或回滚；
+
+
+
+如图：
+
+问题：
+
+协调者挂了，参与者没挂
+选出新的协调者，和所有的参与者做一次交互，就知道协调者挂之前的状态，不会导致不一致；">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/00.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/01.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/02.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/03.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/04.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/05.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/06.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/07.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/16.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/15.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/09.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/25.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/22.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/23.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/24.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/11.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/13.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/12.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/14.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/17.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/19.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/20.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/21.png">
+<meta property="og:updated_time" content="2020-07-19T08:05:04.983Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分布式基础">
+<meta name="twitter:description" content="协议、算法和玩法2PC数据库的分布式事务貌似是利用二阶段协议来做的：
+
+准备阶段
+协调者发起事务；
+参与者根据协调者的信息判断，能做则写REDO和UNDO，但是不提交；不能做则返回；
+
+
+提交阶段
+协调者根据返回或超时，发起提交或回滚；
+参与者执行提交或回滚；
+
+
+
+如图：
+
+问题：
+
+协调者挂了，参与者没挂
+选出新的协调者，和所有的参与者做一次交互，就知道协调者挂之前的状态，不会导致不一致；">
+<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/00.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/28/distributed/"/>
+
+
+  <title> 分布式基础 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                分布式基础
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-28T21:04:48+08:00" content="2020-04-28">
+              2020-04-28
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/28/distributed/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/28/distributed/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/28/distributed/" class="leancloud_visitors" data-flag-title="分布式基础">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="协议、算法和玩法"><a href="#协议、算法和玩法" class="headerlink" title="协议、算法和玩法"></a>协议、算法和玩法</h1><h2 id="2PC"><a href="#2PC" class="headerlink" title="2PC"></a>2PC</h2><p>数据库的分布式事务貌似是利用二阶段协议来做的：</p>
+<ul>
+<li><code>准备阶段</code><ul>
+<li>协调者发起事务；</li>
+<li>参与者根据协调者的信息判断，能做则写REDO和UNDO，但是不提交；不能做则返回；</li>
+</ul>
+</li>
+<li><code>提交阶段</code><ul>
+<li>协调者根据返回或超时，发起提交或回滚；</li>
+<li>参与者执行提交或回滚；</li>
+</ul>
+</li>
+</ul>
+<p>如图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/00.png" alt=""></p>
+<p>问题：</p>
+<ul>
+<li><font color="green">协调者挂了，参与者没挂</font><ul>
+<li>选出新的协调者，和所有的参与者做一次交互，就知道协调者挂之前的状态，不会导致不一致；</li>
+</ul>
+</li>
+<li><font color="green">协调者没挂，参与者挂了</font><ul>
+<li>参与者恢复后能从协调者那里知道它该怎么做；</li>
+</ul>
+</li>
+<li><font color="red">协调者和参与者都挂了</font><ul>
+<li>如果在参与者收到了COMMIT或者ROLLBACK，则协调者可以知道状态；</li>
+<li>如果都没有收到，那么新的协调者无法知道应该怎么做，不管是COMMIT还是ROLLBACK都可能数据不一致；</li>
+</ul>
+</li>
+</ul>
+<h2 id="3PC"><a href="#3PC" class="headerlink" title="3PC"></a>3PC</h2><p>针对二阶段协议的问题，将其改进为三阶段协议，有点像InnoDB里面的DoubleWrite技术：</p>
+<ul>
+<li><code>CanCommit</code><ul>
+<li>协调者询问参与者是否可以执行事务；</li>
+<li>参与者根据自身情况回复YES或NO；</li>
+</ul>
+</li>
+<li><code>PreCommit</code><ul>
+<li>协调者没有全部收到YES，会通知执行ABORT；否则通知参与者预执行；</li>
+<li>参与者收到预执行则开始写REDO和UNDO，回复ACK；</li>
+</ul>
+</li>
+<li><code>DoCommit</code><ul>
+<li>协调者收到所有的ACK，通知所有参与者COMMIT，否则ROLLBACK；</li>
+<li>参与者执行对应指令；</li>
+</ul>
+</li>
+</ul>
+<p>如图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/01.png" alt=""></p>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>在协调者和参与者都挂掉以后，全部是PreCommit的话，貌似也不能完全确认正确的状态是什么，但是大概率是可以提交的。</p>
+<p>参与者一直没有收到DoCommit时，直接自己Commit，因为大概率是要Commit的。</p>
+</blockquote>
+<h2 id="PAXOS"><a href="#PAXOS" class="headerlink" title="PAXOS"></a>PAXOS</h2><p>只有一种分布式<font color="green">一致性算法</font>那就是PAXOS。</p>
+<h3 id="BASIC-PAXOS"><a href="#BASIC-PAXOS" class="headerlink" title="BASIC PAXOS"></a>BASIC PAXOS</h3><p>在没有协调者的情况下，更普遍、更直接、更通用的分布式问题是：</p>
+<blockquote>
+<p>在没有协调者、网络不稳定的情况下，集群如何就一个问题达成一致？</p>
+</blockquote>
+<p>机器和机器之间通过消息来通信，没有谁的消息就是正确的命令，于是需要考虑先解决两个问题：</p>
+<ul>
+<li><code>消息间的关系</code><ul>
+<li>如果消息之间没有任何关系，没有比较就没有逻辑的立足点；</li>
+<li>普适的关系人为构建偏序关系比大小（早晚），在确定机器数量后偏序关系非常容易构建；</li>
+</ul>
+</li>
+<li><code>唯一性</code><ul>
+<li>如果任何一个机器同意就认为达成一致，显然并不具备唯一性；</li>
+<li>如果全部机器都同意，又并不容易；</li>
+<li>折中的方案是过半的机器同意，那么就可以认为集群达成一致，类似选举投票过半就一定赢了；</li>
+</ul>
+</li>
+</ul>
+<p>考虑到过半（先）才被能通过（后），于是过程有点像2PC：</p>
+<ul>
+<li><code>准备阶段(P)</code>：Proposer询问所有的Acceptor是否可以给我投票；</li>
+<li><code>决议阶段(A)</code>：Proposer在收到超过一半的YES后，通知Acceptor已经OK了，开始执行吧；</li>
+</ul>
+<p>如图（白色为P阶段、其他颜色为A阶段）：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/02.png" alt=""></p>
+<p>虽然在Proposer做了逻辑判断，但是还是通过了多个结果，原因是Acceptor并没有做任何的校验、来者不拒。考虑到消息的关系：</p>
+<blockquote>
+<p>Acceptor只接受接收到的最小的消息，结果可能是没有达成任何结论，且无法继续。</p>
+</blockquote>
+<p>如图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/03.png" alt=""></p>
+<p>换个思路：</p>
+<blockquote>
+<p>Acceptor只承诺和接受更大的消息，这样可以循环起来。</p>
+<p>Proposer感知Acceptor达成一致的值：如果Acceptor会在承诺时告诉Proposer接受过最新的消息ID和值，Proposer收到所有的回复后从中挑出最新的，开始决议阶段。</p>
+</blockquote>
+<p>如图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/04.png" alt=""></p>
+<p>如果X已经被过半的Acceptor​接受，那么后续的过程中获取到过半的机器信息后一定有交集，于是能感知到之前集群的决定。总结下：</p>
+<blockquote>
+<p>消息只能比大小。</p>
+<p>Acceptor只能承诺或接受更大的。</p>
+<p>Proposer观察Acceptor的情况，只能提交之前可能已经被集群接受的。</p>
+</blockquote>
+<p>极端情况下可能出现活锁：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/05.png" alt=""></p>
+<p>根据上面的理解画个流程图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/06.png" alt=""></p>
+<h3 id="MULTI-PAXOS"><a href="#MULTI-PAXOS" class="headerlink" title="MULTI PAXOS"></a>MULTI PAXOS</h3><p>先来看BASIC PAXOS中的问题：</p>
+<blockquote>
+<p>可以支持多次更新吗？</p>
+<p>每次都一定需要两个阶段都来一趟吗，能不能省掉准备阶段直接提交？</p>
+</blockquote>
+<p>考虑在Proposer提交$(id=n,value=v_n)$成功后，继续提交$(id=n+1,value=v_{n+1})$会怎么样？</p>
+<ul>
+<li><code>更新成功</code>：如果Acceptor内部的数据没有变过，那么这次提交的内容是满足要求的；<font color="green">和重新走一次准备阶段达到的效果是一样的</font>；</li>
+<li><code>更新失败</code>：说明Acceptor处理过其他请求，需要重新从准备阶段开始；</li>
+</ul>
+<p>非常合理，可以看到同一时间有多个Proposer是会降低效率的，于是可以使用Paxos Lease来选举Leader（唯一的Proposer）：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/07.png" alt=""></p>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>在准备阶段，Acceptor返回了Value说明前面已经达成大多数，当前的Proposer可以放弃了。</p>
+<p>T2小于T1，Leader更稳定。</p>
+</blockquote>
+<h2 id="ZAB"><a href="#ZAB" class="headerlink" title="ZAB"></a>ZAB</h2><p>全称是Zookeeper Atomic（原子） Broadcast（广播），集群中的角色包含：</p>
+<ul>
+<li><code>Leader</code></li>
+<li><code>Follower</code></li>
+<li><code>Observer</code></li>
+</ul>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>实际分布式集群中都会有Leader，在乐观的情况下Leader是稳定的、操作是简单的；在悲观的情况下Leader挂掉以后才需要Paxos的玩法来选Leader。</p>
+</blockquote>
+<h3 id="选主"><a href="#选主" class="headerlink" title="选主"></a>选主</h3><p>集群中服务器状态有：</p>
+<ul>
+<li>不确定<ul>
+<li><code>LOOKING</code>：认为集群中没有Leader，准备发起选举；</li>
+<li><code>来源</code><ul>
+<li>新服务器加入；</li>
+<li>Follower没有收到Leader的心跳信息；</li>
+<li>Leader没有收到过半的Follower的心跳ACK信息；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>确定<ul>
+<li><code>FOLLOWING</code></li>
+<li><code>LEADING</code></li>
+<li><code>OBSERVING</code></li>
+</ul>
+</li>
+</ul>
+<p>服务器状态转换成LOOKING后开始选举（此时可能其他服务器状态是稳定的），选举时服务器广播消息，内容包含：</p>
+<ul>
+<li><code>myid</code>：服务器ID；</li>
+<li><code>epoch</code>：选举代数，每次选出Leader后增加；</li>
+<li><code>vote</code>：选举的服务器ID；</li>
+<li><code>zxid</code>：事务ID；</li>
+</ul>
+<p>服务器收到消息后，比较消息的epoch和本机的epoch，分不同情况来处理：</p>
+<ul>
+<li><code>小于</code>：消息可能是之前选举轮次的，因为延迟才刚刚收到，直接忽略；理解如果当前机器非LOOKING会将自己知道的信息回告；</li>
+<li><code>大于</code>：说明当前服务器轮次落后，清空投票箱并设置epoch，然后根据相等的逻辑来；</li>
+<li><code>等于</code>：根据事务ID和服务器ID进行比较，越大的越优秀，如果本机之前的投票没有消息中选举的优秀，那么更新本地投票，同时把本地的变更同步出去；</li>
+</ul>
+<p>举个例子：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/16.png" alt=""></p>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>集群保证zxid单调递增，高32位是Leader的epoch，低32位是epoch内的序号；每次选举出新Leader后<font color="green">epoch加一、序号重置</font>。</p>
+<p>数据新 =&gt; zxid越大 =&gt; 容易成为Leader。</p>
+<p>服务器投票箱内有足够的票时，说明有过半的服务器做个承诺，和Paxos第一阶段差不多。<font color="red">猜测</font>后面还需要一个确认阶段把epoch加上去才算完成。</p>
+<p>和Basic Paxos相比，每个服务器都在广播应该能更快地达成一致。</p>
+</blockquote>
+<h3 id="广播"><a href="#广播" class="headerlink" title="广播"></a>广播</h3><p>协议要保证数据持久性和顺序一致，写请求的整体流程为：</p>
+<ul>
+<li>Client向Leader发送请求，如果Client连接的是Follower，则Follower会转发给Leader；</li>
+<li>Leader向Follower发送Proposal；</li>
+<li>Follower收到Proposal后返回ACK信息；</li>
+<li>Leader收到超过半数的ACK信息后，发送Commit消息给Follower，同时返回Client；</li>
+</ul>
+<h2 id="RAFT-TODO"><a href="#RAFT-TODO" class="headerlink" title="RAFT[TODO]"></a>RAFT[TODO]</h2><p><a href="http://thesecretlivesofdata.com/raft/" target="_blank" rel="external">http://thesecretlivesofdata.com/raft/</a></p>
+<h2 id="租约机制-TODO"><a href="#租约机制-TODO" class="headerlink" title="租约机制[TODO]"></a>租约机制[TODO]</h2><h2 id="一致性哈希-TODO"><a href="#一致性哈希-TODO" class="headerlink" title="一致性哈希[TODO]"></a>一致性哈希[TODO]</h2><h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h2 id="zookeeper"><a href="#zookeeper" class="headerlink" title="zookeeper"></a>zookeeper</h2><p>在ZK中的数据按照树形结构管理，类似文件系统，数据节点分两种类型：</p>
+<ul>
+<li><code>Persist</code>：创建后不会消失，持久存在；</li>
+<li><code>Ephemeral</code>：创建节点的Client的Session结束时，节点自动被删除；临时节点不可以有子节点；</li>
+</ul>
+<p>创建节点的控制有：</p>
+<ul>
+<li><code>Non-sequence</code>：多个Client创建相同节点时，只有一个能创建成功；</li>
+<li><code>Sequence</code>：多个Client创建相同节点时，都能创建成功，只是序号不同；</li>
+</ul>
+<p>读写操作满足：</p>
+<ul>
+<li><code>顺序性</code></li>
+<li><code>原子性</code></li>
+<li><code>单一系统镜像</code></li>
+<li><code>可靠性</code></li>
+<li><code>最终一致性</code></li>
+</ul>
+<p>有了监听Watch机制就不需要一遍一遍得定时拉数据，浪费性能：</p>
+<ul>
+<li><code>特点</code><ul>
+<li><code>主动推送</code></li>
+<li><code>一次性</code></li>
+<li><code>可见性</code></li>
+<li><code>顺序性</code></li>
+</ul>
+</li>
+<li><code>注册</code><ul>
+<li><code>exists</code></li>
+<li><code>getChildren</code></li>
+<li><code>getData</code></li>
+</ul>
+</li>
+<li><code>触发</code><ul>
+<li><code>create</code></li>
+<li><code>delete</code></li>
+<li><code>setData</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>通知客户端后服务器就把Watcher删掉了，<font color="green">并不能保证客户端处理成功，如果想继续监听则需要重新注册</font>。</p>
+<p>客户端和服务器的心跳断开以后，客户端会和新的服务器建立连接，<font color="green">如果会话还没有过期则会重新注册之前的Watcher来监听（自动）</font>。</p>
+<p>在收到Watch通知到注册新Watch期间的变化是看不到的。</p>
+</blockquote>
+<p>可以使用ZK来做的事情有：</p>
+<ul>
+<li><code>分布式锁</code></li>
+<li><code>选主</code></li>
+<li><code>集群管理</code></li>
+<li><code>配置管理</code></li>
+</ul>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>分布式锁Non-sequence和Non-sequence来做。</p>
+<p>配合Watch机制可以完成选主和集群管理，也就是在Watch到Leader的变化后尝试加分布式锁。</p>
+</blockquote>
+<h2 id="flink-TODO"><a href="#flink-TODO" class="headerlink" title="flink[TODO]"></a>flink[TODO]</h2><p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/15.png" alt=""></p>
+<h2 id="kafka"><a href="#kafka" class="headerlink" title="kafka"></a>kafka</h2><p>用Scala实现的消息队列，可以用来做削峰、异步解耦等，整体如下：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/09.png" alt=""></p>
+<p>角色说明：</p>
+<ul>
+<li><code>Broker</code>：服务器；</li>
+<li><code>Topic</code>：主题；</li>
+<li><code>Partition</code>：分区，决定了性能；<ul>
+<li><code>存储(segment)</code>：分段保存方便删除，超过一定大小后创建新文件；同时，超过一定时间或者大小后，数据也会被删除；<ul>
+<li><code>xxx.log</code>：存放数据；</li>
+<li><code>xxx.index</code>：offset-&gt;position；不是每个消息都有索引，找到附近的直接遍历就行；</li>
+<li><code>xxx.timeindex</code>：timestamp-&gt;offsert；</li>
+</ul>
+</li>
+<li><code>复制(replicas)</code>：副本，提供更高的数据可靠性；<ul>
+<li><code>leader</code>：提供读写；</li>
+<li><code>follower</code>：仅仅备份，连读都不可以，维护ISR列表（与Leader延迟小于replica.lag.time.max.ms）；</li>
+</ul>
+</li>
+<li><code>分配Consumer策略</code>：一个Consumer可以处理多个Partition，一个Partition只能被一个Consumer处理；<ul>
+<li>循环；</li>
+<li>范围；</li>
+</ul>
+</li>
+<li><code>分配Broker策略</code><ul>
+<li><code>Leader</code>：$i \mod n$；</li>
+<li><code>Follower</code>：$(i + j) \mod n$；</li>
+</ul>
+</li>
+<li><code>选举</code><ul>
+<li><code>时机</code>：由Controller监听ZK变化来执行；<ul>
+<li>Leader下线；</li>
+<li>Broker主动下线；</li>
+<li>手动货自动触发最优Leader选举保证均衡；</li>
+</ul>
+</li>
+<li><code>策略</code>：找到数据最全的Follower作为新的Leader，比Majority Vote更高效；可以配置要求ISR必须要存活一个，否则失败；</li>
+</ul>
+</li>
+<li><code>状态</code><ul>
+<li><code>NonExistentPartition</code>：不存在；</li>
+<li><code>NewPartition</code>：新建，有对应的Replicas，但是还没有Leader和ISR；</li>
+<li><code>OnlinePartition</code>：有Leader，正常工作状态；</li>
+<li><code>OfflinePartition</code>：Leader挂了；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>Producer</code><ul>
+<li><code>发送策略</code><ul>
+<li><code>异步发送</code>：放到缓存池里面，异步刷出去（性能好，但是可能丢数据）；</li>
+<li><code>同步发送</code>：放到缓冲池里面，等刷出去再返回；</li>
+</ul>
+</li>
+<li><code>Commit策略</code>：acks；<ul>
+<li><code>0</code>：不需要等Broker返回信息，连续发送；</li>
+<li><code>1</code>：需要等Leader写成功；</li>
+<li><code>-1 or all</code>：需要ISR中有至少min.insync.replicas同步成功，性能比等全部写完好一点；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>Consumer</code><ul>
+<li><code>提交offset</code><ul>
+<li><code>自动提交</code>：enable.auto.commit =true<ul>
+<li>每隔auto.commit.interval.ms（5s）会自动提交接收到的最大的offset；</li>
+</ul>
+</li>
+<li><code>手动提交</code>：enable.auto.commit =false<ul>
+<li><code>同步提交(commitSync)</code>：失败后一直尝试直到成功；</li>
+<li><code>异步提交(commitAsync)</code>：失败后记录异常信息，后面可能有更新的offset；</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>Coordinator</code><ul>
+<li><code>关联Group</code>：Group找到对应的__consumer_offsets中Leader Partition所在的Broker，由Broker上的Coordinator管理；</li>
+<li><code>监测Consumer</code>：Consumer定时向Coordinator发送心跳消息，超时则认为互相有问题，执行操作：<ul>
+<li><code>Consumer</code>：开启Coordinator探测程序；</li>
+<li><code>Coordinator</code>：针对对应的Group开启Rebalance流程；</li>
+</ul>
+</li>
+<li><code>Rebalance</code><ul>
+<li><code>JoinGroup</code>：Consumer向Coordinator报道；</li>
+<li><code>选出Leader</code>：Coordinator按照一个规则选出Consumer Leader，然后分配规则由Consumer Leader来决定，这样<font color="red">把决策权就下放给用户</font>；</li>
+<li><code>SyncGroup</code>：Coordinator把结果同步给Consumer；</li>
+</ul>
+</li>
+<li><code>管理offset</code>：管理Topic-Partition的Offset，在Commit-Offset的时候修改；</li>
+</ul>
+</li>
+<li><code>Controller</code><ul>
+<li><code>职责</code><ul>
+<li><code>Broker上下线</code></li>
+<li><code>Topic创建和删除</code></li>
+<li><code>Partition Leader选举</code></li>
+</ul>
+</li>
+<li><code>选举</code><ul>
+<li><code>监听</code>：监听zk下的/controller（临时节点）下的数据变化，发生变化后查看如果存在数据则拉取最新数据，否则开始竞选；</li>
+<li><code>竞选</code>：向zk注册/controller，成功后变成Controller；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>Consumer Group</code><ul>
+<li><code>状态</code><ul>
+<li><code>Empty</code></li>
+<li><code>PreparingRebalance</code>：准备Rebalance；</li>
+<li><code>AwaitingSync</code></li>
+<li><code>Stable</code>：稳定态；</li>
+<li><code>Dead</code>：当Group对应的Leader Partition移走了会变为Dead，或者在Empty状态且Offset已经都没有了；</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>ZK上的状态：</p>
+<ul>
+<li><code>controller</code></li>
+<li><code>controller_epoch</code></li>
+<li><code>isr_change_notification</code>：ISR变动；</li>
+<li><code>admin</code><ul>
+<li><code>delete_topics</code>：删除Topic；</li>
+<li><code>reassign_partitions</code>：Partition迁移；</li>
+</ul>
+</li>
+<li><code>brokers</code><ul>
+<li><code>topics</code><ul>
+<li><code>my_topic_1</code><ul>
+<li><code>partitions</code><ul>
+<li><code>1</code><ul>
+<li><code>state</code>：Leader的BrokerId、ISR等；</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>__consumer_offsets</code></li>
+</ul>
+</li>
+<li><code>ids</code><ul>
+<li><code>1</code>：主机host、ip等；</li>
+<li><code>2</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="顺序"><a href="#顺序" class="headerlink" title="顺序"></a>顺序</h3><p>只能保证单个<code>Partition</code>中的顺序（局部顺序）。</p>
+<p>如果业务需要，可以根据业务字段把数据路由到单个的<code>Partition</code>，但是有可能导致数据不均衡。</p>
+<h3 id="容灾"><a href="#容灾" class="headerlink" title="容灾"></a>容灾</h3><p>数据在分区维度备份到不同的Broker上，在Broker挂掉后会重新选出分区的新Leader。</p>
+<h3 id="均衡"><a href="#均衡" class="headerlink" title="均衡"></a>均衡</h3><p>当Consumer发生变化时，有协调者和ConsumerLeader重新做均衡。</p>
+<h2 id="RocketMQ"><a href="#RocketMQ" class="headerlink" title="RocketMQ"></a>RocketMQ</h2><p>部署结构：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/25.png" alt=""></p>
+<p>存储结构：</p>
+<ul>
+<li><code>CommitLog</code>：存放消息主体，单个文件大小1GB；和Kafka的区别是<font color="red">混放不同Topic的数据</font>，目的<font color="red">减少写数据时的随机IO</font>；</li>
+<li><code>ConsumerQueue</code>：标记不同Topic的消息在CommitLog的偏移，包含：偏移+长度+标签哈希（这是不是有点像<font color="red">写扩散</font>）；</li>
+<li><code>IndexFile</code>：在磁盘上维护HashTable，支持时间范围和KEY查询；</li>
+</ul>
+<p>如图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/22.png" alt=""></p>
+<h3 id="顺序性"><a href="#顺序性" class="headerlink" title="顺序性"></a>顺序性</h3><p>非顺序消息，在Consumer轮询选择队列进行发送。</p>
+<p>顺序消息，在Consumer根据业务的逻辑和数据，选择特定的队列进行发送，<font color="red">同样是单队列有序</font>。</p>
+<h3 id="均衡-1"><a href="#均衡-1" class="headerlink" title="均衡"></a>均衡</h3><p>在Producer发送时：</p>
+<blockquote>
+<p>根据从Topic找到路由信息，随机、取模、过滤不可用后得到队列来发送。</p>
+</blockquote>
+<p>在Consumer消费时：</p>
+<blockquote>
+<p>每过20秒，随机选择一个主Broker，重新做平衡。</p>
+</blockquote>
+<h3 id="容灾-1"><a href="#容灾-1" class="headerlink" title="容灾"></a>容灾</h3><p>使用Raft协议同步CommitLog，当Master挂掉后自动选举。</p>
+<h3 id="事务消息"><a href="#事务消息" class="headerlink" title="事务消息"></a>事务消息</h3><p>问题：</p>
+<blockquote>
+<p><font color="red">发送消息和本地事务不一致</font>，可能消息发送成功了，但是本地事务失败了。</p>
+</blockquote>
+<p>消息状态：</p>
+<ul>
+<li><code>中间状态</code>：需要向Producer检查以确定状态；</li>
+<li><code>提交</code>：允许Consumer使用；</li>
+<li><code>回滚</code>：不允许Consumer使用；</li>
+</ul>
+<p>玩法：</p>
+<ul>
+<li>主流程：<ul>
+<li>发送消息（HALF）；</li>
+<li>服务器响应写入结果；</li>
+<li>如果写入成功，开始执行本地事务；</li>
+<li>根据本地事务状态进行COMMIT或者ROLLBACK；</li>
+</ul>
+</li>
+<li>补偿流程<ul>
+<li>针对没有COMMIT/ROLLBACK的消息，服务器进行回查；</li>
+<li>Producer收到回查消息，根据回查消息检查本地事务状态，重新做COMMIT/ROLLBACK；</li>
+</ul>
+</li>
+</ul>
+<p>原理：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/23.png" alt=""></p>
+<p>说明：</p>
+<blockquote>
+<p>HALF消息先写入内部TOPIC，在COMMIT/ROLLBACK时也写入内部队列（如果是COMMIT则把消息写到用户的TOPIC里面）。</p>
+<p>定时对比两个队列，找到没有COMMIT/ROLLBACK的消息进行回查。</p>
+</blockquote>
+<h3 id="延迟消息"><a href="#延迟消息" class="headerlink" title="延迟消息"></a>延迟消息</h3><p>问题：</p>
+<blockquote>
+<p>发送的消息在一定时间之后，才允许消费。</p>
+</blockquote>
+<p>原理：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/24.png" alt=""></p>
+<p>说明：</p>
+<blockquote>
+<p>替换TOPIC，将消息放到不同LEVEl的队列中：1s、5s、10s….。定时检查消息是否到期，如果到期，将消息插入到用户定义的TOPIC中。</p>
+</blockquote>
+<p>思考：</p>
+<blockquote>
+<p>管理时间跨度的常用方法是时间轮：将任务放到不同的格子里，根据时间顺序依次执行。针对时间跨度很大的可以用<font color="red">多层次的时间轮</font>。</p>
+</blockquote>
+<h2 id="dubbo"><a href="#dubbo" class="headerlink" title="dubbo"></a>dubbo</h2><p>轻量级、高性能的RPC框架，服务提供方在启动后注册到Registry，服务消费方启动后会从Registry查看是哪台机器提供了服务：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/11.png" alt=""></p>
+<p>在Registry使用Zookeeper时结构如下：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/13.png" alt=""></p>
+<p>服务提供方和消费方的流程为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/12.png" alt=""></p>
+<p>在Invoker调用具体实现的流程为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/14.png" alt=""></p>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>好像链路画的已经很清楚了，在需要调用时主要和分布式相关的就是LoadBalance吧。</p>
+</blockquote>
+<p>在Dubbo中没有使用Java的SPI机制，原因是：</p>
+<ul>
+<li>按需加载接口；</li>
+<li>增加AOP、IOC等特性；</li>
+</ul>
+<p>用法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">XXX xxx = ExtensionLoader.getExtensionLoader(XXX.class).getExtension(<span class="string">"name"</span>);</div></pre></td></tr></table></figure>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>使用<font color="green">@Adaptive</font>实现自适应扩展机制，原理是在发现注解后生成代理类，在代理类中根据参数的名字加载对应的扩展。</p>
+</blockquote>
+<h3 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h3><p>考虑调用失败时的处理策略：</p>
+<ul>
+<li>失败后自动调用其他服务器；</li>
+<li>快速失败；</li>
+<li>同时调用多个服务器；</li>
+</ul>
+<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>考虑一个服务有多个服务器，如何做到各个服务器的请求均衡：</p>
+<ul>
+<li>随机；</li>
+<li>均衡；</li>
+<li>优先调用速度快的服务器；</li>
+<li>一致性哈希：相同的参数优先发给相同的服务器；</li>
+</ul>
+<h3 id="熔断"><a href="#熔断" class="headerlink" title="熔断"></a>熔断</h3><p>当依赖的服务A变慢，如果存在大量到A的请求，那么线程池很快就会被打满，影响整体服务：</p>
+<ul>
+<li>消费端配置最大并发数；</li>
+<li>服务端配置最大线程数；</li>
+<li>通过信号量和线程池来进行隔离；</li>
+<li>超时后调用FALLBACK降级逻辑；</li>
+</ul>
+<h1 id="ServiceMesh"><a href="#ServiceMesh" class="headerlink" title="ServiceMesh"></a>ServiceMesh</h1><p>现在靠SpringCloud或者Dubbo等框架和工具，可以方便的构建微服务：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/17.png" alt=""></p>
+<p>问题在于：</p>
+<ul>
+<li>开发需要掌握各种各样复杂的框架；</li>
+<li>仅支持几种语言；</li>
+<li>框架的升级、兼容等；</li>
+</ul>
+<p>而Service Mesh（服务网格）的目标是<font color="green">解决服务间通信的基础设施</font>。Sidecar模式（边车模式）的架构为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/19.png" alt=""></p>
+<p>网络通信：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/20.png" alt=""></p>
+<p>相关软件Istio和Linkerd都可以k8s中直接集成。</p>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>做到对应用程序无侵入、独立部署，真正地只关注业务逻辑，但是相比Dubbo方案通信的链路更长。</p>
+</blockquote>
+<p>最后补一个云原生（Cloud Native）的图，在习惯的工具上待久了快变成落后时代的人了：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/distributed/21.png" alt=""></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://www.cnblogs.com/bangerlee/p/5268485.html" target="_blank" rel="external">分布式系统理论基础 - 一致性、2PC和3PC</a></li>
+<li><a href="https://www.cnblogs.com/bangerlee/p/5991417.html" target="_blank" rel="external">分布式系统理论进阶 - Raft、Zab</a></li>
+<li><a href="https://www.jianshu.com/p/dd6a340e50b2" target="_blank" rel="external">2PC&amp;&amp;3PC</a></li>
+<li><a href="https://www.cnblogs.com/foxmailed/category/549643.html" target="_blank" rel="external">随笔分类 - 一致性协议</a></li>
+<li>Kafka<ol>
+<li><a href="http://www.jasongj.com/categories/Kafka/" target="_blank" rel="external">Kafka目录</a>：版本老，能看到整个体系和玩法；</li>
+<li><a href="https://blog.csdn.net/wangqyoho/category_6707190.html" target="_blank" rel="external">Kafka目录</a>：总结的不错；</li>
+<li><a href="https://matt33.com/tags/kafka/" target="_blank" rel="external">Kafka目录</a>：有代码细节；</li>
+<li><a href="https://juejin.im/post/5d550c426fb9a06b297545e8#heading-1" target="_blank" rel="external">Kafka 原理和实战</a>：全面的介绍；</li>
+<li><a href="https://zhuanlan.zhihu.com/p/79579389" target="_blank" rel="external">Kafka史上最详细原理总结</a>：全面总结，有问题介绍；</li>
+<li><a href="https://blog.csdn.net/u013256816/article/details/80697456" target="_blank" rel="external">Kafka解惑之时间轮（TimingWheel）</a></li>
+</ol>
+</li>
+<li>Dubbo<ol>
+<li><a href="http://dubbo.apache.org/zh-cn/docs/dev/design.html" target="_blank" rel="external">Dubbo官方文档</a>：非常全面且详细；</li>
+<li><a href="https://my.oschina.net/zhangxufeng/blog/3058009" target="_blank" rel="external">Dubbo Adaptive机制详解</a>：自适应扩展的例子和原理；</li>
+</ol>
+</li>
+<li>Flink<ol>
+<li><a href="http://wuchong.me/blog/2016/05/03/flink-internals-overview/" target="_blank" rel="external">Flink 原理与实现：架构和拓扑概览</a></li>
+</ol>
+</li>
+<li>Zookeeper<ol>
+<li><a href="http://www.jasongj.com/zookeeper/fastleaderelection/" target="_blank" rel="external">深入浅出Zookeeper（一） Zookeeper架构及FastLeaderElection机制</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1015454" target="_blank" rel="external">Zookeeper之Watcher监听事件丢失分析</a></li>
+<li><a href="https://ningg.top/zookeeper-lesson-6-zookeeper-watcher/" target="_blank" rel="external">ZooKeeper 技术内幕：watcher 监视点</a></li>
+</ol>
+</li>
+<li>ZAB</li>
+<li>RocketMQ<ol>
+<li><a href="https://github.com/apache/rocketmq/blob/master/docs/cn/design.md?spm=ata.13261165.0.0.2f3375a0ZvGNuM&amp;file=design.md" target="_blank" rel="external">官方文档</a></li>
+<li><a href="http://blog.itpub.net/31556438/viewspace-2649246/" target="_blank" rel="external">分布式事务利器——RocketMQ事务消息的启示</a></li>
+<li><a href="https://mp.weixin.qq.com/s/nupi5D0RFE6hbaOyYW0EJw" target="_blank" rel="external">你应该知道的RocketMQ</a></li>
+</ol>
+</li>
+<li>PAXOS<ol>
+<li><a href="https://zhuanlan.zhihu.com/p/23811020" target="_blank" rel="external">使用Paxos前的八大问题</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/42912831" target="_blank" rel="external">共识算法 之 Multi-Paxos（一）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/45742830" target="_blank" rel="external">共识算法 之 Multi-Paxos（二）</a></li>
+<li><a href="https://www.cnblogs.com/foxmailed/p/5487533.html" target="_blank" rel="external">使用multi-paxos实现日志同步应用</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzAwMDU1MTE1OQ==&amp;mid=403582309&amp;idx=1&amp;sn=80c006f4e84a8af35dc8e9654f018ace&amp;3rd=MzA3MDU4NTYzMw==&amp;scene=6#rd" target="_blank" rel="external">架构师需要了解的Paxos原理、历程及实战</a></li>
+<li><a href="http://oceanbase.org.cn/?p=111" target="_blank" rel="external">[Paxos三部曲之二] 使用Multi-Paxos协议的日志同步与恢复</a></li>
+<li><a href="http://oceanbase.org.cn/?p=90" target="_blank" rel="external">[Paxos三部曲之一] 使用Basic-Paxos协议的日志同步与恢复</a></li>
+<li><a href="https://my.oschina.net/liangtee/blog/304779" target="_blank" rel="external">Multi Paxos：Basic Paxos的进化</a></li>
+<li><a href="https://liu-jianhao.github.io/2019/05/paxosmulti-paxos%E8%AF%A6%E8%A7%A3/" target="_blank" rel="external">paxosmulti-paxos详解</a></li>
+<li><a href="https://www.bilibili.com/video/av36556594?from=search&amp;seid=15314801214271624197" target="_blank" rel="external">PAXOS视频</a></li>
+<li><a href="https://www.cnblogs.com/bangerlee/p/5655754.html" target="_blank" rel="external">分布式系统理论进阶 - Paxos</a></li>
+</ol>
+</li>
+<li>Service Mesh<ol>
+<li><a href="https://zhuanlan.zhihu.com/p/61901608" target="_blank" rel="external">什么是Service Mesh</a></li>
+<li><a href="https://serverless.ink/#serverless-架构应用开发指南" target="_blank" rel="external">https://serverless.ink/#serverless-%E6%9E%B6%E6%9E%84%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97</a></li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/分布式/" rel="tag">#分布式</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/22/redis/" rel="next" title="REDIS">
+                <i class="fa fa-chevron-left"></i> REDIS
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/biz-sys/" rel="prev" title="业务系统设计">
+                业务系统设计 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#协议、算法和玩法"><span class="nav-number">1.</span> <span class="nav-text">协议、算法和玩法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2PC"><span class="nav-number">1.1.</span> <span class="nav-text">2PC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3PC"><span class="nav-number">1.2.</span> <span class="nav-text">3PC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PAXOS"><span class="nav-number">1.3.</span> <span class="nav-text">PAXOS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BASIC-PAXOS"><span class="nav-number">1.3.1.</span> <span class="nav-text">BASIC PAXOS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MULTI-PAXOS"><span class="nav-number">1.3.2.</span> <span class="nav-text">MULTI PAXOS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ZAB"><span class="nav-number">1.4.</span> <span class="nav-text">ZAB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#选主"><span class="nav-number">1.4.1.</span> <span class="nav-text">选主</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#广播"><span class="nav-number">1.4.2.</span> <span class="nav-text">广播</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAFT-TODO"><span class="nav-number">1.5.</span> <span class="nav-text">RAFT[TODO]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#租约机制-TODO"><span class="nav-number">1.6.</span> <span class="nav-text">租约机制[TODO]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一致性哈希-TODO"><span class="nav-number">1.7.</span> <span class="nav-text">一致性哈希[TODO]</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工具"><span class="nav-number">2.</span> <span class="nav-text">工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#zookeeper"><span class="nav-number">2.1.</span> <span class="nav-text">zookeeper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flink-TODO"><span class="nav-number">2.2.</span> <span class="nav-text">flink[TODO]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka"><span class="nav-number">2.3.</span> <span class="nav-text">kafka</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#顺序"><span class="nav-number">2.3.1.</span> <span class="nav-text">顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容灾"><span class="nav-number">2.3.2.</span> <span class="nav-text">容灾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#均衡"><span class="nav-number">2.3.3.</span> <span class="nav-text">均衡</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RocketMQ"><span class="nav-number">2.4.</span> <span class="nav-text">RocketMQ</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#顺序性"><span class="nav-number">2.4.1.</span> <span class="nav-text">顺序性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#均衡-1"><span class="nav-number">2.4.2.</span> <span class="nav-text">均衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容灾-1"><span class="nav-number">2.4.3.</span> <span class="nav-text">容灾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务消息"><span class="nav-number">2.4.4.</span> <span class="nav-text">事务消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#延迟消息"><span class="nav-number">2.4.5.</span> <span class="nav-text">延迟消息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dubbo"><span class="nav-number">2.5.</span> <span class="nav-text">dubbo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#容错"><span class="nav-number">2.5.1.</span> <span class="nav-text">容错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#负载均衡"><span class="nav-number">2.5.2.</span> <span class="nav-text">负载均衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#熔断"><span class="nav-number">2.5.3.</span> <span class="nav-text">熔断</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ServiceMesh"><span class="nav-number">3.</span> <span class="nav-text">ServiceMesh</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2020/04/28/distributed/';
+      var disqus_title = "分布式基础";
+      var disqus_url = 'http://yoursite.com/2020/04/28/distributed/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

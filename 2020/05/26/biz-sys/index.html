@@ -1,0 +1,1089 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="设计,业务," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="基于关系的FEED流场景：
+
+朋友圈
+微博
+
+操作：
+
+关注、取消关注
+发布
+查看
+
+模型：
+
+用户
+关系
+发布内容
+Inbox/Outbox
+
+在系统设计时需要考虑的因素有：
+
+是否存在热点用户
+排序规则
+是否在信息流中展示广告、推广等非关注的内容
+
+拉模式在请求数据时基于关系找到公共账号发布的内容并进行合并排序，将结果返回：
+
+优点：
+
+发布内容非常轻；
+天然考虑了关注关系的变化；
+
+缺点：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="业务系统设计">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/biz-sys/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="基于关系的FEED流场景：
+
+朋友圈
+微博
+
+操作：
+
+关注、取消关注
+发布
+查看
+
+模型：
+
+用户
+关系
+发布内容
+Inbox/Outbox
+
+在系统设计时需要考虑的因素有：
+
+是否存在热点用户
+排序规则
+是否在信息流中展示广告、推广等非关注的内容
+
+拉模式在请求数据时基于关系找到公共账号发布的内容并进行合并排序，将结果返回：
+
+优点：
+
+发布内容非常轻；
+天然考虑了关注关系的变化；
+
+缺点：">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/biz-sys/00.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/biz-sys/01.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/biz-sys/04.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/biz-sys/03.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/biz-sys/05.png">
+<meta property="og:updated_time" content="2020-06-04T09:29:49.017Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="业务系统设计">
+<meta name="twitter:description" content="基于关系的FEED流场景：
+
+朋友圈
+微博
+
+操作：
+
+关注、取消关注
+发布
+查看
+
+模型：
+
+用户
+关系
+发布内容
+Inbox/Outbox
+
+在系统设计时需要考虑的因素有：
+
+是否存在热点用户
+排序规则
+是否在信息流中展示广告、推广等非关注的内容
+
+拉模式在请求数据时基于关系找到公共账号发布的内容并进行合并排序，将结果返回：
+
+优点：
+
+发布内容非常轻；
+天然考虑了关注关系的变化；
+
+缺点：">
+<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/biz-sys/00.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/biz-sys/"/>
+
+
+  <title> 业务系统设计 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                业务系统设计
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-05-26T23:19:33+08:00" content="2020-05-26">
+              2020-05-26
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/系统设计/" itemprop="url" rel="index">
+                    <span itemprop="name">系统设计</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/05/26/biz-sys/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/05/26/biz-sys/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/05/26/biz-sys/" class="leancloud_visitors" data-flag-title="业务系统设计">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="基于关系的FEED流"><a href="#基于关系的FEED流" class="headerlink" title="基于关系的FEED流"></a>基于关系的FEED流</h1><p>场景：</p>
+<ul>
+<li><code>朋友圈</code></li>
+<li><code>微博</code></li>
+</ul>
+<p>操作：</p>
+<ul>
+<li><code>关注、取消关注</code></li>
+<li><code>发布</code></li>
+<li><code>查看</code></li>
+</ul>
+<p>模型：</p>
+<ul>
+<li><code>用户</code></li>
+<li><code>关系</code></li>
+<li><code>发布内容</code></li>
+<li><code>Inbox/Outbox</code></li>
+</ul>
+<p>在系统设计时需要考虑的因素有：</p>
+<ul>
+<li>是否存在热点用户</li>
+<li>排序规则</li>
+<li>是否在信息流中展示广告、推广等非关注的内容</li>
+</ul>
+<h2 id="拉模式"><a href="#拉模式" class="headerlink" title="拉模式"></a>拉模式</h2><p>在请求数据时基于关系找到公共账号发布的内容并进行合并排序，将结果返回：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/biz-sys/00.png" alt=""></p>
+<p>优点：</p>
+<ul>
+<li>发布内容非常轻；</li>
+<li>天然考虑了关注关系的变化；</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>读取会比较重，且每次从单个关注者那里拉到的数据只能用一部分；</li>
+<li>不方便插入个性化广告；</li>
+</ul>
+<h2 id="推模式"><a href="#推模式" class="headerlink" title="推模式"></a>推模式</h2><p>在发布内容时，异步将数据刷入粉丝的列表中：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/biz-sys/01.png" alt=""></p>
+<p>优点：</p>
+<ul>
+<li>读取操作非常轻，对于<font color="red">读多写少</font>的系统来说还是非常友好的；</li>
+<li>适合灵活地给指定用户推送内容和广告；</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>写操作重，如果大V用推的模式可能扛不住；</li>
+<li>关注、取消关注、权限设置需要单独考虑，在拿到数据后需要单独过滤；</li>
+</ul>
+<h2 id="推拉结合模式"><a href="#推拉结合模式" class="headerlink" title="推拉结合模式"></a>推拉结合模式</h2><p>考虑推、拉在不同条件下的优缺点，可以综合来使用：</p>
+<ul>
+<li>粉丝少的账号，使用推模式；</li>
+<li>粉丝多的账号，使用拉模式；</li>
+<li>广告，使用推模式：给每个用户设置一个收件箱，在拉的时候把关注列表和收件箱合并就行；</li>
+</ul>
+<h1 id="库存"><a href="#库存" class="headerlink" title="库存"></a>库存</h1><p>场景：</p>
+<ul>
+<li><code>交易</code></li>
+<li><code>秒杀</code></li>
+<li><code>进销存</code></li>
+</ul>
+<p>操作：</p>
+<ul>
+<li><code>增加</code></li>
+<li><code>扣减</code></li>
+<li><code>占用</code></li>
+</ul>
+<p>模型：</p>
+<ul>
+<li><code>库存</code></li>
+<li><code>核销</code></li>
+</ul>
+<p>需要考虑的因素：</p>
+<blockquote>
+<p>本质上来看，库存是一个要求<font color="red">重更新、强一致</font>的系统。从业务角度看，保证一致的原则在于需要有自己业务模型和校验逻辑，也就是核销。</p>
+<p>从系统角度看，更新操作最担心的是数据库<font color="red">热点和锁</font>。</p>
+</blockquote>
+<h2 id="多明细"><a href="#多明细" class="headerlink" title="多明细"></a>多明细</h2><p>不同的订单之间有相同的SKU时，那么对应的SKU记录其实只需要更新一次即可：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/biz-sys/04.png" alt=""></p>
+<p><strong>思考</strong>：</p>
+<blockquote>
+<p>数据库要做的是能处理好大部分的场景，个性的场景需要考虑在<font color="red">业务层做优化</font>，有点像MySQL嫌弃OS的感觉。不能一直纠结如何让大事务跑的快一点，而是应该想如何<font color="red">干掉大事务</font>（是必须的吗）。</p>
+<p>现在流行的应用都是无状态的，服务无状态是没问题，但是针对一些特殊的场景，要有勇气、有能力做成有状态的应用。</p>
+<p>在大模式上有两种玩法：</p>
+<ul>
+<li>轮询</li>
+<li>事件驱动</li>
+</ul>
+<p>轮询的问题在于有不少空查询，尽量是事件驱动。比如占用完成的回告可以通过监听数据库的Binlog（内部有精卫）来实现。</p>
+</blockquote>
+<h2 id="秒杀"><a href="#秒杀" class="headerlink" title="秒杀"></a>秒杀</h2><p>典型的热点场景，针对写操作大概有三个思路：</p>
+<ul>
+<li><code>缓存扣减</code>：在活动前把数据里面的库存放到缓存上面，在用户操作扣减缓存成功后判断扣减DB；需要有机制异步比较数据库和REDIS的数据一致性；</li>
+<li><code>缓存多KEY扣减</code>：把100的库存分到REDIS集群中不同的服务器，分别为50，提升写性能；</li>
+<li><code>批量扣减</code>：在需要操作DB时，每次扣减2个，这次使用一个，另一个等下一个请求使用；服务器拿着的数量在100MS内没有被使用则自动释放；</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/biz-sys/03.png" alt=""></p>
+<p><strong>思考</strong>：</p>
+<blockquote>
+<p>业务上可以做答题、验证码等，高峰期时间被<font color="red">拉长</font>，同时防止了秒杀器。高峰期设置一定的概率失败，失败后前端控制延迟重试，同时针对单个用户设置重试次数限制。</p>
+<p>在服务器上做<font color="red">LocalCache</font>（定时失效），如果是静态的可以考虑放CDN。</p>
+<p>从整体上来看，最好是把秒杀和其他的业务进行隔离。如果能<font color="red">自动识别热点</font>让其走到专有的逻辑，能更好地保护系统。</p>
+</blockquote>
+<h1 id="个性化推荐"><a href="#个性化推荐" class="headerlink" title="个性化推荐"></a>个性化推荐</h1><p>有点像基于聚类的协同过滤：</p>
+<ul>
+<li>使用几个维度来描述一个用户：年龄、性别等；</li>
+<li>根据已有用户，计算各个维度组合的账号列表，选取TOP N（活跃性、内容质量等等），每天计算回流到数据库；</li>
+<li>在新用户登录后，根据用户身上的维度拉取账号列表，推荐给用户进行关注；</li>
+</ul>
+<p>效果比运营手动写的营销号好一些，而且能选出一些粉丝不是特别多，但是还比较匹配的账号。</p>
+<h1 id="评论反垃圾"><a href="#评论反垃圾" class="headerlink" title="评论反垃圾"></a>评论反垃圾</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><ul>
+<li>手淘的内容刚起步阶段。</li>
+<li>在产品运营得有点起色阶段，开始被人盯上在评论里面发广告。</li>
+</ul>
+<h2 id="目标和价值"><a href="#目标和价值" class="headerlink" title="目标和价值"></a>目标和价值</h2><ul>
+<li>维护产品的氛围和质量，提升用户的体验。</li>
+</ul>
+<h2 id="难点"><a href="#难点" class="headerlink" title="难点"></a>难点</h2><ul>
+<li>用户会自动摸索出来规则，改变发的内容。</li>
+</ul>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><ul>
+<li>内容会经常变，但是行为是稳定的</li>
+<li>在缓存中维护用户最近一段时间的行为数据<ul>
+<li>发送频率</li>
+<li>相似度</li>
+<li>词库</li>
+<li>空格比例</li>
+</ul>
+</li>
+<li>收集几百条标注样本，通过LIBSVM训练模型，基本没有误杀，能杀掉超过90%的垃圾评论；</li>
+<li>发送垃圾评论的人始终可以看到垃圾评论，减慢他们改变的速度</li>
+</ul>
+<h1 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h1><p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/biz-sys/05.png" alt=""></p>
+<h2 id="背景-1"><a href="#背景-1" class="headerlink" title="背景"></a>背景</h2><ul>
+<li>菜鸟WMS从16年开始尝试自动化，大概做了两年的时间。</li>
+<li>没有带来业务上的价值，更像是一个玩具，主要的工作是实现从云端能下指令让设备动起来。</li>
+</ul>
+<h2 id="目标和价值-1"><a href="#目标和价值-1" class="headerlink" title="目标和价值"></a>目标和价值</h2><ul>
+<li>使用设备实现降本提效。</li>
+<li>实现物流的自动化和智能化，探索未来物流模式。</li>
+</ul>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
+<li>资源管理<ul>
+<li>对设备、库位进行精细化的管理。</li>
+<li>拓扑图。</li>
+<li>仓储系统按照仓库来隔离，我们在建模的时候考虑资源对不同业务方的共享，目的是提升设备的利用率。</li>
+</ul>
+</li>
+<li>任务驱动<ul>
+<li>根据业务任务描述，系统基于成本、风险、效率来规划执行路线，并驱动设备依次执行。</li>
+</ul>
+</li>
+</ul>
+<h2 id="难点-1"><a href="#难点-1" class="headerlink" title="难点"></a>难点</h2><ul>
+<li>完整的产品搭建和逐步的迭代<ul>
+<li>分析现有的系统和产品，协调算法、运营、产品、技术把产品落地，并得到大家的认可，开始在大促也有一定的影响力</li>
+<li>设计产品、模型和系统</li>
+<li>迭代，支持更多的场景和设备</li>
+<li>在如何计算最合适的作业链路、最大化设备的效率上拿到结果</li>
+</ul>
+</li>
+<li>新模式的探索<ul>
+<li>共享模式</li>
+<li>任务模式：仓库管理像是一个IT系统，而自动化场景里面更像是一个智能系统，库工在整个系统中也是可被调度的资源</li>
+</ul>
+</li>
+<li>技术<ul>
+<li>实操没有很高的并发量，但是在做决策的时候会需要更多数据，同时执行的任务会相互影响</li>
+<li>还需要考虑任务对资源的竞争</li>
+<li>把不同仓的调度分发到不同的服务器上，期间通过心跳感知服务器状态；在服务器内存中保存全量的数据，针对单个仓使用单线程来做计算</li>
+<li>通过仿真来验证优化的效果，在内存中十几秒可以模拟一整天的作业情况，实现了算法的快速迭代</li>
+</ul>
+</li>
+</ul>
+<h1 id="集货流程"><a href="#集货流程" class="headerlink" title="集货流程"></a>集货流程</h1><h2 id="背景-2"><a href="#背景-2" class="headerlink" title="背景"></a>背景</h2><ul>
+<li>之前建设的都是toc的流程，还没有tob的流程，但是tob的业务量已经发展起来了。</li>
+<li>需要从整个链路上考虑如何串起来的。</li>
+</ul>
+<h2 id="目标和价值-2"><a href="#目标和价值-2" class="headerlink" title="目标和价值"></a>目标和价值</h2><ul>
+<li>提升做tob作业的效率，实际超过100%，一个tob的发货量超过了其他所有的toc仓加起来。</li>
+<li>在做业务的过程中搭系统，做抽象：开始落地了任务模型，把SKU从起点到终点，现在也是仓储系统的核心领域，好处是操作的复用。</li>
+</ul>
+<h2 id="项目难点"><a href="#项目难点" class="headerlink" title="项目难点"></a>项目难点</h2><ul>
+<li>目标明确。</li>
+<li>进度、风险、依赖管理。</li>
+<li>沟通。</li>
+<li>透明。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/设计/" rel="tag">#设计</a>
+          
+            <a href="/tags/业务/" rel="tag">#业务</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/28/distributed/" rel="next" title="分布式基础">
+                <i class="fa fa-chevron-left"></i> 分布式基础
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基于关系的FEED流"><span class="nav-number">1.</span> <span class="nav-text">基于关系的FEED流</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#拉模式"><span class="nav-number">1.1.</span> <span class="nav-text">拉模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#推模式"><span class="nav-number">1.2.</span> <span class="nav-text">推模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#推拉结合模式"><span class="nav-number">1.3.</span> <span class="nav-text">推拉结合模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#库存"><span class="nav-number">2.</span> <span class="nav-text">库存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#多明细"><span class="nav-number">2.1.</span> <span class="nav-text">多明细</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#秒杀"><span class="nav-number">2.2.</span> <span class="nav-text">秒杀</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#个性化推荐"><span class="nav-number">3.</span> <span class="nav-text">个性化推荐</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#评论反垃圾"><span class="nav-number">4.</span> <span class="nav-text">评论反垃圾</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">4.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标和价值"><span class="nav-number">4.2.</span> <span class="nav-text">目标和价值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#难点"><span class="nav-number">4.3.</span> <span class="nav-text">难点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案"><span class="nav-number">4.4.</span> <span class="nav-text">方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#任务"><span class="nav-number">5.</span> <span class="nav-text">任务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景-1"><span class="nav-number">5.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标和价值-1"><span class="nav-number">5.2.</span> <span class="nav-text">目标和价值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">5.3.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#难点-1"><span class="nav-number">5.4.</span> <span class="nav-text">难点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集货流程"><span class="nav-number">6.</span> <span class="nav-text">集货流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景-2"><span class="nav-number">6.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标和价值-2"><span class="nav-number">6.2.</span> <span class="nav-text">目标和价值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目难点"><span class="nav-number">6.3.</span> <span class="nav-text">项目难点</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2020/05/26/biz-sys/';
+      var disqus_title = "业务系统设计";
+      var disqus_url = 'http://yoursite.com/2020/05/26/biz-sys/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

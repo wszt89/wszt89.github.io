@@ -1,0 +1,1197 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="基础," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="用户态和内核态是什么？
+
+操作系统中的概念，内核态和用户态分别对应CPU的两种运行模式（权限）。
+
+解决什么问题？
+
+早起系统运行在实模式，应用程序和操作系统的混在一起，可以随便改变内存数据、访问硬件设备。写的不严谨的代码很容易影响整体系统，也很容易写病毒。
+
+怎么解决？
+
+CPU至少支持两种状态（不一定非得两种），保证一些指令只有操作系统才能执行，这种切换的玩法叫保护模式。
+操作系统保证只能跳转">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机体系基础">
+<meta property="og:url" content="http://yoursite.com/2020/04/13/computer-system-base/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="用户态和内核态是什么？
+
+操作系统中的概念，内核态和用户态分别对应CPU的两种运行模式（权限）。
+
+解决什么问题？
+
+早起系统运行在实模式，应用程序和操作系统的混在一起，可以随便改变内存数据、访问硬件设备。写的不严谨的代码很容易影响整体系统，也很容易写病毒。
+
+怎么解决？
+
+CPU至少支持两种状态（不一定非得两种），保证一些指令只有操作系统才能执行，这种切换的玩法叫保护模式。
+操作系统保证只能跳转">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/19.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/1.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/2.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/16.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/3.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/4.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/6.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/7.jpeg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/8.jpeg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/9.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/10.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/17.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/11.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/12.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/13.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/14.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/15.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/18.png">
+<meta property="og:updated_time" content="2020-05-25T12:40:46.609Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计算机体系基础">
+<meta name="twitter:description" content="用户态和内核态是什么？
+
+操作系统中的概念，内核态和用户态分别对应CPU的两种运行模式（权限）。
+
+解决什么问题？
+
+早起系统运行在实模式，应用程序和操作系统的混在一起，可以随便改变内存数据、访问硬件设备。写的不严谨的代码很容易影响整体系统，也很容易写病毒。
+
+怎么解决？
+
+CPU至少支持两种状态（不一定非得两种），保证一些指令只有操作系统才能执行，这种切换的玩法叫保护模式。
+操作系统保证只能跳转">
+<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/19.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/13/computer-system-base/"/>
+
+
+  <title> 计算机体系基础 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                计算机体系基础
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-13T21:10:10+08:00" content="2020-04-13">
+              2020-04-13
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/13/computer-system-base/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/13/computer-system-base/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/13/computer-system-base/" class="leancloud_visitors" data-flag-title="计算机体系基础">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="用户态和内核态"><a href="#用户态和内核态" class="headerlink" title="用户态和内核态"></a>用户态和内核态</h1><p>是什么？</p>
+<blockquote>
+<p>操作系统中的概念，内核态和用户态分别对应CPU的两种运行模式（权限）。</p>
+</blockquote>
+<p>解决什么问题？</p>
+<blockquote>
+<p>早起系统运行在<font color="blue">实模式</font>，应用程序和操作系统的混在一起，可以随便改变内存数据、访问硬件设备。写的不严谨的代码很容易影响整体系统，也很容易写病毒。</p>
+</blockquote>
+<p>怎么解决？</p>
+<blockquote>
+<p>CPU至少支持两种状态（不一定非得两种），保证一些指令只有操作系统才能执行，这种切换的玩法叫<font color="blue">保护模式</font>。</p>
+<p>操作系统保证只能跳转到操作系统的代码，才能走到内核态。</p>
+<p>在用户态，内存的访问需要走MMU，从而实现内存保护（保护系统代码等），用户态只能访问0~3GB的空间，比较容易判断。</p>
+</blockquote>
+<p>从用户态到内核态的方式有：</p>
+<ul>
+<li>系统调用；</li>
+<li>异常；</li>
+<li>外设中断；</li>
+</ul>
+<p>系统调用流程：</p>
+<ul>
+<li>程序调用封装函数；</li>
+<li>通过<font color="blue">软中断</font>进入内核；</li>
+<li>在内核中，根据<font color="blue">寄存器中的系统调用号</font>，找到对应的系统调用服务例程；</li>
+<li>执行服务例程；</li>
+<li>从系统调用返回；</li>
+</ul>
+<p>通过strace可以看到命令相关的系统调用。</p>
+<h1 id="高速缓存"><a href="#高速缓存" class="headerlink" title="高速缓存"></a>高速缓存</h1><p>是什么？</p>
+<blockquote>
+<p>读写速度仅次于寄存器的存储。</p>
+</blockquote>
+<p>解决什么问题？</p>
+<blockquote>
+<p>内存的访问速度相对于磁盘来说非常快，但是CPU的执行速度非常快，所以需要更快的存储。CPU高速缓存的访问速度和内存访问速度不在一个数量级。</p>
+<p>一般分为三层缓存：L1、L2和L3，其中L1、L2内置于CPU，而L3在CPU间共享。</p>
+</blockquote>
+<p>从内存向CPU CACHE加载数据时，会视图把访问数据邻近的（内存块）也加载，因为根据<font color="blue">程序局部性原理</font>这些数据也很可能会被用到。</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/19.png" alt=""></p>
+<p>基本玩法：</p>
+<ul>
+<li>将CPU CACHE分成若干等分，每一份就是一个缓存行，一般64B；</li>
+<li>容量不够时，使用LRU算法踢掉一些；</li>
+</ul>
+<p>内存和CPU CACHE的数据可能不一致，用<font color="blue">缓存同步协议</font>来处理，维护缓存行状态：</p>
+<ul>
+<li><code>修改</code>：数据已修改，不同于主存；</li>
+<li><code>专有</code>：内容和主存相同，且数据不存在于其他CPU的缓存；</li>
+<li><code>共享</code>：内容和主存相同，其他CPU的缓存中有；</li>
+<li><code>无效</code>：内容共享，但是其他CPU修改了数据，则数据会变为无效；</li>
+</ul>
+<p>状态的变更通过<font color="blue">缓存锁定</font>来实现（之前是总线锁定，开销太大）。数据是一致了，但是也带来了新问题：</p>
+<blockquote>
+<p>当两个CPU同时操作同一个内存块，会导致缓存轮流失效，<font color="red">两个CPU也一起串行</font>，需要将共享多线程间的数据进行隔离，避免在同一个缓存行（Cache Line Padding）。</p>
+</blockquote>
+<p>理解在Java的线程内存是对CPU CACHE的抽象。</p>
+<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p>进程是资源（<font color="grey">内存、文件、文件系统、信号</font>）的封装单位，从这个定义上有看出进程和线程的区别。在Kernel中使用<font color="blue">task_struct</font>来描述：</p>
+<ul>
+<li><code>pid</code>：进程ID（ID资源是有限的，用户维度也有限制）；</li>
+<li><code>mm_struct</code>：内存，包括页表什么的；</li>
+<li><code>fs_struct</code>：文件系统资源；</li>
+<li><code>files_struct</code>：打开的文件资源；</li>
+<li><code>signal_struct</code>：信号；</li>
+</ul>
+<p>进程状态转移如下：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/1.jpg" alt="生命周期"></p>
+<p>特殊类型的进程：</p>
+<ul>
+<li><code>僵尸进程</code>：子进程先于父进程退出，依然会保留一定信息，等待父进程wait/waitpid来取时才会释放；所以一直不释放<font color="red">可能耗尽进程号</font>；</li>
+<li><code>孤儿进程</code>：父进程先于子进程退出，子进程最后由init完成回收；</li>
+<li><code>守护进程</code>：在后台执行，不和任何终端关联（将标准输入输出等指向/dev/null）；</li>
+</ul>
+<p>创建进程/线程（<font color="grey">轻量级进程</font>）的方法有：</p>
+<ul>
+<li><code>fork</code>：子进程会复制父进程的资源结构，仅复制结构及指针，此时父子进程指向相同的资源；</li>
+<li><code>vfork</code>：与fork的区别是共用<font color="blue">mm_struct</font>；父进程在vfork后会阻塞等待子进程结束；</li>
+<li><code>clone</code>：在pthread_create创建线程时最终要调用的就是clone，和父进程共享所有的资源；</li>
+</ul>
+<p>其中fork也并没有我们想象的那么重（<font color="grey">比如Redis的玩法</font>），<font color="blue">写时复制</font>机制会尽量降低开销：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/2.jpg" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>POXIS标准要求同一个进程的多个线程共用PID，LINUX的套路是增加了一个TGID，所有线程的TGID都等于第一个线程的PID，在调用getpid返回的也是TGID，这样就满足规范了。</p>
+<p>这就是<font color="red">top和top -H的区别</font>。</p>
+</blockquote>
+<h2 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h2><p>进程执行调度需要考虑两个方向（<font color="grey">非正相关，甚至矛盾</font>）：</p>
+<ul>
+<li>吞吐量</li>
+<li>响应时间</li>
+</ul>
+<p>内核把优先级分为0~139，值越小优先级越高：</p>
+<ul>
+<li>优先级0~99是RT进程，采用RT策略，两个调度策略：<ul>
+<li><code>SCHED-FIFO</code>：同等优先级，除非自己schedule走，否则一直会占用CPU；不同优先级时，高优先级立即抢占。</li>
+<li><code>SCHED-RR</code>：同等优先级，按照时间片轮转；不同优先级时，高优先级立即抢占。</li>
+</ul>
+</li>
+<li>优先级100~139是Normal进程，一个调度策略：<ul>
+<li><code>基于nice值</code>：-20~19来对应优先级100~139，即nice值越高对应的优先级越低。（越nice优先级越低）</li>
+</ul>
+</li>
+</ul>
+<p>执行中使用<font color="blue">CFS</font>算法：</p>
+<ul>
+<li>红黑树维护所有进程；</li>
+<li>节点上的虚拟时间计算逻辑为<code>vtime = ptime * 1024 / weight</code>；</li>
+<li>每次找到虚拟执行时间最小的进程来执行；</li>
+</ul>
+<p>这样做到的效果是：</p>
+<ul>
+<li>利于IO型进程；</li>
+<li>利于nice值低的进程；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>CFS处理的是单CORE上的<font color="red">NORMA类型、TASK_RUNNING状态</font>的进程。</p>
+</blockquote>
+<p>在有多核时，CORE可以从其他的PULL进程过来执行，也可以把自己的推给其他CORE来执行，调整策略有：</p>
+<ul>
+<li>均衡优先级最高的进程；</li>
+<li>周期性校验均衡性并发起PULL和PUSH；</li>
+<li>空闲时校验均衡性并发起PULL和PUSH；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>可以设置进程和CPU的亲和度，减少切换（YY:是不是分布式任务也可以设置根单机的亲和度？）。</p>
+</blockquote>
+<h2 id="进程间通信（IPC）"><a href="#进程间通信（IPC）" class="headerlink" title="进程间通信（IPC）"></a>进程间通信（IPC）</h2><ul>
+<li><code>管道</code><ul>
+<li><code>无名管道</code>：父子进程间单向流动；</li>
+<li><code>有名管道</code>：允许无亲缘的进程间互相通信，同样是单向；</li>
+</ul>
+</li>
+<li><code>信号</code>：用于接收进程某个事件；</li>
+<li><code>消息队列</code>：存储在内核；进程将格式化的数据流以消息队列的形式发送给任意进程，</li>
+<li><code>共享内存</code>：最快的通信方式，不需要多次内存拷贝；底层把同一块物理内存映射到不同的进程的地址空间；</li>
+<li><code>信号量</code>：线程间的同步机制；</li>
+<li><code>套接字</code>：类似客户和服务端的通信；</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/16.png" alt=""></p>
+<h1 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h1><p>不仅要考虑内存自己怎么管理好 ，还要考虑内存与进程、磁盘的关系和交互。</p>
+<h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><p>内存地址种类包含：</p>
+<ul>
+<li><code>物理地址</code>：从0开始物理内存的标号；</li>
+<li><code>虚拟地址</code>：CPU在开启MMU之后处理的地址，通过页表映射到物理地址；</li>
+<li><code>逻辑地址</code>：段式内存管理；</li>
+<li><code>线性地址</code>：段式内存管理；</li>
+<li><code>总线地址</code>：从设备端看到的地址；</li>
+</ul>
+<p>地址之间的关系是：</p>
+<blockquote>
+<p>在Linux内核通过页管理就可以完成内存管理，于是<font color="red">逻辑地址等于虚拟地址</font>（<font color="grey">应该是做了一个简单映射，抛弃了段式管理</font>）。</p>
+</blockquote>
+<p>开启<font color="blue">MMU</font>后，CPU只能看到虚拟地址，而MMU能访问到物理地址，功能有：</p>
+<ul>
+<li>根据页表实现虚拟地址到物理地址的映射；</li>
+<li>页访问权限控制：<ul>
+<li>RWX：读、写、执行；</li>
+<li>Kernel/User：确保“非特权模式”无法访问“特权模式”才能访问的内存，隔离内核态和用户态；</li>
+</ul>
+</li>
+<li>产生缺页异常；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>感觉MMU有点像是用硬件完成一些逻辑（玩法标准化）。</p>
+<p>通过<font color="blue">TLB</font>缓存页表项加速转换。</p>
+<p>产生缺页异常后，如果VMA合法，则会分配相应的物理页并修改页表，<font color="red">这就是这时候才真正的分配物理内存</font>。</p>
+</blockquote>
+<p>内存分为三个区域（ZONE）：</p>
+<ul>
+<li><code>DMA</code>：原因是DMA IP只能访问到某个地址以下的部分内存；可以分配做其他用途，但在内存分配时需要考虑（<font color="grey">实在没有的时候再分配</font>）；</li>
+<li><code>MORMAL</code>：地址一一映射；</li>
+<li><code>HIGH MEM</code>：原因是Kernel使用的虚拟地址空间只有3~4G（<font color="grey">也就是1GB</font>），小于实际物理内存大小；通过kmap来做高端内存的映射；</li>
+</ul>
+<p>内存分配器有：</p>
+<ul>
+<li><code>BUDDY</code>：<ul>
+<li>管理最小单元是1页（4KB）；在分配和释放的过程中会涉及到拆分与合并；</li>
+<li>目标是解决<font color="blue">外碎片</font>；</li>
+</ul>
+</li>
+<li><code>SLAB</code>：<ul>
+<li>基于BUDDY，做二次分配管理，目标是解决<font color="blue">内碎片</font>；</li>
+<li>分为专用和通用；</li>
+</ul>
+</li>
+</ul>
+<p>内核总是以<font color="blue">Lazy</font>的方式分配真实的物理内存，比如在使用c函数malloc申请100MB内存的流程是：</p>
+<ul>
+<li>内核调用brk/sbrk将堆vss扩大，返回成功；</li>
+<li>内核把申请的100MB内存全部以只读方式映射到清零的物理页面（4KB）；</li>
+<li>在写数据时，MMU发现只读于是产生PageFault；</li>
+<li>内核检查PageFault的地址和原因，发现是malloc导致，于是会申请物理内存执行COW（把之前指向清零的物理页拷贝到刚申请的物理页上）；</li>
+<li>修改页表，将虚拟地址指向新申请的物理地址，权限修改为R+W；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>由于Lazy的分配方式，可能在写内存时一应没有物理内存，于是内核会启动<font color="blue">OOM</font>机制。内核根据一套打分机制，计算出得分最高的进程杀掉。</p>
+<p>在分配时发现没有足够的空闲内存会触发回收，平时也会有<font color="blue">kswapd</font>周期性地回收。</p>
+</blockquote>
+<h2 id="内存和进程的关系"><a href="#内存和进程的关系" class="headerlink" title="内存和进程的关系"></a>内存和进程的关系</h2><p>从进程的角度来看他拥有哪些内存：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/3.jpg" alt=""></p>
+<p>从内存的角度来看它是如何被进程瓜分掉的：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/4.jpg" alt=""></p>
+<h2 id="内存和磁盘的关系"><a href="#内存和磁盘的关系" class="headerlink" title="内存和磁盘的关系"></a>内存和磁盘的关系</h2><p>在空闲内存不够时可以把数据<font color="blue">swap</font>到磁盘上（<font color="grey">控制参数是swappiness</font>），在程序需要用的时候再回到内存。</p>
+<h1 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h1><p>在Linux中一切都是文件，好处是可以共用一套读/写工具和API。而这些的底层则是通过<font color="blue">VFS</font>（virtual File System）来封装和实现。</p>
+<h2 id="虚拟文件系统"><a href="#虚拟文件系统" class="headerlink" title="虚拟文件系统"></a>虚拟文件系统</h2><p>VFS所在的位置如下：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/6.jpg" alt=""></p>
+<p>使用到的概念：</p>
+<ul>
+<li><code>filesystem_type</code>：文件系统类型；</li>
+<li><code>super_block</code>：文件系统；</li>
+<li><code>inode</code>：文件；<ul>
+<li><code>file_operations</code>：定义读写接口；</li>
+<li><code>inode_operations</code>：定义文件增删改查的接口；</li>
+</ul>
+</li>
+<li><code>dentry</code>：目录；<ul>
+<li>在内存中缓存，没有时调用文件系统的<code>ino.lookup</code>来查找；</li>
+<li>在磁盘上通过<code>ext4_dir_entry_2</code>进行管理，inode的数据项中存放父节点、当前节点、子节点等信息；其中<font color="blue">根节点在固定的位置</font>；</li>
+</ul>
+</li>
+<li><code>file</code>：也是文件，文件被多个进程打开会有多个file，但只有一个inode；</li>
+</ul>
+<p>关于文件链接：</p>
+<ul>
+<li><code>硬链接</code>：创建后新建dentry并指向相同的inode（计数增加），在硬链接删除时需要判断计数是否为0；</li>
+<li><code>软链接</code>：创建新的inode，内容为老的inode，并不会增加老inode上的计数；</li>
+</ul>
+<p>在文件系统里面可以继续挂载文件系统，关系如下：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/7.jpeg" alt=""></p>
+<p>下面是dentry和inode的关系：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/8.jpeg" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>在移动或者重命名文件时，仅仅在更改dentry，inode是不会发生变化的。另外，在通过filename打开文件之后，后面的操作就只跟inodeno有关系了。</p>
+<p>dentry和inode有缓存。</p>
+</blockquote>
+<h2 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h2><p>文件系统实现了VFS的接口，实现对磁盘空间的管理，著名的文件系统有ext2/3/4，这时候就需要管存储的细节了。在ext3中管理方式为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/9.jpg" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>存储的最小单位是<font color="blue">BLOCK</font>。</p>
+<p>使用bitmap来管理哪些是用过的，哪些是空闲的，如果文件的空间大部分是连续的话，用bitmap并不是经济的管理方式。</p>
+<p>可以通过间接、多层的方式来管理BLOCK，这样管理的更多，但问题是需要访问多次。</p>
+</blockquote>
+<p>在ext4中利用<font color="blue">EXTEND</font>做了优化：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/10.jpg" alt=""></p>
+<p>Ext4的磁盘布局如下：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/17.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>Block大小通常是4KB，Inode大小通常为256字节。</p>
+</blockquote>
+<h2 id="文件缓存"><a href="#文件缓存" class="headerlink" title="文件缓存"></a>文件缓存</h2><p>如果每次读写文件都直接从磁盘操作，会消耗大量的时间，在内核会为文件做缓存，把文件的不同位置的映射到page：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/11.jpg" alt=""></p>
+<p>从进程找到页缓存的路径如下：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/12.jpg" alt=""></p>
+<p>进程通过read读文件内容的流程为：</p>
+<ul>
+<li>进程向内核发起读文件请求；</li>
+<li>内核根据上面的路径查找页缓存，如果没找到，则分配一个page加到页缓存，从磁盘中读取相应页的数据进行填充；</li>
+<li>将数据从页缓存复制到进程的堆空间；</li>
+</ul>
+<p>所以read的流程会导致<font color="red">同一份数据在内存中有两份</font>。mmap的操作流程为：</p>
+<ul>
+<li>前两步和read相似；</li>
+<li>创建虚拟内存区域vm_area_struct，并更新相应的进程页表项，使其指向页缓存的page；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>同样基于局部性原理，在从磁盘到PageCache读数据时会考虑预读，就说多读一些。</p>
+</blockquote>
+<p>触发Cache刷盘的场景有：</p>
+<blockquote>
+<p>脏页太多（一定比例或数量）或者脏页太久。</p>
+<p>调用fsync。</p>
+</blockquote>
+<h2 id="文件日志"><a href="#文件日志" class="headerlink" title="文件日志"></a>文件日志</h2><p>文件系统在执行一次append涉及到三次操作：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/13.jpg" alt=""></p>
+<p>而磁盘是不能保证这些操作同时成功（比如断电）。为了解决这个问题使用类似数据库事务的实现方式：</p>
+<ul>
+<li>将数据写到日志区，并commit；</li>
+<li>将数据写入到文件系统，并做checkpoint，这时候日志区的数据就没用了；</li>
+<li>释放日志区数据；</li>
+</ul>
+<p>在断电重启后通过日志（journal）回放即可恢复数据，但是如果暴力<font color="red">把所有数据做日志有很大的IO代价</font>，折中是仅对元数据做日志：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/14.jpg" alt=""></p>
+<p>上面的①写数据，②~⑤对元数据做日志，有三种配置：</p>
+<ul>
+<li><code>data=journal</code>：对metadata和datablock全部做日志，性能最差；</li>
+<li><code>data=ordered</code>：写metadata之前先写datablock（先把脏页刷盘），这样能避免metadata写完但是datablock没写完的情况，折中方案；</li>
+<li><code>data=writeback</code>：同步写metadata和datablock，性能最高，但是有一定风险；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>对于数据库等重IO的场景，PageCache的日志刷盘并不考虑，一般都是<font color="red">使用DIO直接写文件并自己管理BUFFER</font>，甚至旁路掉Kernel使用用户态驱动和用户态文件系统。</p>
+</blockquote>
+<h2 id="BIO"><a href="#BIO" class="headerlink" title="BIO"></a>BIO</h2><p>BIO的作用是处理磁盘上的哪些BLOCK需要读到哪些PAGE上，步骤是：</p>
+<ul>
+<li><code>生成</code>：address_space将datablock操作打包成bio；</li>
+<li><code>蓄水</code>：bio转换成request插入到进程的plug队列；</li>
+<li><code>放水</code>：plug队列达到一定程度后，将所有的request发送到IO<font color="blue">电梯调度队列</font>；</li>
+<li><code>QoS</code>：电梯调度队列根据策略对request排序后放入dispatch队列；</li>
+<li><code>收发</code>：设备驱动从dispathc中取到request执行；</li>
+</ul>
+<p>电梯调度算法有<font color="blue">CFS</font>、<font color="blue">Deadline</font>等。</p>
+<h1 id="namespace-amp-cgroup"><a href="#namespace-amp-cgroup" class="headerlink" title="namespace&amp;cgroup"></a>namespace&amp;cgroup</h1><p>流行了好几年的容器Docker据说是基于namespace和cgroup来实现，可以用命令来判断是否在容器里面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemd-detect-virt -c</div></pre></td></tr></table></figure>
+<p>没有这个命令的话。。。看下top里面系统进程的情况：<font color="red">容器里面基本只允许用户进程</font>。通过namespace可以对资源做隔离（可见性），在/proc/pid/ns查看：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/15.jpg" alt=""></p>
+<p>而cgroup（control group）的隔离则倾向于能力，可以实现：</p>
+<ul>
+<li><code>资源限制</code>：限制进程能使用的CPU、内存等上限；</li>
+<li><code>优先级控制</code>：不同的组有不同的优先级；</li>
+<li><code>审计</code>：统计使用情况；</li>
+<li><code>控制</code>：按组控制；</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/computer-system-base/18.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>内核通过vfs将cgroup暴露给用户态来使用；通过不同的cgroup来管理不同类型的资源分配。进程和cgroup是<font color="red">N:M</font>的关系，通过css_set（cgroups subsystem set）表示对进程的多种资源的限制。</p>
+</blockquote>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://www.zhihu.com/question/306127044/answer/555327651" target="_blank" rel="external">进入内核态究竟是什么意思？</a></li>
+<li><a href="https://blog.csdn.net/cs2539263027/article/details/78977054" target="_blank" rel="external">linux下的系统调用全过程</a></li>
+<li><a href="https://blog.acean.vip/post/linux-kernel/gai-shu-linuxnei-he-san-jia-ma-che-zhi-jin-cheng-guan-li#toc_0" target="_blank" rel="external">【概述】-Linux内核三驾马车之-进程管理</a></li>
+<li><a href="https://blog.acean.vip/post/linux-kernel/gai-shu-linuxnei-he-san-jia-ma-che-zhi-nei-cun-guan-li#toc_8" target="_blank" rel="external">【概述】-Linux内核三驾马车之-内存管理</a></li>
+<li><a href="https://blog.acean.vip/post/linux-kernel/gai-shu-linuxnei-he-san-jia-ma-che-zhi-ioguan-li" target="_blank" rel="external">【概述】-Linux内核三驾马车之-IO管理</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/l-cache/index.html" target="_blank" rel="external">Linux 内核的文件 Cache 管理机制介绍</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1551286" target="_blank" rel="external">干货！大话EXT4文件系统完整版</a></li>
+<li><a href="http://www.ilinuxkernel.com/files/Linux.Kernel.Cache.pdf" target="_blank" rel="external">Linux内核文件Cache 机制</a></li>
+<li><a href="https://www.lenzhao.com/topic/5a29facc2e95f0fd0a9818ab" target="_blank" rel="external">理解页缓存page cache和地址空间</a></li>
+<li><a href="https://coolshell.cn/articles/17010.html" target="_blank" rel="external">DOCKER基础技术：LINUX NAMESPACE（上）</a></li>
+<li><a href="https://coolshell.cn/articles/17029.html" target="_blank" rel="external">DOCKER基础技术：LINUX NAMESPACE（下）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/102293437" target="_blank" rel="external">Cache的基本原理</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/基础/" rel="tag">#基础</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/09/juc/" rel="next" title="并发基础">
+                <i class="fa fa-chevron-left"></i> 并发基础
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/16/jvm/" rel="prev" title="虚拟机基础">
+                虚拟机基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#用户态和内核态"><span class="nav-number">1.</span> <span class="nav-text">用户态和内核态</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高速缓存"><span class="nav-number">2.</span> <span class="nav-text">高速缓存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程"><span class="nav-number">3.</span> <span class="nav-text">进程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程调度"><span class="nav-number">3.1.</span> <span class="nav-text">进程调度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程间通信（IPC）"><span class="nav-number">3.2.</span> <span class="nav-text">进程间通信（IPC）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内存"><span class="nav-number">4.</span> <span class="nav-text">内存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存管理"><span class="nav-number">4.1.</span> <span class="nav-text">内存管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存和进程的关系"><span class="nav-number">4.2.</span> <span class="nav-text">内存和进程的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存和磁盘的关系"><span class="nav-number">4.3.</span> <span class="nav-text">内存和磁盘的关系</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件"><span class="nav-number">5.</span> <span class="nav-text">文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟文件系统"><span class="nav-number">5.1.</span> <span class="nav-text">虚拟文件系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件系统"><span class="nav-number">5.2.</span> <span class="nav-text">文件系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件缓存"><span class="nav-number">5.3.</span> <span class="nav-text">文件缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件日志"><span class="nav-number">5.4.</span> <span class="nav-text">文件日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BIO"><span class="nav-number">5.5.</span> <span class="nav-text">BIO</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#namespace-amp-cgroup"><span class="nav-number">6.</span> <span class="nav-text">namespace&cgroup</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2020/04/13/computer-system-base/';
+      var disqus_title = "计算机体系基础";
+      var disqus_url = 'http://yoursite.com/2020/04/13/computer-system-base/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

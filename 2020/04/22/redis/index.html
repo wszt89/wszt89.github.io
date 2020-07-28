@@ -1,0 +1,1660 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="Redis是一个支持多种结构的、纯内存的KV存储系统。
+数据格式查看KEY的类型已经编码等信息的命令为：
+
+type key：类型；
+object refcount key：被引用次数；
+object encoding key：内部编码方式；
+object idletime key：空闲时间，从最后一次读写开始算；
+
+整体的数据保存结构：
+
+对应的type和encoding的关系（不同版本有差别的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="REDIS">
+<meta property="og:url" content="http://yoursite.com/2020/04/22/redis/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="Redis是一个支持多种结构的、纯内存的KV存储系统。
+数据格式查看KEY的类型已经编码等信息的命令为：
+
+type key：类型；
+object refcount key：被引用次数；
+object encoding key：内部编码方式；
+object idletime key：空闲时间，从最后一次读写开始算；
+
+整体的数据保存结构：
+
+对应的type和encoding的关系（不同版本有差别的">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/04.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/01.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/02.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/14.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/00.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/15.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/07.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/05.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/08.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/09.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/10.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/13.jpg">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/12.jpg">
+<meta property="og:updated_time" content="2020-05-21T10:23:17.768Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="REDIS">
+<meta name="twitter:description" content="Redis是一个支持多种结构的、纯内存的KV存储系统。
+数据格式查看KEY的类型已经编码等信息的命令为：
+
+type key：类型；
+object refcount key：被引用次数；
+object encoding key：内部编码方式；
+object idletime key：空闲时间，从最后一次读写开始算；
+
+整体的数据保存结构：
+
+对应的type和encoding的关系（不同版本有差别的">
+<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/04.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/22/redis/"/>
+
+
+  <title> REDIS | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                REDIS
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-22T10:33:12+08:00" content="2020-04-22">
+              2020-04-22
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/22/redis/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/22/redis/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/22/redis/" class="leancloud_visitors" data-flag-title="REDIS">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Redis是一个支持多种结构的、<font color="red">纯内存</font>的KV存储系统。</p>
+<h1 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h1><p>查看KEY的类型已经编码等信息的命令为：</p>
+<ul>
+<li><code>type key</code>：类型；</li>
+<li><code>object refcount key</code>：被引用次数；</li>
+<li><code>object encoding key</code>：内部编码方式；</li>
+<li><code>object idletime key</code>：空闲时间，从最后一次读写开始算；</li>
+</ul>
+<p>整体的数据保存结构：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/04.png" alt=""></p>
+<p>对应的type和encoding的关系（不同版本有差别的，变化有点快🤣）：</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>encoding</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>string</td>
+<td>long</td>
+<td>整数</td>
+</tr>
+<tr>
+<td>string</td>
+<td>embstr</td>
+<td>短字符串(小于44)</td>
+</tr>
+<tr>
+<td>string</td>
+<td>sds</td>
+<td>长字符串</td>
+</tr>
+<tr>
+<td>list</td>
+<td>quicklist</td>
+<td>貌似现在的默认实现？</td>
+</tr>
+<tr>
+<td>hash</td>
+<td>ziplist</td>
+<td>小哈希表(64KB，512)</td>
+</tr>
+<tr>
+<td>hash</td>
+<td>dict</td>
+<td>大哈希表</td>
+</tr>
+<tr>
+<td>set</td>
+<td>intset</td>
+<td>整数集合(512)</td>
+</tr>
+<tr>
+<td>set</td>
+<td>dict</td>
+<td>不是正说或大集合</td>
+</tr>
+<tr>
+<td>zset</td>
+<td>ziplist</td>
+<td>有序小集合(64KB，128)</td>
+</tr>
+<tr>
+<td>zset</td>
+<td>zskiplist + dict</td>
+<td>有序大集合</td>
+</tr>
+<tr>
+<td>stream</td>
+<td>stream</td>
+<td>消息队列</td>
+</tr>
+</tbody>
+</table>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>整体来说，量小的时候用数组，量大的时候再用链表，这样比较省内存。</p>
+<p>短字符使用embstr格式：<font color="red">特点是一次分配redisObj和sds，放在连续的空间上，减少分配和释放的次数</font>。</p>
+</blockquote>
+<h2 id="内部格式"><a href="#内部格式" class="headerlink" title="内部格式"></a>内部格式</h2><h3 id="sds"><a href="#sds" class="headerlink" title="sds"></a>sds</h3><p>简单动态字符串，用来存放字符串、数字、位图，且二进制安全、访问快、省空间：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">char</span> *sds;</div><div class="line"></div><div class="line"><span class="keyword">struct</span> __attribute__ ((__packed__)) sdshdr8 &#123;</div><div class="line">    <span class="keyword">uint8_t</span> len; <span class="comment">/* used */</span></div><div class="line">    <span class="keyword">uint8_t</span> alloc; <span class="comment">/* excluding the header and null terminator */</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> flags; <span class="comment">/* 3 lsb of type, 5 unused bits */</span></div><div class="line">    <span class="keyword">char</span> buf[];</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>根据长度的不同分别定义不同的头部，C里面的惯用玩法。</p>
+<p>返回的是<font color="red">char*，这样兼容了C函数，用起来也很简单</font>，并且flags放到最下面很容易找到结构体的起点位置。</p>
+<p>扩容策略：如果扩容后长度小于1MB，则扩容一倍，否则增加1MB，最大是512MB。</p>
+</blockquote>
+<h3 id="zskiplist"><a href="#zskiplist" class="headerlink" title="zskiplist"></a>zskiplist</h3><p>跳跃表可以低成本地实现<font color="red">有序</font>列表（<font color="grey">主要还是写起来简单</font>）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> zskiplistNode &#123;</div><div class="line">    sds ele; <span class="comment">// 数据</span></div><div class="line">    <span class="keyword">double</span> score; <span class="comment">// 排序依据的分值</span></div><div class="line">    <span class="keyword">struct</span> zskiplistNode *backward; <span class="comment">// 后退指针</span></div><div class="line">    <span class="keyword">struct</span> zskiplistLevel &#123;</div><div class="line">        <span class="keyword">struct</span> zskiplistNode *forward; <span class="comment">// 本层下一个节点</span></div><div class="line">        <span class="keyword">unsigned</span> <span class="keyword">long</span> span; <span class="comment">// 跨越的节点数</span></div><div class="line">    &#125; level[]; <span class="comment">// 随机层数</span></div><div class="line">&#125; zskiplistNode;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> zskiplist &#123;</div><div class="line">    <span class="keyword">struct</span> zskiplistNode *header, *tail; <span class="comment">// 头、尾</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> length; <span class="comment">// 长度</span></div><div class="line">    <span class="keyword">int</span> level; <span class="comment">// 高度</span></div><div class="line">&#125; zskiplist;</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>分值相同则按字典序排序。</p>
+<p>大部分操作的复杂度为$O(logN)$，最坏复杂度为$O(N)$。</p>
+</blockquote>
+<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p>双向链表，不仅包含用户数据，在很多内部管理结构上也有用到：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> listNode &#123;</div><div class="line">    <span class="keyword">struct</span> listNode *prev; <span class="comment">// 向前</span></div><div class="line">    <span class="keyword">struct</span> listNode *next; <span class="comment">// 向后</span></div><div class="line">    <span class="keyword">void</span> *value; <span class="comment">// 值</span></div><div class="line">&#125; listNode;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="built_in">list</span> &#123;</div><div class="line">    listNode *head; <span class="comment">// 头</span></div><div class="line">    listNode *tail; <span class="comment">// 尾</span></div><div class="line">    <span class="keyword">void</span> *(*dup)(<span class="keyword">void</span> *ptr); <span class="comment">// 复制函数</span></div><div class="line">    <span class="keyword">void</span> (*<span class="built_in">free</span>)(<span class="keyword">void</span> *ptr); <span class="comment">// 释放函数</span></div><div class="line">    <span class="keyword">int</span> (*match)(<span class="keyword">void</span> *ptr, <span class="keyword">void</span> *key); <span class="comment">// 比较函数</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> len; <span class="comment">// 长度</span></div><div class="line">&#125; <span class="built_in">list</span>;</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>增删改比较快（不需要考虑复制、扩容等），查起来比较慢。</p>
+</blockquote>
+<h3 id="dict"><a href="#dict" class="headerlink" title="dict"></a>dict</h3><p>类似MAP，相关的数据结构如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> dictht &#123;</div><div class="line">    dictEntry **table; <span class="comment">// 哈希表数组</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> size; <span class="comment">// table大小</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> sizemask; <span class="comment">// 哈希表掩码，size - 1</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> used; <span class="comment">// 哈希表中已有的节点数</span></div><div class="line">&#125; dictht;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> dictEntry &#123;</div><div class="line">    <span class="keyword">void</span> *key; <span class="comment">// 键</span></div><div class="line">    <span class="keyword">union</span> &#123; <span class="comment">// 值，可以是数字</span></div><div class="line">        <span class="keyword">void</span> *val;</div><div class="line">        <span class="keyword">uint64_t</span> u64;</div><div class="line">        <span class="keyword">int64_t</span> s64;</div><div class="line">        <span class="keyword">double</span> d;</div><div class="line">    &#125; v;</div><div class="line">    <span class="keyword">struct</span> dictEntry *next; <span class="comment">// 单链</span></div><div class="line">&#125; dictEntry;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> dict &#123;</div><div class="line">    dictType *type; <span class="comment">// 指定用来操作不同类型数据的函数</span></div><div class="line">    <span class="keyword">void</span> *privdata; <span class="comment">// 需要传递给操作函数的一些数据</span></div><div class="line">    dictht ht[<span class="number">2</span>]; <span class="comment">// 哈希表</span></div><div class="line">    <span class="keyword">long</span> rehashidx; <span class="comment">// rehash的进度，如果没有在执行则是-1</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> iterators; <span class="comment">// 正在遍历的迭代器数量</span></div><div class="line">&#125; dict;</div></pre></td></tr></table></figure>
+<p>关系如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/01.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>当负载因子达到一定阈值开始扩容/缩容：<font color="red">重新分配dictht并对已有数据重新计算哈希</font>。</p>
+<p>在CRUD的过程中（或者定时？）执行rehash，每次处理rehashidx对应的列表，操作完成后rehashidx加一（<font color="red">渐进式rehash</font>），这样做的好处是避免出现长延迟。</p>
+</blockquote>
+<h3 id="intset"><a href="#intset" class="headerlink" title="intset"></a>intset</h3><p>保存不重复的、<font color="red">有序（从小到大）</font>的数字集合：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> intset &#123;</div><div class="line">    <span class="keyword">uint32_t</span> encoding;   <span class="comment">// 类型：int16/int32/int64</span></div><div class="line">    <span class="keyword">uint32_t</span> length;     <span class="comment">// 长度</span></div><div class="line">    <span class="keyword">int8_t</span> contents[];   <span class="comment">// 内容</span></div><div class="line">&#125; intset;</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>更新过程中根据数字的范围决定是否需要升级（encoding），不支持降级。</p>
+<p>插入时，判断是否已经存在元素，如果存在则不会插入；否则，把数组中的元素挪动腾出来空间来存放数据。</p>
+</blockquote>
+<h3 id="ziplist"><a href="#ziplist" class="headerlink" title="ziplist"></a>ziplist</h3><p>用数组来实现<font color="red">双向链表，为了省内存快疯了</font>：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/02.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>根据encoding来决定存放的是什么东西。</p>
+<p>根据previous_entry_length（前面节点的大小）来实现向遍历。</p>
+<p>虽然查找是$O(N)$的复杂度，但是数组相邻的数据会加载到高速缓存，所以速度并不慢。</p>
+</blockquote>
+<h3 id="quicklist"><a href="#quicklist" class="headerlink" title="quicklist"></a>quicklist</h3><p>针对LIST和ZIPLIST的缺点引入，QUICKLIST = LIST + ZIPLIST：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/14.jpg" alt=""></p>
+<p>使用QUICKLIST管理：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> quicklist &#123;</div><div class="line">    quicklistNode *head;          <span class="comment">// 头</span></div><div class="line">    quicklistNode *tail;          <span class="comment">// 尾</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> count;          <span class="comment">// 元素总数</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> len;            <span class="comment">// ziplist总数</span></div><div class="line">    <span class="keyword">int</span> fill : <span class="number">16</span>;                <span class="comment">// ziplist 长度，负数时更大</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> compress : <span class="number">16</span>;   <span class="comment">// 两端不压缩的节点数量</span></div><div class="line">&#125; quicklist;</div></pre></td></tr></table></figure>
+<p>管理ZIPLIST的结构为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> quicklistNode &#123;</div><div class="line">    <span class="keyword">struct</span> quicklistNode *prev;    <span class="comment">// 前</span></div><div class="line">    <span class="keyword">struct</span> quicklistNode *next;    <span class="comment">// 后</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> *zl;             <span class="comment">// ziplist</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> sz;               <span class="comment">// ziplist size</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> count : <span class="number">16</span>;       <span class="comment">// ziplist 元素数量</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> encoding : <span class="number">2</span>;     <span class="comment">// 编码方式：1、原生；2、LZF压缩；</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> container : <span class="number">2</span>;    </div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> recompress : <span class="number">1</span>;   <span class="comment">// 是否压缩</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> attempted_compress : <span class="number">1</span>; </div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> extra : <span class="number">10</span>; </div><div class="line">&#125; quicklistNode;</div></pre></td></tr></table></figure>
+<p>压缩后的节点结构为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> quicklistLZF &#123;</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> sz;               <span class="comment">// 字节数</span></div><div class="line">    <span class="keyword">char</span> compressed[];</div><div class="line">&#125; quicklistLZF;</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>更新操作采用先删除再插入来完成。</p>
+</blockquote>
+<h3 id="stream"><a href="#stream" class="headerlink" title="stream"></a>stream</h3><p>在REDIS 5.0.0引入的消息队列功能，核心元素：</p>
+<ul>
+<li><code>消息</code>：ID保证递增且唯一；</li>
+<li><code>生产者</code></li>
+<li><code>消费者</code></li>
+<li><code>消费组</code>：一个消息只需要一个消费组里面一个消费组消费即可；</li>
+</ul>
+<p>核心的数据结构有：</p>
+<ul>
+<li><code>listpack</code>：字符串列表，用来存放多个消息；</li>
+<li><code>rax</code>：压缩前缀树，天生排序且能快速检索；</li>
+</ul>
+<p>整体如下：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/00.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>标志位删除。</p>
+</blockquote>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>各种类型对应的底层结构在上面，命令的实现基本也能猜到，主要是列举相关指令。</p>
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>set</code> key value [NX] [XX] [EX seconds] [PX milliseconds]</td>
+<td>设置字符串<br>NX：不存在时设置<br>XX：存在时设置<br>EX：超时秒数<br>PX：超时毫秒数</td>
+</tr>
+<tr>
+<td><code>setnx</code> key value</td>
+<td>当KEY不存在时设置</td>
+</tr>
+<tr>
+<td><code>setex</code> key seconds value</td>
+<td>同时设置秒级过期时间</td>
+</tr>
+<tr>
+<td><code>psetex</code> key milliseconds value</td>
+<td>同时设置毫秒级过期时间</td>
+</tr>
+<tr>
+<td><code>mset</code> key value [key value …]</td>
+<td>批量设置</td>
+</tr>
+<tr>
+<td><code>msetnx</code> key value [key value …]</td>
+<td>当所有KEY都不存在时才设置</td>
+</tr>
+<tr>
+<td><code>append</code> key value</td>
+<td>尾部追加</td>
+</tr>
+<tr>
+<td><code>setrange</code> key offset value</td>
+<td>根据偏移量设置部分子串</td>
+</tr>
+<tr>
+<td><code>incrby</code> key increment &amp; <code>decrby</code> key decrement</td>
+<td>加值 &amp; 减值</td>
+</tr>
+<tr>
+<td><code>incr</code> key &amp; <code>decr</code> key</td>
+<td>加一 &amp; 减一</td>
+</tr>
+<tr>
+<td><code>incrbyfloat</code> key increment</td>
+<td>加值（浮点数）</td>
+</tr>
+<tr>
+<td><code>get</code> key</td>
+<td>获取KEY</td>
+</tr>
+<tr>
+<td><code>getset</code> key value</td>
+<td>设置新值、返回老值</td>
+</tr>
+<tr>
+<td><code>getrange</code> key start end</td>
+<td>获取子串</td>
+</tr>
+<tr>
+<td><code>strlen</code> key</td>
+<td>获取长度</td>
+</tr>
+<tr>
+<td><code>mget</code> key [key …]</td>
+<td>批量获取</td>
+</tr>
+<tr>
+<td><code>setbit</code> key offset value</td>
+<td>二进制位设置为一</td>
+</tr>
+<tr>
+<td><code>getbit</code> key offset</td>
+<td>获取二进制位的值</td>
+</tr>
+<tr>
+<td><code>bitpos</code> key bit [start [end]]</td>
+<td>获取<font color="red">字节范围</font>的第一个bit的索引值</td>
+</tr>
+<tr>
+<td><code>bitcount</code> key [start] [end]</td>
+<td>获取<font color="red">字节范围</font>的1的个数</td>
+</tr>
+<tr>
+<td><code>bitop</code> op_name target_key key [key]</td>
+<td>对一个或多个KEY操作并保存到新KEY上<br>AND<br>OR<br>NOT<br>XOR</td>
+</tr>
+<tr>
+<td><code>bitfield</code> key [get type offset] [set type offset value] [incrby type offset ] [overflow WRAP / SAT / FAIL]</td>
+<td>作为二进制数据进行操作</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hset</code> key field value</td>
+<td>覆盖设置</td>
+</tr>
+<tr>
+<td><code>hmset</code> key field value [field value …]</td>
+<td>批量设置</td>
+</tr>
+<tr>
+<td><code>hsetnx</code> key field value</td>
+<td>不存在时设置</td>
+</tr>
+<tr>
+<td><code>hexists</code> key field</td>
+<td>是否存在</td>
+</tr>
+<tr>
+<td><code>hget</code> key field</td>
+<td>获取</td>
+</tr>
+<tr>
+<td><code>hmget</code> key field [field …]</td>
+<td>批量获取</td>
+</tr>
+<tr>
+<td><code>hkeys</code> key</td>
+<td>获取所有FIELD</td>
+</tr>
+<tr>
+<td><code>hvals</code> key</td>
+<td>获取所有VALUE</td>
+</tr>
+<tr>
+<td><code>hgetall</code> key</td>
+<td>获取所有FIELD + VALUE</td>
+</tr>
+<tr>
+<td><code>hlen</code> key</td>
+<td>获取FIELD个数</td>
+</tr>
+<tr>
+<td><code>hscan</code> key cursor [MATCH pattern] [COUNT count]</td>
+<td>渐进式遍历，支持匹配（count不一定准）</td>
+</tr>
+<tr>
+<td><code>hdel</code> key field [field …]</td>
+<td>删除</td>
+</tr>
+<tr>
+<td><code>hincrby</code> key field increment</td>
+<td>自增</td>
+</tr>
+<tr>
+<td><code>hincrbyfloat</code> key field increment</td>
+<td>自增浮点数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="list-1"><a href="#list-1" class="headerlink" title="list"></a>list</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lpush</code> key value [value …] <br>—<br><code>lpushx</code>：KEY不存在时不操作<br><code>rpush</code>：尾部插入<br><code>rpushx</code>：尾部插入，KEY不存在时不操作</td>
+<td>头部插入</td>
+</tr>
+<tr>
+<td><code>lpop</code> key<br>—<br><code>rpop</code>：尾部弹出</td>
+<td>头部弹出</td>
+</tr>
+<tr>
+<td><code>blpop</code> key [key …] timeout<br>—<br><code>brpop</code>：尾部阻塞弹出</td>
+<td>头部弹出，列表为空则等待</td>
+</tr>
+<tr>
+<td><code>lindex</code> key index</td>
+<td>根据下标获取元素</td>
+</tr>
+<tr>
+<td><code>lrange</code> key start end</td>
+<td>根据范围获取元素</td>
+</tr>
+<tr>
+<td><code>llen</code> key</td>
+<td>获取列表长度</td>
+</tr>
+<tr>
+<td><code>lset</code> key index value</td>
+<td>设置指定索引位置的值</td>
+</tr>
+<tr>
+<td><code>linsert</code> key before / after pivot value</td>
+<td>在pivot的前后插入新值</td>
+</tr>
+<tr>
+<td><code>lrem</code> key count value</td>
+<td>移除指定数量的value</td>
+</tr>
+<tr>
+<td><code>ltrim</code> key start stop</td>
+<td>保留指定范围元素，其余删除</td>
+</tr>
+<tr>
+<td><code>brpoplpush</code> source destination timeout</td>
+<td>阻塞地从source尾部移动到destination头部</td>
+</tr>
+<tr>
+<td><code>rpoplpush</code> source destination timeout</td>
+<td>非阻塞移动</td>
+</tr>
+</tbody>
+</table>
+<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sadd</code> key member [member …]</td>
+<td>添加，返回成功个数</td>
+</tr>
+<tr>
+<td><code>srem</code> key member [member …]</td>
+<td>移除</td>
+</tr>
+<tr>
+<td><code>spop</code> key [count]</td>
+<td>随机移除并返回</td>
+</tr>
+<tr>
+<td><code>srandmember</code> key [count]</td>
+<td>随机返回</td>
+</tr>
+<tr>
+<td><code>smembers</code> key</td>
+<td>返回所有元素</td>
+</tr>
+<tr>
+<td><code>sismember</code> key member</td>
+<td>判断是否存在</td>
+</tr>
+<tr>
+<td><code>smove</code> source destination member</td>
+<td>将member从source移动到destination</td>
+</tr>
+<tr>
+<td><code>scard</code> key</td>
+<td>元素个数</td>
+</tr>
+<tr>
+<td><code>sscan</code> key cursor [match pattern] [count count]</td>
+<td>增量遍历（根据返回值继续遍历）</td>
+</tr>
+<tr>
+<td><code>sinter</code> key [key …]</td>
+<td>交集（找到最小的集合开始依次校验元素）</td>
+</tr>
+<tr>
+<td><code>sinterstore</code> destination key [key …]</td>
+<td>计算交集后保存到destination</td>
+</tr>
+<tr>
+<td><code>sunion</code> key [key …]</td>
+<td>并集</td>
+</tr>
+<tr>
+<td><code>sdiff</code> key [key …]</td>
+<td>差集（找到最小的，然后依次找到其他集合里面没有的）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="zset"><a href="#zset" class="headerlink" title="zset"></a>zset</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>zadd</code> key [NX] [XX] [CH] [INCR] score member [score member]</td>
+<td>增加元素和分值</td>
+</tr>
+<tr>
+<td><code>zrem</code> key member [member …]</td>
+<td>移除</td>
+</tr>
+<tr>
+<td><code>zcard</code> key</td>
+<td>元素个数</td>
+</tr>
+<tr>
+<td><code>zcount</code> key min max</td>
+<td>范围内元素数量</td>
+</tr>
+<tr>
+<td><code>zincrby</code> key increment member</td>
+<td>元素member的分值增加increment</td>
+</tr>
+<tr>
+<td><code>zrank</code> key member</td>
+<td>排名（从小到大）</td>
+</tr>
+<tr>
+<td><code>zrevrank</code> key member</td>
+<td>排名（从大到小）</td>
+</tr>
+<tr>
+<td><code>zscan</code> key cursor [MATCH pattern] [COUNT count]</td>
+<td>遍历</td>
+</tr>
+<tr>
+<td><code>zscore</code> key member</td>
+<td>获取分值</td>
+</tr>
+<tr>
+<td><code>zrange</code> key start stop [WITHSCORES]</td>
+<td>递增顺序获取区间元素</td>
+</tr>
+<tr>
+<td><code>zrevrange</code> key start stop [WITHSCORES]</td>
+<td>递减顺序获取区间元素</td>
+</tr>
+<tr>
+<td><code>zrangebyscore</code> key min max [WITHSCORES] [LIMIT offset count]</td>
+<td>递增顺序获取分值范围内元素</td>
+</tr>
+<tr>
+<td><code>zrevrangebyscore</code> key min max [WITHSCORES] [LIMIT offset count]</td>
+<td>递减顺序获取分值范围内元素</td>
+</tr>
+<tr>
+<td><code>zlexcount</code> key min max</td>
+<td>分值范围内元素个数</td>
+</tr>
+<tr>
+<td><code>zremrangebyrank</code> key start stop</td>
+<td>移除排名区间内元素</td>
+</tr>
+<tr>
+<td><code>zremrangebyscore</code> key min max</td>
+<td>移除分值区间内元素</td>
+</tr>
+<tr>
+<td><code>zremrangebylex</code> key min max</td>
+<td>移除字典序区间内元素</td>
+</tr>
+<tr>
+<td><code>zunionstore</code> destination numkeys key [key …] [WEIGHTS weight [weight …]] [AGGREGATE SUM / MIN / MAX]</td>
+<td>并集</td>
+</tr>
+<tr>
+<td><code>zinterstore</code> destination numkeys key [key …] [WEIGHTS weight [weight …]] [AGGREGATE SUM / MIN / MAX]</td>
+<td>交集</td>
+</tr>
+</tbody>
+</table>
+<h1 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h1><ul>
+<li><code>object</code> subcommand [arguments [arguments]]<ul>
+<li><code>refcount</code>：引用数；</li>
+<li><code>encoding</code>：内部存储编码方式；</li>
+<li><code>idletime</code>：空闲时间；</li>
+<li><code>freq</code>：访问频次$log$，在使用LFU侧率时有用；</li>
+</ul>
+</li>
+<li><code>type key</code>：类型；</li>
+<li><code>ttl key</code>：过期时间，单位为秒；</li>
+<li><code>expire key seconds</code>：设置过期时间，单位为秒；</li>
+<li><code>persist key</code>：删除过期时间；</li>
+<li><code>rename key new_key</code>：重命名；</li>
+<li><code>touch key [key]</code>：更新访问时间，避免被淘汰；</li>
+<li><code>exists key [key]</code>：检查是否存储，返回存在的数量；</li>
+<li><code>key pattern</code>：找到所有匹配的一次性返回，数量很大有可能阻塞服务器；</li>
+<li><code>scan cursor [MATCH pattern] [COUNT count]</code>：间断性遍历；</li>
+<li><code>randomkey</code>：随机；</li>
+<li><code>del key [key]</code>：删除；</li>
+<li><code>unlink key [key]</code>：删除，如果数据太大会异步执行；</li>
+<li><code>dump key</code>：序列化；</li>
+<li><code>restore key ttl serialized-value [replace]</code>：反序列化后与KEY关联；</li>
+<li><code>move key db</code>：移动到另一个DB；</li>
+<li><code>migrate</code>：移动到另一个实例；</li>
+<li><code>sort</code>：针对指定的KEY排序；</li>
+</ul>
+<h1 id="基础逻辑机制"><a href="#基础逻辑机制" class="headerlink" title="基础逻辑机制"></a>基础逻辑机制</h1><h2 id="阻塞"><a href="#阻塞" class="headerlink" title="阻塞"></a>阻塞</h2><p>在用BRPOP时，如果KEY为空则会阻塞等待，此时会在redisDb中维护所有阻塞的KEY：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> redisDb &#123;</div><div class="line">    ...</div><div class="line">    dict *blocking_keys;</div><div class="line">    dict *ready_keys;</div><div class="line">    ...</div><div class="line">&#125; redisDb;</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>每个KEY可能同时会阻塞多个客户端，用列表管理。</p>
+</blockquote>
+<p>当执行到PUSH命令时如果发现有被KEY阻塞了，则将其添加到ready_keys中：</p>
+<blockquote>
+<p>在PUSH指令完成后检查ready_keys，唤醒所有需要唤醒的客户端，部分客户端也可能已经超时了。</p>
+</blockquote>
+<h2 id="事件轮询"><a href="#事件轮询" class="headerlink" title="事件轮询"></a>事件轮询</h2><p>在REDIS中实现了一套事件机制，包含文件事件和时间事件，整体的结构为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/15.png" alt=""></p>
+<p>在编译时会根据操作系统的特性来选择文件事件等待的方式：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> HAVE_EVPORT</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ae_evport.c"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">else</span></span></div><div class="line">    <span class="meta">#<span class="meta-keyword">ifdef</span> HAVE_EPOLL</span></div><div class="line">    <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ae_epoll.c"</span></span></div><div class="line">    <span class="meta">#<span class="meta-keyword">else</span></span></div><div class="line">        <span class="meta">#<span class="meta-keyword">ifdef</span> HAVE_KQUEUE</span></div><div class="line">        <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ae_kqueue.c"</span></span></div><div class="line">        <span class="meta">#<span class="meta-keyword">else</span></span></div><div class="line">        <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ae_select.c"</span></span></div><div class="line">        <span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">    <span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>定义相同的接口来对不同的实现进行封装：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">aeApiCreate</span><span class="params">(aeEventLoop *eventLoop)</span></span>;</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">aeApiAddEvent</span><span class="params">(aeEventLoop *eventLoop, <span class="keyword">int</span> fd, <span class="keyword">int</span> mask)</span></span>;</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">aeApiDelEvent</span><span class="params">(aeEventLoop *eventLoop, <span class="keyword">int</span> fd, <span class="keyword">int</span> delmask)</span></span>;</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">aeApiPoll</span><span class="params">(aeEventLoop *eventLoop, <span class="keyword">struct</span> timeval *tvp)</span></span>;</div></pre></td></tr></table></figure>
+<p>时间事件会比较简单，每次找到最新到达的事件，如果到了就执行，还没到就继续等着。</p>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>命令：</p>
+<ul>
+<li><code>multi</code>：开启事务；</li>
+<li><code>exec</code>：执行；</li>
+<li><code>discard</code>：放弃；</li>
+<li><code>watch</code>：乐观锁机制，当对应的KEY未修改时才会提交事务；</li>
+<li><code>unwatch</code>：取消监听；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>指令被保存在client中。</p>
+<p>当watch时，会在client保存监听的KEY，同时在db上维护未修改的KEY（发生写操作时移除）。</p>
+</blockquote>
+<h2 id="客户端命令执行流程"><a href="#客户端命令执行流程" class="headerlink" title="客户端命令执行流程"></a>客户端命令执行流程</h2><p>在客户端连接到REDIS服务器的处理流程为：</p>
+<ul>
+<li>监听端口；</li>
+<li>当有连接事件时，创建相应的数据结构，并开始监听读事件；</li>
+</ul>
+<p>代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">initServer</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="comment">// 监听端口：IPV4、IPV6</span></div><div class="line">    <span class="keyword">if</span> (server.port != <span class="number">0</span> &amp;&amp;</div><div class="line">        listenToPort(server.port,server.ipfd,&amp;server.ipfd_count) == C_ERR)</div><div class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line"></div><div class="line">    <span class="comment">// 注册事件处理方法： acceptTcpHandler</span></div><div class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; server.ipfd_count; j++) &#123;</div><div class="line">        <span class="keyword">if</span> (aeCreateFileEvent(server.el, server.ipfd[j], AE_READABLE,</div><div class="line">            acceptTcpHandler,<span class="literal">NULL</span>) == AE_ERR)</div><div class="line">            &#123;</div><div class="line">                serverPanic(</div><div class="line">                    <span class="string">"Unrecoverable error creating server.ipfd file event."</span>);</div><div class="line">            &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">acceptTcpHandler</span><span class="params">(aeEventLoop *el, <span class="keyword">int</span> fd, <span class="keyword">void</span> *privdata, <span class="keyword">int</span> mask)</span> </span>&#123;</div><div class="line">    <span class="keyword">while</span>(max--) &#123;</div><div class="line">        <span class="comment">// ACCEPT获取IP等信息</span></div><div class="line">        cfd = anetTcpAccept(server.neterr, fd, cip, <span class="keyword">sizeof</span>(cip), &amp;cport);</div><div class="line">        <span class="keyword">if</span> (cfd == ANET_ERR) &#123;</div><div class="line">            <span class="keyword">if</span> (errno != EWOULDBLOCK)</div><div class="line">                serverLog(LL_WARNING,</div><div class="line">                    <span class="string">"Accepting client connection: %s"</span>, server.neterr);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        acceptCommonHandler(cfd,<span class="number">0</span>,cip);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">acceptCommonHandler</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">int</span> flags, <span class="keyword">char</span> *ip)</span> </span>&#123;</div><div class="line">    client *c;</div><div class="line">    <span class="keyword">if</span> ((c = createClient(fd)) == <span class="literal">NULL</span>) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function">client *<span class="title">createClient</span><span class="params">(<span class="keyword">int</span> fd)</span> </span>&#123;</div><div class="line">    <span class="comment">// 创建CLIENT</span></div><div class="line">    client *c = zmalloc(<span class="keyword">sizeof</span>(client));</div><div class="line">    <span class="keyword">if</span> (fd != <span class="number">-1</span>) &#123;</div><div class="line">        <span class="comment">// 设置非阻塞</span></div><div class="line">        anetNonBlock(<span class="literal">NULL</span>,fd);</div><div class="line">        <span class="comment">// 设置NO_DELAY</span></div><div class="line">        anetEnableTcpNoDelay(<span class="literal">NULL</span>,fd);</div><div class="line">        <span class="keyword">if</span> (server.tcpkeepalive)</div><div class="line">            anetKeepAlive(<span class="literal">NULL</span>,fd,server.tcpkeepalive);</div><div class="line">        <span class="comment">// 添加事件监控</span></div><div class="line">        <span class="keyword">if</span> (aeCreateFileEvent(server.el,fd,AE_READABLE,</div><div class="line">            readQueryFromClient, c) == AE_ERR)</div><div class="line">        &#123;</div><div class="line">            close(fd);</div><div class="line">            zfree(c);</div><div class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接下来客户端发送命令，执行流程为：</p>
+<ul>
+<li>触发事件，读取客户端发送的命令；</li>
+<li>执行命令注册好的回调函数；</li>
+<li>执行成功后，将结果写到客户端对应的缓存上，客户端也挂到等待写出的链表上；</li>
+</ul>
+<p>代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">readQueryFromClient</span><span class="params">(aeEventLoop *el, <span class="keyword">int</span> fd, <span class="keyword">void</span> *privdata, <span class="keyword">int</span> mask)</span> </span>&#123;</div><div class="line">    readlen = PROTO_IOBUF_LEN;</div><div class="line">    <span class="comment">// 读取客户端命令</span></div><div class="line">    nread = read(fd, c-&gt;querybuf+qblen, readlen);</div><div class="line">    <span class="comment">// 处理命令</span></div><div class="line">    processInputBufferAndReplicate(c);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">processInputBufferAndReplicate</span><span class="params">(client *c)</span> </span>&#123;</div><div class="line">    processInputBuffer(c);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">processInputBuffer</span><span class="params">(client *c)</span> </span>&#123;</div><div class="line">    processCommand(c);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">processCommand</span><span class="params">(client *c)</span> </span>&#123;</div><div class="line">    call(c,CMD_CALL_FULL);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">call</span><span class="params">(client *c, <span class="keyword">int</span> flags)</span> </span>&#123;</div><div class="line">    c-&gt;cmd-&gt;proc(c);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>找到命令处理函数后，执行完成会调用addReply把数据添加到输出缓存区。最后，在事件循环中，会检查并把数据缓存写给客户端：</p>
+<ul>
+<li>对于输出缓存区非空的客户端，监听可写事件；</li>
+<li>接到可写事件后刷数据；</li>
+</ul>
+<p>代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">aeMain</span><span class="params">(aeEventLoop *eventLoop)</span> </span>&#123;</div><div class="line">    eventLoop-&gt;stop = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span> (!eventLoop-&gt;stop) &#123;</div><div class="line">        <span class="keyword">if</span> (eventLoop-&gt;beforesleep != <span class="literal">NULL</span>)</div><div class="line">            eventLoop-&gt;beforesleep(eventLoop);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">beforeSleep</span><span class="params">(<span class="keyword">struct</span> aeEventLoop *eventLoop)</span> </span>&#123;</div><div class="line">    handleClientsWithPendingWrites();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">handleClientsWithPendingWrites</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> processed = listLength(server.clients_pending_write);</div><div class="line">    listRewind(server.clients_pending_write,&amp;li);</div><div class="line">    </div><div class="line">    <span class="comment">// 遍历需要输出的客户端</span></div><div class="line">    <span class="keyword">while</span>((ln = listNext(&amp;li))) &#123;</div><div class="line">        <span class="comment">// 刷数据</span></div><div class="line">        <span class="keyword">if</span> (writeToClient(c-&gt;fd,c,<span class="number">0</span>) == C_ERR) <span class="keyword">continue</span>;</div><div class="line">        <span class="comment">// 如果还有没写完的数据，则继续刷</span></div><div class="line">        <span class="keyword">if</span> (clientHasPendingReplies(c)) &#123;</div><div class="line">            <span class="keyword">int</span> ae_flags = AE_WRITABLE;</div><div class="line">            <span class="comment">// 注册可写事件的回调函数，继续刷数据</span></div><div class="line">            <span class="keyword">if</span> (aeCreateFileEvent(server.el, c-&gt;fd, ae_flags,</div><div class="line">                sendReplyToClient, c) == AE_ERR)</div><div class="line">            &#123;</div><div class="line">                    freeClientAsync(c);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> processed;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="淘汰"><a href="#淘汰" class="headerlink" title="淘汰"></a>淘汰</h1><p>在内存不够用的时候会考虑删除部分数据，相关配置有：</p>
+<ul>
+<li><code>maxmemory</code>：内存限制，在达到限制时启动淘汰机制；</li>
+<li><code>maxmemory_policy</code>：淘汰策略；</li>
+<li><code>maxmemory_samples</code>：随机取样精度；</li>
+</ul>
+<p>策略：</p>
+<ul>
+<li><code>expires</code>：从有设置过期时间的里面挑（可能无法淘汰出足够的空间）；<ul>
+<li><code>volatile-lru</code></li>
+<li><code>volatile-ttl</code></li>
+<li><code>volatile-lfu</code></li>
+<li><code>volatile-random</code></li>
+</ul>
+</li>
+<li><code>dict</code>：从所有里面挑；<ul>
+<li><code>allkeys-lru</code></li>
+<li><code>allkeys-lfu</code></li>
+<li><code>allkeys-random</code></li>
+</ul>
+</li>
+<li><code>noeviction</code>：不淘汰（默认值）；</li>
+</ul>
+<p>Redis在访问数据时会通过lookupKey查找，于是在这个方法里面可以统一设置robj-&gt;lru值，作为后续淘汰的依据：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="function">robj *<span class="title">lookupKey</span><span class="params">(redisDb *db, robj *key, <span class="keyword">int</span> flags)</span> </span>&#123;</div><div class="line">    dictEntry *de = dictFind(db-&gt;dict,key-&gt;ptr);</div><div class="line">    <span class="keyword">if</span> (de) &#123;</div><div class="line">        robj *val = dictGetVal(de);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (server.rdb_child_pid == <span class="number">-1</span> &amp;&amp; server.aof_child_pid == <span class="number">-1</span> &amp;&amp; !(flags &amp; LOOKUP_NOTOUCH))</div><div class="line">        &#123;</div><div class="line">            <span class="keyword">if</span> (server.maxmemory_policy &amp; MAXMEMORY_FLAG_LFU) &#123;</div><div class="line">                updateLFU(val);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                val-&gt;lru = LRU_CLOCK();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> val;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">updateLFU</span><span class="params">(robj *val)</span> </span>&#123;</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> counter = LFUDecrAndReturn(val);</div><div class="line">    counter = LFULogIncr(counter);</div><div class="line">    val-&gt;lru = (LFUGetTimeInMinutes()&lt;&lt;<span class="number">8</span>) | counter;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>具体执行筛选和释放在evict.c/freeMemoryIfNeeded方法完成，思路是：</p>
+<blockquote>
+<p>捞出一批数据，从数据中淘汰一部分数据，从全局来看不一定是需要淘汰的，<font color="red">并非最优解</font>。</p>
+</blockquote>
+<h1 id="过期"><a href="#过期" class="headerlink" title="过期"></a>过期</h1><p>在到达KEY设置的过期时间后，数据并不是马上就被删除了，而是通过一些机制来处理：</p>
+<ul>
+<li>在读写KEY的时候判断是否超时，如果超时则删除；</li>
+<li>定期删除；<ul>
+<li>实现在expire/activeExpireCycle方法中；</li>
+<li>每次随机尝试一定次数的db-&gt;expires中的数据，需要控制时间，不能影响正常读写；</li>
+</ul>
+</li>
+<li>内存不足时删除（淘汰，略）；</li>
+</ul>
+<h1 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h1><p>配置：</p>
+<ul>
+<li><code>save 900 1</code>：900秒至少有1次写入则触发生成快照；</li>
+<li><code>dbfilename dump.rdb</code>：文件名；</li>
+<li><code>dir /home/work/app/redis/data/</code>：文件保存路径；</li>
+<li><code>stop-writes-on-bgsave-error yes</code>：持久化出错时主进程是否停止写入；</li>
+<li><code>rdbcompression yes</code>：是否压缩（关掉可以节省CPU🤔）；</li>
+<li><code>rdbchecksum yes</code>：导入时是否检查；</li>
+<li><code>appendonly yes</code>：是否开启AOF；</li>
+<li><code>appendfilename &quot;appendonly.aof&quot;</code>：文件名；</li>
+<li><code>appendfsync</code>：同步方式（刷盘）<ul>
+<li><code>always</code>：每个命令都要刷，最慢也最安全；</li>
+<li><code>everysec</code>：每秒刷一次，折中；</li>
+<li><code>no</code>：由OS决定什么时候刷，最快也最危险；</li>
+</ul>
+</li>
+</ul>
+<p>感觉rdb类似checkpoint生成全量的存储，启动加载快，aof类似redo，增量写盘快。</p>
+<h2 id="rdb"><a href="#rdb" class="headerlink" title="rdb"></a>rdb</h2><p>命令：</p>
+<ul>
+<li><code>save</code>：阻塞，除了手动触发还有；<ul>
+<li><code>shutdown</code>：关机；</li>
+</ul>
+</li>
+<li><code>bgsave</code>：非阻塞除了手动显示地触发<ul>
+<li>定时配置；</li>
+<li>主从复制；</li>
+<li><code>flushall</code>：清空数据；</li>
+</ul>
+</li>
+</ul>
+<p>流程：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/07.jpg" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>载入时只能处理PUBLISH、SUBSCRIBE等命令。</p>
+</blockquote>
+<h2 id="aof"><a href="#aof" class="headerlink" title="aof"></a>aof</h2><p>可以用aof做全量持久化，也可以配合rdb做增量持久化。本身比较简单：</p>
+<blockquote>
+<p>把写操作以日志的形式保存下来。</p>
+</blockquote>
+<p>比较复杂的是<font color="red">日志重写</font>，触发条件：</p>
+<blockquote>
+<p>AOF的文件大小大于阈值，且距离最后一次重写的增长比例超过阈值，则尝试触发重写。</p>
+</blockquote>
+<p>流程：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/05.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>如果是混合持久化，在子进程中保存aof前先保存rdb，接着写入aof的是后面的操作。</p>
+<p>父进程持续响应请求。</p>
+<p>过程中父进程把数据写入内存，通过管道告诉子进程，在子进程中完成追加，避免最后一把父进程要写入的数据太多影响性能。</p>
+</blockquote>
+<h1 id="多机玩法"><a href="#多机玩法" class="headerlink" title="多机玩法"></a>多机玩法</h1><h2 id="主从模式"><a href="#主从模式" class="headerlink" title="主从模式"></a>主从模式</h2><p>使用<code>slaveof</code>命令可以把自己设置为另一台机器的从服务器，作用是：</p>
+<ul>
+<li>读写分离</li>
+<li>数据容灾</li>
+</ul>
+<p>初始化流程：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/08.jpg" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>Master在同步前保存RDB。</p>
+<p>Master维护复制缓存区，配合OFFSET来支持部分重同步，有点像断点续传。</p>
+</blockquote>
+<p>后续Master写请求会写入缓存区同步给Slaver，而Slaver则需要定时发送心跳信息给Master，心跳信息中包含当前偏移量。</p>
+<h2 id="哨兵-Sentinel-模式"><a href="#哨兵-Sentinel-模式" class="headerlink" title="哨兵(Sentinel)模式"></a>哨兵(Sentinel)模式</h2><p>相比主从模式需要手工切换，使用哨兵模式可以实现<font color="red">自动切换</font>，启动命令（单独进程）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">redis-server /path/to/sentinel.config --sentinel</div><div class="line">或</div><div class="line">redis-sentinel /path/to/sentinel.config</div></pre></td></tr></table></figure>
+<p>启动后建立连接：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/09.jpg" alt=""></p>
+<p>整体流程：</p>
+<ul>
+<li>建立连接，订阅频道（发现其他哨兵）；</li>
+<li>哨兵定时发送INFO命令，通过响应拿到其他机器的详细信息（发现从服务器）；</li>
+<li>哨兵定时发送PING命令探测状态；</li>
+<li>哨兵发现主服务器下线且有足够数量的哨兵认为主服务器下线，开始故障修复：<ul>
+<li><code>哨兵选举</code>；</li>
+<li><code>选新主服务器</code>：挑选足够健康的从服务：心跳正常、数据最新等等；</li>
+<li><code>从转主</code>：哨兵向候选主机发送slaveof none命令，使其转变成一个主服务器；</li>
+<li><code>认新主</code>：哨兵向其他从机发送slaveof promote_slave，使其转变为候选主服务器的从服务器；</li>
+<li><code>老主变从</code>：在旧的主服务器恢复后，哨兵会向其发送命令变成从服务器；</li>
+</ul>
+</li>
+</ul>
+<h2 id="集群-Cluster-模式"><a href="#集群-Cluster-模式" class="headerlink" title="集群(Cluster)模式"></a>集群(Cluster)模式</h2><p>在<font color="red">数据太多、单机扛不住</font>的时候，需要开启集群模式：</p>
+<blockquote>
+<p>REDIS将KEY分了16384个SLOT，单个主服务器只负责一部分的SLOT。</p>
+</blockquote>
+<p>在CLIENT访问集群时如果刚好SLOT不在，则会收到MOVED重定向：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/10.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>在CLIENT会有缓存，避免频繁重定向。</p>
+<p>单条命令操作不同的节点的KEY会报错，可以用HASH TAGS的机制把不同KEY路由到单个SLOT。</p>
+</blockquote>
+<p>集群模式中主从服务器的关系为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/13.jpg" alt=""></p>
+<p>为了提高可靠性会冗余从服务器，如果给每个节点都冗余会比较浪费，更好的解决办法是：</p>
+<blockquote>
+<p>通过<font color="red">副本漂移</font>，在主服务器挂掉以后，找到冗余的从服务器挂到自己下面。</p>
+</blockquote>
+<p>在主A挂掉后调整为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/redis/12.jpg" alt=""></p>
+<p>在有新节点加入后，需要通过把SLOT在节点间迁移来重新达到负载均衡。</p>
+<h1 id="常见缓存问题及解法"><a href="#常见缓存问题及解法" class="headerlink" title="常见缓存问题及解法"></a>常见缓存问题及解法</h1><ul>
+<li><code>缓存穿透</code><ul>
+<li><code>描述</code>：缓存查不到数据时，从数据库捞；于是可以利用不存在的KEY来攻击数据库；</li>
+<li><code>解法</code><ul>
+<li>缓存不存在时就算了，在数据库有更新时，同步到缓存；</li>
+<li>缓存包装空值；</li>
+<li>布隆过滤器保存所有可能存在的KEY，在取数据前先判断有没有；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>缓存击穿</code><ul>
+<li><code>描述</code>：在KEY过期时出现大量访问；</li>
+<li><code>解法</code>：在多线程读的需要落DB时，通过加锁来避免大量DB重复访问，有点像缓存Future；</li>
+</ul>
+</li>
+<li><code>缓存雪崩</code><ul>
+<li><code>描述</code>：短时间大量KEY过期，导致大量请求落到DB；</li>
+<li><code>解法</code>：在过期时间加一定的随机值；</li>
+</ul>
+</li>
+<li><code>缓存一致性</code><ul>
+<li><code>描述</code>：缓存中的数据和DB中的数据不一致；</li>
+<li><code>解法</code><ul>
+<li><code>Cache aside</code><ul>
+<li><code>读取</code>：缓存中没有则从DB读取并放入缓存，理论上并发读写就会有不一致（读到的老数据被写到了缓存）；</li>
+<li><code>更新</code>：保存DB失效缓存，避免并发写导致的不一致；</li>
+</ul>
+</li>
+<li><code>Read through</code><ul>
+<li><code>读取</code>：缓存服务封装掉缓存不存在时回查DB的逻辑；</li>
+</ul>
+</li>
+<li><code>Write through</code><ul>
+<li><code>更新</code>：缓存不存在时，直接更新DB后返回；缓存存在时，更新DB后再更新缓存；</li>
+</ul>
+</li>
+<li><code>Write behind Caching</code><ul>
+<li><code>更新</code>：只修改缓存，然后异步的回写到DB，类似PageCache，有可能丢数据；</li>
+</ul>
+</li>
+<li><code>其他</code><ul>
+<li><code>读取</code>：从缓存查不到时不从DB查；</li>
+<li><code>更新</code>：在DB更新后，增量拉取修改的数据或者通过监听DB的变化来更新缓存；</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://juejin.im/post/5d71d3bee51d453b5f1a04f1#heading-9" target="_blank" rel="external">深入了解Redis底层数据结构</a></li>
+<li><a href="https://wiki.jikexueyuan.com/project/redis/intset.html" target="_blank" rel="external">Redis 源码日志</a></li>
+<li><a href="http://redisbook.com/" target="_blank" rel="external">Redis 设计与实现</a></li>
+<li><a href="https://www.cnblogs.com/linxiyue/p/10945216.html" target="_blank" rel="external">Redis中的LRU淘汰策略分析</a></li>
+<li><a href="https://www.cnblogs.com/linxiyue/p/10955533.html" target="_blank" rel="external">Redis中的LFU算法</a></li>
+<li><a href="https://www.cnblogs.com/xuliangxing/p/7151812.html" target="_blank" rel="external">Redis学习笔记–Redis数据过期策略详解</a></li>
+<li><a href="https://wiki.jikexueyuan.com/project/redis/guard-mechanism.html" target="_blank" rel="external">Redis哨兵机制</a></li>
+<li><a href="https://wenchao.ren/2019/07/Select%E3%80%81Epoll%E3%80%81KQueue%E5%8C%BA%E5%88%AB/" target="_blank" rel="external">Select、poll、Epoll、KQueue区别</a></li>
+<li><a href="https://cbsheng.github.io/posts/redis里一个简单请求如何被处理/" target="_blank" rel="external">redis里一个简单请求如何被处理</a></li>
+<li><a href="https://juejin.im/post/5bbcc8325188255c74553ae3" target="_blank" rel="external">深入理解Redis的scan命令</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag">#redis</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/spring/" rel="next" title="SPRING">
+                <i class="fa fa-chevron-left"></i> SPRING
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/28/distributed/" rel="prev" title="分布式基础">
+                分布式基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据格式"><span class="nav-number">1.</span> <span class="nav-text">数据格式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内部格式"><span class="nav-number">1.1.</span> <span class="nav-text">内部格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sds"><span class="nav-number">1.1.1.</span> <span class="nav-text">sds</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zskiplist"><span class="nav-number">1.1.2.</span> <span class="nav-text">zskiplist</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list"><span class="nav-number">1.1.3.</span> <span class="nav-text">list</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dict"><span class="nav-number">1.1.4.</span> <span class="nav-text">dict</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#intset"><span class="nav-number">1.1.5.</span> <span class="nav-text">intset</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ziplist"><span class="nav-number">1.1.6.</span> <span class="nav-text">ziplist</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#quicklist"><span class="nav-number">1.1.7.</span> <span class="nav-text">quicklist</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stream"><span class="nav-number">1.1.8.</span> <span class="nav-text">stream</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型"><span class="nav-number">1.2.</span> <span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#string"><span class="nav-number">1.2.1.</span> <span class="nav-text">string</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash"><span class="nav-number">1.2.2.</span> <span class="nav-text">hash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">list</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#set"><span class="nav-number">1.2.4.</span> <span class="nav-text">set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zset"><span class="nav-number">1.2.5.</span> <span class="nav-text">zset</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#通用命令"><span class="nav-number">2.</span> <span class="nav-text">通用命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基础逻辑机制"><span class="nav-number">3.</span> <span class="nav-text">基础逻辑机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#阻塞"><span class="nav-number">3.1.</span> <span class="nav-text">阻塞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件轮询"><span class="nav-number">3.2.</span> <span class="nav-text">事件轮询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务"><span class="nav-number">3.3.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端命令执行流程"><span class="nav-number">3.4.</span> <span class="nav-text">客户端命令执行流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#淘汰"><span class="nav-number">4.</span> <span class="nav-text">淘汰</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#过期"><span class="nav-number">5.</span> <span class="nav-text">过期</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#持久化"><span class="nav-number">6.</span> <span class="nav-text">持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rdb"><span class="nav-number">6.1.</span> <span class="nav-text">rdb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#aof"><span class="nav-number">6.2.</span> <span class="nav-text">aof</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多机玩法"><span class="nav-number">7.</span> <span class="nav-text">多机玩法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主从模式"><span class="nav-number">7.1.</span> <span class="nav-text">主从模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#哨兵-Sentinel-模式"><span class="nav-number">7.2.</span> <span class="nav-text">哨兵(Sentinel)模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集群-Cluster-模式"><span class="nav-number">7.3.</span> <span class="nav-text">集群(Cluster)模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常见缓存问题及解法"><span class="nav-number">8.</span> <span class="nav-text">常见缓存问题及解法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">9.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2020/04/22/redis/';
+      var disqus_title = "REDIS";
+      var disqus_url = 'http://yoursite.com/2020/04/22/redis/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

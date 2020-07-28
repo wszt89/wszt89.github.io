@@ -1,0 +1,1012 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spring - 基础 - java," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="SPRING
+控制反转相比普通玩法的优势在于：
+
+减少重复代码；
+解耦；
+
+Bean的管理是Spring的基石，通过工厂模式（BeanFactory）创建。
+BeanFactory创建的整体流程为：
+
+加载定义
+实例化
+设置属性
+初始化
+
+如下（在过程中暴露出扩展点，很多Spring的功能利用这些扩展点实现）：
+
+用到的几个对象是：
+
+BeanDefinition
+BeanWrapper
+Bean">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SPRING">
+<meta property="og:url" content="http://yoursite.com/2020/04/20/spring/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="SPRING
+控制反转相比普通玩法的优势在于：
+
+减少重复代码；
+解耦；
+
+Bean的管理是Spring的基石，通过工厂模式（BeanFactory）创建。
+BeanFactory创建的整体流程为：
+
+加载定义
+实例化
+设置属性
+初始化
+
+如下（在过程中暴露出扩展点，很多Spring的功能利用这些扩展点实现）：
+
+用到的几个对象是：
+
+BeanDefinition
+BeanWrapper
+Bean">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/01.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/06.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/07.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/08.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/09.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/10.png">
+<meta property="og:updated_time" content="2020-05-06T08:28:51.981Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SPRING">
+<meta name="twitter:description" content="SPRING
+控制反转相比普通玩法的优势在于：
+
+减少重复代码；
+解耦；
+
+Bean的管理是Spring的基石，通过工厂模式（BeanFactory）创建。
+BeanFactory创建的整体流程为：
+
+加载定义
+实例化
+设置属性
+初始化
+
+如下（在过程中暴露出扩展点，很多Spring的功能利用这些扩展点实现）：
+
+用到的几个对象是：
+
+BeanDefinition
+BeanWrapper
+Bean">
+<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/20/spring/"/>
+
+
+  <title> SPRING | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SPRING
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-20T08:20:06+08:00" content="2020-04-20">
+              2020-04-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/20/spring/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/20/spring/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/20/spring/" class="leancloud_visitors" data-flag-title="SPRING">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="SPRING"><a href="#SPRING" class="headerlink" title="SPRING"></a>SPRING</h1><p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/01.png" alt=""></p>
+<h2 id="控制反转"><a href="#控制反转" class="headerlink" title="控制反转"></a>控制反转</h2><p>相比普通玩法的优势在于：</p>
+<ul>
+<li>减少重复代码；</li>
+<li>解耦；</li>
+</ul>
+<p>Bean的管理是Spring的基石，通过工厂模式（BeanFactory）创建。</p>
+<h3 id="BeanFactory"><a href="#BeanFactory" class="headerlink" title="BeanFactory"></a>BeanFactory</h3><p>创建的整体流程为：</p>
+<ul>
+<li><code>加载定义</code></li>
+<li><code>实例化</code></li>
+<li><code>设置属性</code></li>
+<li><code>初始化</code></li>
+</ul>
+<p>如下（在过程中暴露出扩展点，很多Spring的功能利用这些扩展点实现）：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/06.png" alt=""></p>
+<p>用到的几个对象是：</p>
+<ul>
+<li><code>BeanDefinition</code></li>
+<li><code>BeanWrapper</code></li>
+<li><code>BeanDefinitionHolder</code></li>
+</ul>
+<p>BEAN的作用域（scope）有：</p>
+<ul>
+<li><code>singleton</code>：共享、单例；</li>
+<li><code>prototype</code>：每次请求都创建新的实例；</li>
+<li><code>request or session or global session</code>：和HTTP请求相关，基本没有用过；</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>在创建BEAN时需要考虑依赖关系，prototype类型的不允许互相依赖。</p>
+<p>FactoryBean实例化时使用getObject。</p>
+</blockquote>
+<h3 id="ApplicationContext"><a href="#ApplicationContext" class="headerlink" title="ApplicationContext"></a>ApplicationContext</h3><p>仅仅有一个工厂，用起来并不是那么的方便，于是继续封装：</p>
+<ul>
+<li>事件；</li>
+<li>基于注解的Bean定义；</li>
+<li>定义组装常用的扩展；</li>
+<li>国际化；</li>
+</ul>
+<p>实现方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// AbstractApplicationContext</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</div><div class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>.startupShutdownMonitor) &#123;</div><div class="line">        prepareRefresh();</div><div class="line">      </div><div class="line">        <span class="comment">// 创建BeanFactory并进行配置</span></div><div class="line">        ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</div><div class="line">        prepareBeanFactory(beanFactory);</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            postProcessBeanFactory(beanFactory);</div><div class="line">          </div><div class="line">            <span class="comment">// 调用BeanFactoryPostProcessor</span></div><div class="line">            invokeBeanFactoryPostProcessors(beanFactory);</div><div class="line">            <span class="comment">// 注册BeanPostProcessor</span></div><div class="line">            registerBeanPostProcessors(beanFactory);</div><div class="line">            <span class="comment">// 初始化消息</span></div><div class="line">            initMessageSource();</div><div class="line">            <span class="comment">// 初始化事件</span></div><div class="line">            initApplicationEventMulticaster();</div><div class="line">          </div><div class="line">            onRefresh();</div><div class="line">            </div><div class="line">            <span class="comment">// 注册时间监听器：ApplicationListener</span></div><div class="line">            registerListeners();</div><div class="line">            <span class="comment">// 使用beanFactory.getBean进行初始化</span></div><div class="line">            finishBeanFactoryInitialization(beanFactory);</div><div class="line">            <span class="comment">// 发送ContextRefreshedEvent事件</span></div><div class="line">            finishRefresh();</div><div class="line">        &#125; </div><div class="line">        <span class="keyword">catch</span> (BeansException ex) &#123; &#125; </div><div class="line">        <span class="keyword">finally</span> &#123; &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>提供修改BeanFactory的钩子BeanFactoryPostProcessor，其余的功能依旧是用BeanPostProcessor来完成。</p>
+</blockquote>
+<p>事件机制依赖于ApplicationListener、ApplicationEvent，玩法是：</p>
+<ul>
+<li><code>发布消息</code>：ApplicationContext.publishEvent</li>
+<li><code>处理消息</code>：ApplicationListener.onApplicationEvent</li>
+</ul>
+<p>常用事件类型有：</p>
+<ul>
+<li><code>ContextRefreshedEvent(refresh)</code></li>
+<li><code>ContextStartedEvent(start)</code></li>
+<li><code>ContextStoppedEvent(stop)</code></li>
+<li><code>ContextClosedEvent(close)</code></li>
+<li><code>RequestHandledEvent</code></li>
+</ul>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>注意到ApplicationListener参数是泛型，类型可能与实际的ApplicationEvent不同。在Spring中调用时会拦截异常，根据异常的Msg来处理。</p>
+<p>应用里面有多个ApplicationContext，都会发事件。</p>
+</blockquote>
+<p>常用注解：</p>
+<ul>
+<li><code>@Component</code></li>
+<li><code>@Configuration</code></li>
+<li><code>@PostConstruct</code></li>
+<li><code>@PreDestory</code></li>
+<li><code>@DependsOn</code></li>
+<li><code>@Autowired</code></li>
+<li><code>@Resource</code></li>
+</ul>
+<h2 id="面向切面编程"><a href="#面向切面编程" class="headerlink" title="面向切面编程"></a>面向切面编程</h2><p>有些性质的代码具有通用性，比如打日志什么的，如果每次都写会比较麻烦，有没有办法呢？通过代理模式来做：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/07.png" alt=""></p>
+<p>在Java中能够实现动态代理的方式有两种：</p>
+<ul>
+<li>JDK动态代理；</li>
+<li>CGLIB；</li>
+</ul>
+<p>JDK动态代理的限制是只能代理接口，原因是：<font color="green">动态生成的类是java.lang.reflect.Proxy的子类，不能同时extend另一个类</font>，但是可以implement多个接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestProxy</span> </span>&#123;</div><div class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Hello</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">void</span> <span class="title">hi</span><span class="params">(String msg)</span></span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloImpl</span> <span class="keyword">implements</span> <span class="title">Hello</span> </span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hi</span><span class="params">(String msg)</span> </span>&#123;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@AllArgsConstructor</span></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloProxy</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</div><div class="line">        <span class="keyword">private</span> Object proxied = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">            <span class="keyword">return</span> method.invoke(proxied, args);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Hello hello = (Hello) Proxy.newProxyInstance(Hello.class.getClassLoader(), <span class="keyword">new</span> Class[]&#123;Hello.class&#125;, <span class="keyword">new</span> HelloProxy(<span class="keyword">new</span> HelloImpl()));</div><div class="line"></div><div class="line">        System.out.println(hello.getClass().getSuperclass()); <span class="comment">// java.lang.reflect.Proxy</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>而CGLIB则用ASM直接整出来一个目标类的子类，所以没有限制：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestProxy</span> </span>&#123;</div><div class="line">    <span class="meta">@NoArgsConstructor</span></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hi</span><span class="params">(String msg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"hello"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@AllArgsConstructor</span></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloProxy</span> <span class="keyword">implements</span> <span class="title">MethodInterceptor</span> </span>&#123;</div><div class="line">        <span class="keyword">private</span> Object target;</div><div class="line"></div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object o, Method method, Object[] args, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">            System.out.println(<span class="string">"before"</span>);</div><div class="line">            Object ret = method.invoke(target, args);</div><div class="line">            System.out.println(<span class="string">"after"</span>);</div><div class="line">            <span class="keyword">return</span> ret;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Hello obj = <span class="keyword">new</span> Hello();</div><div class="line"></div><div class="line">        Enhancer en = <span class="keyword">new</span> Enhancer();</div><div class="line">        en.setSuperclass(obj.getClass());</div><div class="line">        en.setCallback(<span class="keyword">new</span> HelloProxy(obj));</div><div class="line"></div><div class="line">        Hello objProxy = (Hello) en.create();</div><div class="line">        objProxy.hi(<span class="string">"abc"</span>);</div><div class="line"></div><div class="line">        System.out.println(objProxy.getClass()); <span class="comment">// class TestProxy$Hello$$EnhancerByCGLIB$$5226ea3e</span></div><div class="line">        System.out.println(objProxy.getClass().getSuperclass());<span class="comment">// class TestProxy$Hello</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>通过参数proxyTargetClass来设置代理方式。</p>
+<p>在Spring通过InstantiationAwareBeanPostProcessor.postProcessBeforeInstantiation扩展（在实例化之前）来改写BeanDefinition。</p>
+<p>使用CGLIB多次代理时，并不会一层一层地继承下去。</p>
+</blockquote>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>使用模板模式（JdbcTemplate）简化了JDBC的数据库操作，但是还不够。手动事务的操作如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Connection cnn;</div><div class="line"></div><div class="line">cnn.setAutoCommit(<span class="keyword">false</span>);</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    <span class="comment">// 操作DB</span></div><div class="line"></div><div class="line">    cnn.commit();</div><div class="line">&#125; <span class="keyword">catch</span> (SQLException se) &#123;</div><div class="line">    cnn.rollback();</div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">    cnn.setAutoCommit(<span class="keyword">true</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>每次手动写不仅麻烦还容易出错，更简单的可以利用@Transactional来完成，也是AOP的一种场景。</p>
+<h2 id="WEB服务"><a href="#WEB服务" class="headerlink" title="WEB服务"></a>WEB服务</h2><p>在SpringMVC中定义了一套处理HTTP请求的流程：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/08.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>借用前面的基础，搭建的一套处理WEB请求的流程，好像没啥需要特别深入了解的。</p>
+</blockquote>
+<h1 id="SPRING-BOOT"><a href="#SPRING-BOOT" class="headerlink" title="SPRING BOOT"></a>SPRING BOOT</h1><p>只能用SPRING来搭架子，要跑起来还需要依赖其他的工具：比如WEB服务需要先搞个TOMCAT，然后把WAR包弄进去才能跑起来。</p>
+<p>连同其他问题一起考虑，于是SPRING BOOT来了：</p>
+<blockquote>
+<ul>
+<li>内嵌WEB容器，部署、启动更简单；</li>
+<li>无需XML，配置更简单；</li>
+<li>自动配置、约定大于配置、懒人整合包（Starter），从而更进一步简化配置；</li>
+<li>监控、运维；</li>
+</ul>
+</blockquote>
+<h1 id="SPRING-CLOUD"><a href="#SPRING-CLOUD" class="headerlink" title="SPRING CLOUD"></a>SPRING CLOUD</h1><p>前面是单机玩法，现在流行微服务，当然也少不了SPRING：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/09.png" alt=""></p>
+<p>其中：</p>
+<ul>
+<li><code>Eureka</code>：服务注册和发现；</li>
+<li><code>Ribbon</code>：负载均衡；</li>
+<li><code>Feign</code>：模板化的HTTP客户端；</li>
+<li><code>Hystrix</code>：熔断；</li>
+<li><code>Zuul</code>：动态路由；</li>
+</ul>
+<p>Eureka的结构为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/spring/10.png" alt=""></p>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>通过增量、心跳、缓存来玩。</p>
+</blockquote>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://cmsblogs.com/?cat=206" target="_blank" rel="external">死磕Spring</a></li>
+<li><a href="https://juejin.im/post/5dfb4d7151882542977d0cb7" target="_blank" rel="external">SpringBoot 就这一篇全搞定</a></li>
+<li><a href="https://blog.csdn.net/forezp/article/details/70148833" target="_blank" rel="external">史上最简单的 SpringCloud 教程 | 终章</a></li>
+<li><a href="https://juejin.im/post/5d9c97d9518825157267fb25" target="_blank" rel="external">spring源码分析系列2:Bean与BeanDefinition关系</a></li>
+<li><a href="https://juejin.im/post/5a77f3eb6fb9a06361085451" target="_blank" rel="external">Spring源码系列：BeanWrapper</a></li>
+<li><a href="https://www.jianshu.com/p/1dec08d290c1" target="_blank" rel="external">请别再问Spring Bean的生命周期了！</a></li>
+<li><a href="https://www.lagou.com/lgeduarticle/73527.html" target="_blank" rel="external">GetBean源码全面解读</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/86740798" target="_blank" rel="external">JDK动态代理为什么不能代理类</a></li>
+<li><a href="https://www.jianshu.com/p/8a20c547e245" target="_blank" rel="external">SpringMVC执行流程及工作原理</a></li>
+<li><a href="https://www.zhihu.com/question/64671972" target="_blank" rel="external">spring boot与spring mvc的区别是什么？</a></li>
+<li><a href="https://www.zhihu.com/question/65502802/answer/802678798" target="_blank" rel="external">什么是微服务架构？</a></li>
+<li><a href="https://juejin.im/post/5be13b83f265da6116393fc7" target="_blank" rel="external">拜托！面试请不要再问我Spring Cloud底层原理</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/34976125" target="_blank" rel="external">Spring Cloud Eureka 全解 （1） - 总览篇</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spring-基础-java/" rel="tag">#spring - 基础 - java</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/20/mysql/" rel="next" title="MYSQL">
+                <i class="fa fa-chevron-left"></i> MYSQL
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/22/redis/" rel="prev" title="REDIS">
+                REDIS <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SPRING"><span class="nav-number">1.</span> <span class="nav-text">SPRING</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#控制反转"><span class="nav-number">1.1.</span> <span class="nav-text">控制反转</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BeanFactory"><span class="nav-number">1.1.1.</span> <span class="nav-text">BeanFactory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ApplicationContext"><span class="nav-number">1.1.2.</span> <span class="nav-text">ApplicationContext</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面向切面编程"><span class="nav-number">1.2.</span> <span class="nav-text">面向切面编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务"><span class="nav-number">1.3.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WEB服务"><span class="nav-number">1.4.</span> <span class="nav-text">WEB服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SPRING-BOOT"><span class="nav-number">2.</span> <span class="nav-text">SPRING BOOT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SPRING-CLOUD"><span class="nav-number">3.</span> <span class="nav-text">SPRING CLOUD</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2020/04/20/spring/';
+      var disqus_title = "SPRING";
+      var disqus_url = 'http://yoursite.com/2020/04/20/spring/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

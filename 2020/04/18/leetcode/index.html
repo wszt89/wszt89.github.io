@@ -1,0 +1,1133 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="leetcode," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="代码模板树状数组每个数字管理的区间是其最低位的1的范围：
+
+计算idx管理的范围：
+1idx &amp;amp; -idx;
+找到idx的更大的一个区间：
+1idx += idx &amp;amp; -idx;
+分解区间：
+1idx -= idx &amp;amp; -idx;
+求和：
+12345int sum = 0;while(idx &amp;gt; 0)&amp;#123;    sum += a[idx];    idx -=">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法">
+<meta property="og:url" content="http://yoursite.com/2020/04/18/leetcode/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="代码模板树状数组每个数字管理的区间是其最低位的1的范围：
+
+计算idx管理的范围：
+1idx &amp;amp; -idx;
+找到idx的更大的一个区间：
+1idx += idx &amp;amp; -idx;
+分解区间：
+1idx -= idx &amp;amp; -idx;
+求和：
+12345int sum = 0;while(idx &amp;gt; 0)&amp;#123;    sum += a[idx];    idx -=">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/leetcode/03.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/leetcode/00.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/leetcode/02.png">
+<meta property="og:updated_time" content="2020-06-14T10:33:25.877Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="算法">
+<meta name="twitter:description" content="代码模板树状数组每个数字管理的区间是其最低位的1的范围：
+
+计算idx管理的范围：
+1idx &amp;amp; -idx;
+找到idx的更大的一个区间：
+1idx += idx &amp;amp; -idx;
+分解区间：
+1idx -= idx &amp;amp; -idx;
+求和：
+12345int sum = 0;while(idx &amp;gt; 0)&amp;#123;    sum += a[idx];    idx -=">
+<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/leetcode/03.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/18/leetcode/"/>
+
+
+  <title> 算法 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                算法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-18T21:49:00+08:00" content="2020-04-18">
+              2020-04-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/18/leetcode/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/18/leetcode/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/18/leetcode/" class="leancloud_visitors" data-flag-title="算法">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="代码模板"><a href="#代码模板" class="headerlink" title="代码模板"></a>代码模板</h1><h2 id="树状数组"><a href="#树状数组" class="headerlink" title="树状数组"></a>树状数组</h2><p>每个数字管理的区间是其最低位的1的范围：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/leetcode/03.png" alt=""></p>
+<p>计算idx管理的范围：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">idx &amp; -idx;</div></pre></td></tr></table></figure>
+<p>找到idx的更大的一个区间：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">idx += idx &amp; -idx;</div></pre></td></tr></table></figure>
+<p>分解区间：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">idx -= idx &amp; -idx;</div></pre></td></tr></table></figure>
+<p>求和：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line"><span class="keyword">while</span>(idx &gt; <span class="number">0</span>)&#123;</div><div class="line">    sum += a[idx];</div><div class="line">    idx -= idx &amp; -idx;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>更新：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span>(idx &lt; len)&#123;</div><div class="line">    a[idx] += delta;</div><div class="line">    idx += idx &amp; -idx;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>构造：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; i++)&#123;</div><div class="line">    <span class="keyword">int</span> j = i + (i &amp; -i);</div><div class="line">    <span class="keyword">if</span>(j &lt; len)&#123;</div><div class="line">        a[j] += a[i];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="前缀树"><a href="#前缀树" class="headerlink" title="前缀树"></a>前缀树</h2><p>节点定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span> </span>&#123;</div><div class="line">    <span class="keyword">boolean</span>    end  = <span class="keyword">false</span>;</div><div class="line">    TrieNode[] next = <span class="keyword">new</span> TrieNode[<span class="number">26</span>];</div><div class="line"></div><div class="line">    <span class="function">TrieNode <span class="title">addNext</span><span class="params">(<span class="keyword">char</span> ch, <span class="keyword">boolean</span> end)</span> </span>&#123;</div><div class="line">        TrieNode tmp = next[ch - <span class="string">'a'</span>];</div><div class="line">        <span class="keyword">if</span> (tmp == <span class="keyword">null</span>) &#123;</div><div class="line">            tmp = next[ch - <span class="string">'a'</span>] = <span class="keyword">new</span> TrieNode();</div><div class="line">        &#125;</div><div class="line">        tmp.end = tmp.end || end;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> tmp;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function">TrieNode <span class="title">getNext</span><span class="params">(<span class="keyword">char</span> ch)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> next[ch - <span class="string">'a'</span>];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>构建：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> TrieNode <span class="title">build</span><span class="params">(String[] dictionary)</span> </span>&#123;</div><div class="line">    TrieNode root = <span class="keyword">new</span> TrieNode();</div><div class="line">    <span class="keyword">for</span> (String word : dictionary) &#123;</div><div class="line">        TrieNode curr = root;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; word.length(); i++) &#123;</div><div class="line">            <span class="keyword">char</span> ch = word.charAt(i);</div><div class="line">            curr = curr.addNext(ch, i == word.length() - <span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> root;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="计算器"><a href="#计算器" class="headerlink" title="计算器"></a>计算器</h2><p>转换为波兰表示法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> List&lt;String&gt; <span class="title">convert</span><span class="params">(String s)</span> </span>&#123;</div><div class="line">    LinkedList&lt;String&gt; ret = <span class="keyword">new</span> LinkedList&lt;&gt;();</div><div class="line">    Stack&lt;String&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</div><div class="line">        <span class="keyword">char</span> ch = s.charAt(i);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.isNum(ch)) &#123;</div><div class="line">            String numStr = <span class="keyword">this</span>.getNum(s, i);</div><div class="line"></div><div class="line">            ret.add(numStr);</div><div class="line">            i += numStr.length() - <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.isOp(ch)) &#123;</div><div class="line">            <span class="keyword">while</span> (!stack.isEmpty() &amp;&amp; <span class="keyword">this</span>.isOp(stack.peek()) &amp;&amp; <span class="keyword">this</span>.priority(stack.peek().charAt(<span class="number">0</span>)) &gt;= <span class="keyword">this</span>.priority(ch)) &#123;</div><div class="line">                ret.add(stack.pop());</div><div class="line">            &#125;</div><div class="line">            stack.push(<span class="string">""</span> + ch);</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ch == <span class="string">'('</span>) &#123;</div><div class="line">            stack.push(<span class="string">""</span> + ch);</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ch == <span class="string">')'</span>) &#123;</div><div class="line">            <span class="keyword">while</span> (!<span class="string">"("</span>.equals(stack.peek())) &#123;</div><div class="line">                ret.add(stack.pop());</div><div class="line">            &#125;</div><div class="line">            stack.pop();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (!stack.isEmpty()) &#123;</div><div class="line">        ret.add(stack.pop());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>计算j结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">calc</span><span class="params">(List&lt;String&gt; list)</span> </span>&#123;</div><div class="line">    Stack&lt;Integer&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (String str : list) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.isNum(str)) &#123;</div><div class="line">            stack.push(Integer.parseInt(str));</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">int</span> a = stack.pop();</div><div class="line">            <span class="keyword">int</span> b = stack.pop();</div><div class="line">            stack.push(<span class="keyword">this</span>.op(str.charAt(<span class="number">0</span>), b, a));</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> stack.pop();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="常见问题解决套路"><a href="#常见问题解决套路" class="headerlink" title="常见问题解决套路"></a>常见问题解决套路</h1><h2 id="最长上升子序列"><a href="#最长上升子序列" class="headerlink" title="最长上升子序列"></a>最长上升子序列</h2><p>思路：</p>
+<blockquote>
+<p><u>动态规划</u></p>
+<p>状态转移方程为dp[i] = max{dp[j] + 1}，其中a[j] &gt; a[i]，复杂度为O(N^2)​。</p>
+<p>可以使用树状数组把状态转移方程的复杂度降低到O(logN)，总体复杂度降低到O(N*logN)。</p>
+<p><u>贪心+二分</u></p>
+<p>相同的长度，最后一个数字越小越好。用low[i]表示长度为i的最后一个数的最小值，于是一定有low[i+1] &gt; low[i]。</p>
+<p>对于a，找到low最大的小于a的数i，更新low[i+1] = a。</p>
+</blockquote>
+<p>题目：</p>
+<ul>
+<li><a href="https://leetcode-cn.com/problems/circus-tower-lcci/" target="_blank" rel="external">https://leetcode-cn.com/problems/circus-tower-lcci/</a></li>
+</ul>
+<h2 id="数组中消失或重复的数"><a href="#数组中消失或重复的数" class="headerlink" title="数组中消失或重复的数"></a>数组中消失或重复的数</h2><p>通用套路：</p>
+<ul>
+<li><code>求和</code></li>
+<li><code>异或</code></li>
+<li><code>原地哈希</code></li>
+<li><code>通过计数和抵消找到过半的数字</code></li>
+</ul>
+<p>题目：</p>
+<ul>
+<li><a href="https://leetcode-cn.com/problems/missing-two-lcci/" target="_blank" rel="external">https://leetcode-cn.com/problems/missing-two-lcci/</a></li>
+<li><a href="https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/" target="_blank" rel="external">https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/</a></li>
+<li><a href="https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-ii-lcof/" target="_blank" rel="external">https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-ii-lcof/</a></li>
+</ul>
+<h2 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a>双指针</h2><p>通用套路：</p>
+<ul>
+<li><code>滑动窗口扫描</code></li>
+<li><code>排序数组，计算和为SUM的2个数</code></li>
+</ul>
+<p>题目：</p>
+<ul>
+<li><a href="https://leetcode-cn.com/problems/shortest-supersequence-lcci/" target="_blank" rel="external">https://leetcode-cn.com/problems/shortest-supersequence-lcci/</a></li>
+<li><a href="https://leetcode-cn.com/problems/he-wei-sde-liang-ge-shu-zi-lcof/" target="_blank" rel="external">https://leetcode-cn.com/problems/he-wei-sde-liang-ge-shu-zi-lcof/</a></li>
+</ul>
+<h2 id="丑数"><a href="#丑数" class="headerlink" title="丑数"></a>丑数</h2><h2 id="二叉树遍历"><a href="#二叉树遍历" class="headerlink" title="二叉树遍历"></a>二叉树遍历</h2><p>通用套路：</p>
+<ul>
+<li><code>分解为左右两个子树相应的子问题</code></li>
+<li><code>二叉搜索树的中序遍历为递增序列</code></li>
+<li><code>比较一个二叉树是不是另一个二叉树的子树（哈希），找到相同的再递归解决</code></li>
+</ul>
+<p>题目</p>
+<ul>
+<li><a href="https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/" target="_blank" rel="external">https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/</a></li>
+<li><a href="https://leetcode-cn.com/problems/legal-binary-search-tree-lcci/" target="_blank" rel="external">https://leetcode-cn.com/problems/legal-binary-search-tree-lcci/</a></li>
+<li><a href="https://leetcode-cn.com/problems/check-subtree-lcci/" target="_blank" rel="external">https://leetcode-cn.com/problems/check-subtree-lcci/</a></li>
+</ul>
+<h2 id="最近公共祖先"><a href="#最近公共祖先" class="headerlink" title="最近公共祖先"></a>最近公共祖先</h2><ul>
+<li><a href="https://leetcode-cn.com/problems/first-common-ancestor-lcci/" target="_blank" rel="external">https://leetcode-cn.com/problems/first-common-ancestor-lcci/</a></li>
+</ul>
+<h1 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h1><ul>
+<li><a href="https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/solution/shu-zu-zhong-de-ni-xu-dui-by-leetcode-solution/" target="_blank" rel="external">https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/solution/shu-zu-zhong-de-ni-xu-dui-by-leetcode-solution/</a></li>
+</ul>
+<h1 id="丑数-1"><a href="#丑数-1" class="headerlink" title="丑数"></a>丑数</h1><p>题目：</p>
+<ul>
+<li><a href="https://leetcode-cn.com/problems/chou-shu-lcof/" target="_blank" rel="external">https://leetcode-cn.com/problems/chou-shu-lcof/</a></li>
+</ul>
+<p>关键字：</p>
+<ul>
+<li><code>小根堆</code></li>
+</ul>
+<h1 id="约瑟夫环"><a href="#约瑟夫环" class="headerlink" title="约瑟夫环"></a>约瑟夫环</h1><p><a href="https://leetcode-cn.com/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/" target="_blank" rel="external">https://leetcode-cn.com/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/</a></p>
+<h1 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">qsort</span><span class="params">(<span class="keyword">int</span>[] p, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (left &gt;= right) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    <span class="keyword">int</span> l = left + <span class="number">1</span>, r = right;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (l &lt;= r) &#123;</div><div class="line">        <span class="keyword">if</span> (p[l] &lt;= p[left]) &#123;</div><div class="line">            l += <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">this</span>.swap(p, l, r);</div><div class="line">            r -= <span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">this</span>.swap(p, left, r);</div><div class="line"></div><div class="line">    <span class="keyword">this</span>.qsort(p, left, r - <span class="number">1</span>);</div><div class="line">    <span class="keyword">this</span>.qsort(p, r + <span class="number">1</span>, right);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] p, <span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> tmp = p[a];</div><div class="line">    p[a] = p[b];</div><div class="line">    p[b] = tmp;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="接雨水"><a href="#接雨水" class="headerlink" title="接雨水"></a>接雨水</h1><p>接雨水：<a href="https://leetcode-cn.com/problems/trapping-rain-water/" target="_blank" rel="external">https://leetcode-cn.com/problems/trapping-rain-water/</a></p>
+<blockquote>
+<p>从左往右看，如果右边柱子比左边柱子高，那么左边柱子对后续的柱子放水没有任何影响。可以考虑用<font color="blue">单调递减栈</font>来保存柱子。</p>
+<p>遍历柱子，如果当前柱子大于栈顶元素，在出栈前计算与栈顶柱子间能放的水量。如果柱子要入占了，<font color="blue">需要考虑当前柱子很栈顶柱子之间的水量</font>。</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/leetcode/00.png" alt=""></p>
+</blockquote>
+<h1 id="最大矩形"><a href="#最大矩形" class="headerlink" title="最大矩形"></a>最大矩形</h1><p>柱状图中的最大矩形：<a href="https://leetcode-cn.com/problems/largest-rectangle-in-histogram/" target="_blank" rel="external">https://leetcode-cn.com/problems/largest-rectangle-in-histogram/</a></p>
+<blockquote>
+<p>可以用分治$O(NlogN)$来解决：找到最小的的，分别计算左、右及全部的来选择最大值。</p>
+<p>**</p>
+<p>可以用$O(N^2)$的复杂度来遍历解决：</p>
+<ul>
+<li>遍历每个柱子；</li>
+<li>找到每个柱子左边的边界和右边的边界；</li>
+</ul>
+<p>**</p>
+<p>如有右边的柱子大于左边的柱子，那么右边柱子的左边界就是左边的柱子。可以用<font color="blue">单调递增栈</font>来保存柱子的左边界，如果当前柱子大于栈顶元素，也就是找到栈顶元素的右边界：</p>
+<ul>
+<li><code>右边界</code>：当前位置；</li>
+<li><code>左边界</code>：栈里面前一个元素的位置；</li>
+<li><code>高度</code>：栈顶值；</li>
+</ul>
+<p>Tips：先把-1压栈，当做哨兵。最后把-1压栈，用来把栈清空掉。</p>
+</blockquote>
+<h1 id="下一个序列"><a href="#下一个序列" class="headerlink" title="下一个序列"></a>下一个序列</h1><p><a href="https://leetcode-cn.com/problems/next-permutation/" target="_blank" rel="external">https://leetcode-cn.com/problems/next-permutation/</a></p>
+<p>解法：</p>
+<ul>
+<li>从后往前，找到第一个开始下降的（如果<font color="blue">不存在下降的</font>，那么说明已经是最大的序列）；</li>
+<li>左边的最后一个值为$x$；</li>
+<li>找到右边最后一个$y&gt;x$（这样的$y$是最小的），将$x,y$进行交换，这样对于<font color="blue">字典序的增加是最小的</font>，再将右边的序列进行翻转；</li>
+</ul>
+<h1 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h1><p>最小字典序子串：<a href="https://leetcode-cn.com/problems/remove-duplicate-letters/" target="_blank" rel="external">https://leetcode-cn.com/problems/remove-duplicate-letters/</a></p>
+<blockquote>
+<p>因为有序，可以考虑用<font color="blue">单调递增栈</font>来保存结果。</p>
+<p>遍历字符串，比较当前字符和栈顶字符：</p>
+<ul>
+<li><code>大于</code>：入栈，保持递增；</li>
+<li><code>小于(循环)</code>：判断栈顶元素是不是最后一次出现：<ul>
+<li><code>是</code>：跳出循环，这样会破坏了栈的递增，<font color="blue">前面的字符顺序已经不能修改，所以在每次处理前，如果字符已经在栈里面就不用管了</font>；</li>
+<li><code>否</code>：出栈，后面还有机会加回来，但是这次出栈可以保持递增；</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<hr>
+<p>最大频率栈（先数量再次序）：<a href="https://leetcode-cn.com/problems/maximum-frequency-stack/" target="_blank" rel="external">https://leetcode-cn.com/problems/maximum-frequency-stack/</a></p>
+<blockquote>
+<p>比较麻烦的是如何处理最后入栈的值，最后出现的是在栈里面最后面的。</p>
+<p>可以为<font color="blue">每个数量</font>维护一个数字的栈就行。</p>
+</blockquote>
+<hr>
+<p>队列的最大值：<a href="https://leetcode-cn.com/problems/dui-lie-de-zui-da-zhi-lcof/" target="_blank" rel="external">https://leetcode-cn.com/problems/dui-lie-de-zui-da-zhi-lcof/</a></p>
+<blockquote>
+<p>PUSH和POP天然就是$O(1)$，比较麻烦的是MAX。</p>
+<p>在一个大的值进PUSH后，前面PUSH的小的值就没有影响了：<font color="blue">单调递减维护在队列中的数据</font>，每次查到的最大值就是头上的。</p>
+<p>如果在POP的时候是最大值，最大值数量减一，最大值的数量在两个队列里面永远都是一致的。</p>
+</blockquote>
+<hr>
+<p>批量操作的栈：<a href="https://leetcode-cn.com/problems/design-a-stack-with-increment-operation/" target="_blank" rel="external">https://leetcode-cn.com/problems/design-a-stack-with-increment-operation/</a></p>
+<blockquote>
+<p>最直观的是在INCR的时候占用的时候使用$O(N)$的复杂度修改。</p>
+<p>**</p>
+<p>如果在INCR的时候记录要加的位置和数量，<font color="blue">在POP的时候把增加的数量从高位上推到低的位置上</font>，每个操作的复杂度为$O(1)$。</p>
+</blockquote>
+<hr>
+<p>索引处的解码字符串：<a href="https://leetcode-cn.com/problems/decoded-string-at-index/" target="_blank" rel="external">https://leetcode-cn.com/problems/decoded-string-at-index/</a></p>
+<blockquote>
+<p>根据题目升生成的序列为：</p>
+<p>a = 1, 2, 3, 4, 8[=4 x 2], 9, 10, 11, 12, 36[=12 x 3]</p>
+<p>b = l, e, e, t, 2, c, o, d, e, 3​</p>
+<p>依次来计算a[i]，当a[i] &gt; k时，说明字符一定在前面的字符出现过了，倒着开始遍历处理。<font color="blue">编码技巧：一步一步来看，把字符串可以转换成一个数组（试试转换）</font>。</p>
+</blockquote>
+<hr>
+<hr>
+<p>132模式：<a href="https://leetcode-cn.com/problems/132-pattern/" target="_blank" rel="external">https://leetcode-cn.com/problems/132-pattern/</a></p>
+<blockquote>
+<p>需要$i&lt;j&lt;k$且$a_i&lt;a_k&lt;a_j$，从$a_k$的角度来考虑：</p>
+<ul>
+<li>找到左边第一个小于$a_k$的坐标$x$；</li>
+<li>找到左边末一个大于$a_k$的坐标$y$；</li>
+</ul>
+<p>如果存在$x&lt;y$，那么就存在，否在不存在。分别用递增和递减栈，貌似需要$O(nlogn)$的时间。</p>
+<p>**</p>
+<p>从$a_{j}$的角度来考虑：</p>
+<p>维护$min[i]=min(a[0],…,a[i])$，如果$a_j&lt;=min[j]$，说明不存在$a_i &lt; a_j$。</p>
+<p>如果$min[j] &gt;= a_k$则一定有$min[j-1] &gt;= a_k$，于是不存在$ai_i&lt;a_k$。</p>
+<p>比较$a_j,a_k$：</p>
+<ul>
+<li>$a_j &gt; a_k$：找到答案；</li>
+<li>$a_j &lt; a_k$：压入栈中，因为$a_k$为了满足条件压入栈中，栈顶永远是后面满足条件最小的$a_k$；</li>
+</ul>
+</blockquote>
+<hr>
+<p>丑数：<a href="https://leetcode-cn.com/problems/super-ugly-number/" target="_blank" rel="external">https://leetcode-cn.com/problems/super-ugly-number/</a></p>
+<blockquote>
+<p>为每个乘数维护一个指针，指向该乘数考虑的最小的位置。然后根据乘完的结果维护一个小根堆。</p>
+<ul>
+<li>从小根堆中取出最小的节点；</li>
+<li>乘积就是需要第$n$个结果，然后沿着结果列表移动指针；</li>
+</ul>
+<p>Tips：需要用过集合判重。</p>
+<p>**</p>
+<p>朴素的思路是：取出最小的一个，然后分别乘以各个数字丢进小根堆。问题在于：如果乘完的结果很大，其实暂时没必要考虑。</p>
+</blockquote>
+<hr>
+<p>排和列都有序的K个数：<a href="https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/" target="_blank" rel="external">https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/</a></p>
+<blockquote>
+<p>直观的思路是用堆。</p>
+<p>**</p>
+<p>用二分来找数，Left=左上角的最小值，Right=右下角的最大值。计算出Mid后在有序的矩阵中统计数量。</p>
+</blockquote>
+<hr>
+<p>带随机指针的链表复制：<a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/" target="_blank" rel="external">https://leetcode-cn.com/problems/copy-list-with-random-pointer/</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> Map&lt;Node, Node&gt; visited = <span class="keyword">new</span> HashMap();</div><div class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">copyRandomList</span><span class="params">(Node head)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">return</span> head;</div><div class="line">    &#125;</div><div class="line">    Node node = visited.get(head);</div><div class="line">    <span class="keyword">if</span> (node != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">return</span> node;</div><div class="line">    &#125;</div><div class="line">    visited.put(head, node = <span class="keyword">new</span> Node(head.val));</div><div class="line">    node.random = copyRandomList(head.random);</div><div class="line">    node.next = copyRandomList(head.next);</div><div class="line">    <span class="keyword">return</span> node;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>通用的数据结构复制套路，用一个MAP记录访问过的节点，然后递归处理指针：</p>
+<p>**</p>
+<p>更巧妙的思路、更合理：</p>
+<ul>
+<li>先沿着Next复制，并嵌入到原来的链表里面，这样和原有的链表也建立的一对一的关系；</li>
+<li>然后依次处理随机指针；</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/leetcode/02.png" alt=""></p>
+</blockquote>
+<hr>
+<ul>
+<li><code>栈</code><ul>
+<li>维护有序的结果；<ul>
+<li><code>有序值</code></li>
+<li><code>最值（辅助栈）</code></li>
+</ul>
+</li>
+<li>寻找已出现的最新的边界值；<ul>
+<li>对于单调递增栈的边界：$a_{new}&gt;=a_{top}$时入栈，$a_{new}&lt;a_{top}$时出栈；<ul>
+<li><code>入栈</code>：$a_{top}$是前面最后一个小于$a_{new}$的值；</li>
+<li><code>栈中</code>：<ul>
+<li>$a_{i-1}$是前面最后一个小于$a_i$的值（累积的入栈顺序，区别在于栈中只保存了部分）；</li>
+<li>$a_{i}$是后面最小的大于$a_{i-1}$的值；</li>
+</ul>
+</li>
+<li><code>出栈</code>：$a_{new}$是后面第一个小于$a_{top}$的值；</li>
+</ul>
+</li>
+<li>对于单调递减栈的边界：$a_{new}&lt;=a_{top}$时入栈，$a_{new}&gt;a_{top}$时出栈；<ul>
+<li><code>入栈</code>：$a_{top}$是前面最后一个大于$a_{new}$的值；</li>
+<li><code>栈中</code>：<ul>
+<li>$a_{i-1}$是前面最后一个大于$a_i$的值（累积的入栈顺序，区别在于栈中只保存了部分）；</li>
+<li>$a_{i}$是后面最大的小于$a_{i-1}$的值；</li>
+</ul>
+</li>
+<li><code>出栈</code>：$a_{new}$是后面第一个大于$a_{top}$的值；</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>队列</code><ul>
+<li>维护递减的滑动窗口，用来在$O(1)$的时间获取最大值；</li>
+</ul>
+</li>
+<li><code>堆</code><ul>
+<li><code>小根堆</code>：最大的第K个数（或者是一个结构体：比如丑数）；</li>
+<li><code>大根堆</code>：最小的第K个数；</li>
+</ul>
+</li>
+<li><code>二分</code><ul>
+<li><code>根据最大值和最小值进行二分</code></li>
+<li><code>根据范围进行二分</code></li>
+</ul>
+</li>
+<li><code>贪心</code></li>
+<li><code>链表</code><ul>
+<li><code>环</code><ul>
+<li><code>快慢指针</code></li>
+<li><code>环的大小</code>：LEN；</li>
+<li><code>先后指针找环出现的位置</code>：一个指针先走LEN，然后两个指针一起走，相遇时就是交叉点；</li>
+</ul>
+</li>
+<li><code>链表翻转</code>：栈、递归、多指针；</li>
+<li><code>转换为有头链表</code></li>
+<li><code>复制</code>：递归、用MAP保存访问过的节点；</li>
+</ul>
+</li>
+<li><code>位操作</code></li>
+<li><code>动态规划</code><ul>
+<li><code>最大和子序列</code></li>
+<li><code>通用博弈归纳</code>：下一步到的都是必败的，那么当前这一步就是必胜的；</li>
+</ul>
+</li>
+<li><code>其他</code><ul>
+<li><code>超过一半的数</code>：相同加一，不同减一，等于0时换人，保证不会错过候选人；</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li>1124：<a href="https://leetcode-cn.com/problems/longest-well-performing-interval/" target="_blank" rel="external">https://leetcode-cn.com/problems/longest-well-performing-interval/</a></li>
+<li>975：<a href="https://leetcode-cn.com/problems/odd-even-jump/" target="_blank" rel="external">https://leetcode-cn.com/problems/odd-even-jump/</a></li>
+<li>407：<a href="https://leetcode-cn.com/problems/trapping-rain-water-ii/" target="_blank" rel="external">https://leetcode-cn.com/problems/trapping-rain-water-ii/</a></li>
+<li>659（贪心）：<a href="https://leetcode-cn.com/problems/split-array-into-consecutive-subsequences/" target="_blank" rel="external">https://leetcode-cn.com/problems/split-array-into-consecutive-subsequences/</a></li>
+<li><a href="https://leetcode-cn.com/problems/network-delay-time/" target="_blank" rel="external">https://leetcode-cn.com/problems/network-delay-time/</a><ul>
+<li>最短路径，找时间尝试用代码写一遍；</li>
+</ul>
+</li>
+<li><a href="https://leetcode-cn.com/problems/single-number-ii/" target="_blank" rel="external">https://leetcode-cn.com/problems/single-number-ii/</a></li>
+</ul>
+<ul>
+<li>线性时间解决回文：<a href="https://leetcode-cn.com/problems/palindromic-substrings/" target="_blank" rel="external">https://leetcode-cn.com/problems/palindromic-substrings/</a></li>
+<li>重构字符串不相邻：<a href="https://leetcode-cn.com/problems/reorganize-string/" target="_blank" rel="external">https://leetcode-cn.com/problems/reorganize-string/</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/leetcode/" rel="tag">#leetcode</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/16/jvm/" rel="next" title="虚拟机基础">
+                <i class="fa fa-chevron-left"></i> 虚拟机基础
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/mysql/" rel="prev" title="MYSQL">
+                MYSQL <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#代码模板"><span class="nav-number">1.</span> <span class="nav-text">代码模板</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#树状数组"><span class="nav-number">1.1.</span> <span class="nav-text">树状数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前缀树"><span class="nav-number">1.2.</span> <span class="nav-text">前缀树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算器"><span class="nav-number">1.3.</span> <span class="nav-text">计算器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常见问题解决套路"><span class="nav-number">2.</span> <span class="nav-text">常见问题解决套路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#最长上升子序列"><span class="nav-number">2.1.</span> <span class="nav-text">最长上升子序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组中消失或重复的数"><span class="nav-number">2.2.</span> <span class="nav-text">数组中消失或重复的数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#双指针"><span class="nav-number">2.3.</span> <span class="nav-text">双指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#丑数"><span class="nav-number">2.4.</span> <span class="nav-text">丑数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树遍历"><span class="nav-number">2.5.</span> <span class="nav-text">二叉树遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最近公共祖先"><span class="nav-number">2.6.</span> <span class="nav-text">最近公共祖先</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TODO"><span class="nav-number">3.</span> <span class="nav-text">TODO</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#丑数-1"><span class="nav-number">4.</span> <span class="nav-text">丑数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#约瑟夫环"><span class="nav-number">5.</span> <span class="nav-text">约瑟夫环</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#快速排序"><span class="nav-number">6.</span> <span class="nav-text">快速排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接雨水"><span class="nav-number">7.</span> <span class="nav-text">接雨水</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最大矩形"><span class="nav-number">8.</span> <span class="nav-text">最大矩形</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下一个序列"><span class="nav-number">9.</span> <span class="nav-text">下一个序列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#栈"><span class="nav-number">10.</span> <span class="nav-text">栈</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2020/04/18/leetcode/';
+      var disqus_title = "算法";
+      var disqus_url = 'http://yoursite.com/2020/04/18/leetcode/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

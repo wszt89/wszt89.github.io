@@ -256,8 +256,8 @@
             
               
                 
-                <a class="post-title-link" href="/2019/10/18/redis-stream/" itemprop="url">
-                  Redis Stream
+                <a class="post-title-link" href="/2020/05/26/biz-sys/" itemprop="url">
+                  业务系统设计
                 </a>
               
             
@@ -270,8 +270,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-10-18T19:28:53+08:00" content="2019-10-18">
-              2019-10-18
+            <time itemprop="dateCreated" datetime="2020-05-26T23:19:33+08:00" content="2020-05-26">
+              2020-05-26
             </time>
           </span>
 
@@ -284,8 +284,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/工具/" itemprop="url" rel="index">
-                    <span itemprop="name">工具</span>
+                  <a href="/categories/系统设计/" itemprop="url" rel="index">
+                    <span itemprop="name">系统设计</span>
                   </a>
                 </span>
 
@@ -300,8 +300,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2019/10/18/redis-stream/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/10/18/redis-stream/" itemprop="commentsCount"></span>
+                <a href="/2020/05/26/biz-sys/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/05/26/biz-sys/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -311,7 +311,7 @@
 
           
           
-             <span id="/2019/10/18/redis-stream/" class="leancloud_visitors" data-flag-title="Redis Stream">
+             <span id="/2020/05/26/biz-sys/" class="leancloud_visitors" data-flag-title="业务系统设计">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -335,21 +335,35 @@
       
         
           
-          写在前面消息中间件内部用的都是MetaQ，非常标准的生产、消费的用法，但是感觉有几点不太方便（这几点可能普通场景确实没什么必要）：
+          基于关系的FEED流场景：
 
+朋友圈
+微博
 
-能够根据时间消费过去的消息；
-能阻塞读；
-能方便地增加或减少Topic；
-性能高；
-能方便地把数据发送到指定的Topic；
+操作：
 
+关注、取消关注
+发布
+查看
 
-总体来说：做性能比较高的队列，可以方
+模型：
+
+用户
+关系
+发布内容
+Inbox/Outbox
+
+在系统设计时需要考虑的因素有：
+
+是否存在热点用户
+排序规则
+是否在信息流中展示广告、推广等非关注的内容
+
+拉模式在请求数据时基于关系找到公共账号发布的内
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2019/10/18/redis-stream/" rel="contents">
+            <a class="btn" href="/2020/05/26/biz-sys/" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -400,8 +414,8 @@
             
               
                 
-                <a class="post-title-link" href="/2019/05/03/reinforcement-learning/" itemprop="url">
-                  强化学习
+                <a class="post-title-link" href="/2020/04/28/distributed/" itemprop="url">
+                  分布式基础
                 </a>
               
             
@@ -414,421 +428,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-05-03T23:23:48+08:00" content="2019-05-03">
-              2019-05-03
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2019/05/03/reinforcement-learning/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/05/03/reinforcement-learning/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2019/05/03/reinforcement-learning/" class="leancloud_visitors" data-flag-title="强化学习">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          简介强化学习用来解决序列决策问题，比如：
-
-下棋，或用来玩马里奥、雅达利类似的游戏；
-自动化控制；
-自动驾驶；
-
-借用西瓜与其他算法类型比较：
-
-监督学习：找出好瓜；
-无监督学习：把瓜分成两拨；
-强化学习：怎样浇水、施肥才能种出好瓜？
-
-概念：
-
-马尔科夫性
-马尔科夫过程
-马尔科夫决策过程
-
-目标：
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/05/03/reinforcement-learning/" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2019/05/03/reinforcement-learning-1/" itemprop="url">
-                  reinforcement learning
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-05-03T11:30:05+08:00" content="2019-05-03">
-              2019-05-03
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2019/05/03/reinforcement-learning-1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/05/03/reinforcement-learning-1/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2019/05/03/reinforcement-learning-1/" class="leancloud_visitors" data-flag-title="reinforcement learning">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          
-          
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/05/03/reinforcement-learning-1/" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2019/03/24/2018-summary/" itemprop="url">
-                  路虽远行则将至，事虽难做则必成！
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-03-24T21:57:17+08:00" content="2019-03-24">
-              2019-03-24
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/总结/" itemprop="url" rel="index">
-                    <span itemprop="name">总结</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2019/03/24/2018-summary/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/03/24/2018-summary/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2019/03/24/2018-summary/" class="leancloud_visitors" data-flag-title="路虽远行则将至，事虽难做则必成！">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          在大家的同心协力下，系统成功上线了，但是开心不起来。写个晚到的总结，顺便思考一下人生。
-工作自17年末加入自动化，搞过的自动化设备有：
-
-机械臂
-立库
-输送线
-无人叉车
-
-并不会直接和硬件打交道，更多的是想怎么把更多的任务喂给设备。业务上做了：
-
-机械臂拣选
-立库直出
-立库 + 机械臂 + 贴标 全
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/03/24/2018-summary/" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/11/27/linux-introduction-1/" itemprop="url">
-                  Linux基础(1)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-11-27T15:45:53+08:00" content="2018-11-27">
-              2018-11-27
+            <time itemprop="dateCreated" datetime="2020-04-28T21:04:48+08:00" content="2020-04-28">
+              2020-04-28
             </time>
           </span>
 
@@ -857,8 +458,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2018/11/27/linux-introduction-1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/27/linux-introduction-1/" itemprop="commentsCount"></span>
+                <a href="/2020/04/28/distributed/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/28/distributed/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -868,7 +469,7 @@
 
           
           
-             <span id="/2018/11/27/linux-introduction-1/" class="leancloud_visitors" data-flag-title="Linux基础(1)">
+             <span id="/2020/04/28/distributed/" class="leancloud_visitors" data-flag-title="分布式基础">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -892,16 +493,28 @@
       
         
           
-          有时间就扫除知识的盲点，加油吧少年！
-常用命令线上出问题了第一反应是看日志，常用的几个命令有：
+          协议、算法和玩法2PC数据库的分布式事务貌似是利用二阶段协议来做的：
 
-vim、vi：准确的说是编辑器，在打开大的文件会占用很大内存（把文件全部的内容载入到内存，有插件的话消耗更大），线上操作有风险；
-less：支持前后翻页、支持搜索，比较适合用来看日志；
-more：类似l
+准备阶段
+协调者发起事务；
+参与者根据协调者的信息判断，能做则写REDO和UNDO，但是不提交；不能做则返回；
+
+
+提交阶段
+协调者根据返回或超时，发起提交或回滚；
+参与者执行提交或回滚；
+
+
+
+如图：
+
+问题：
+
+协调者挂了，
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2018/11/27/linux-introduction-1/" rel="contents">
+            <a class="btn" href="/2020/04/28/distributed/" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -952,8 +565,8 @@ more：类似l
             
               
                 
-                <a class="post-title-link" href="/2018/10/16/dot/" itemprop="url">
-                  Dot语法
+                <a class="post-title-link" href="/2020/04/22/redis/" itemprop="url">
+                  REDIS
                 </a>
               
             
@@ -966,423 +579,8 @@ more：类似l
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-10-16T21:18:01+08:00" content="2018-10-16">
-              2018-10-16
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/工具/" itemprop="url" rel="index">
-                    <span itemprop="name">工具</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2018/10/16/dot/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/16/dot/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2018/10/16/dot/" class="leancloud_visitors" data-flag-title="Dot语法">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          在很久之前接触过dot和graphviz，当时觉得用dsl来画图的想法太牛了，非常好玩，也仅仅停留在好玩上。现在工作上在做自动化的东西，如果能有简单的方法实现可视化帮助还是蛮大的：
-
-是不是可以将拓扑结构翻译成dot，然后用graphviz来生成svg，一切看起来很完美🤔
-
-玩和用有很大差别的！这
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/10/16/dot/" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/10/08/aop-1/" itemprop="url">
-                  使用AOP时的代理问题记录
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-10-08T15:37:46+08:00" content="2018-10-08">
-              2018-10-08
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程/" itemprop="url" rel="index">
-                    <span itemprop="name">编程</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2018/10/08/aop-1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/08/aop-1/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2018/10/08/aop-1/" class="leancloud_visitors" data-flag-title="使用AOP时的代理问题记录">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          问题复现处理场景：
-
-用AOP拦截方法，打印执行耗时、异常信息等。
-
-做法传统，先定义Annotation：
-12345@Inherited@Retention(RetentionPolicy.RUNTIME)@Target(ElementType.METHOD)public @interface 
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/10/08/aop-1/" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/06/18/rust-ownership/" itemprop="url">
-                  RUST的所有权和生命周期
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-06-18T16:17:25+08:00" content="2018-06-18">
-              2018-06-18
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程/" itemprop="url" rel="index">
-                    <span itemprop="name">编程</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2018/06/18/rust-ownership/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/18/rust-ownership/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2018/06/18/rust-ownership/" class="leancloud_visitors" data-flag-title="RUST的所有权和生命周期">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          写在前面在决定学习RUST时，非常有吸引的一个地方在于内存安全。倒不是完全是对自己的c/c++功底不自信：
-
-当很多人协作完成一个功能，由于每个人的状态、经验各不相同，非常有可能写出来不安全的代码。而查找和修复问题的成本是极大的。
-
-RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权就放弃学
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2018/06/18/rust-ownership/" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/05/12/distributed-theory/" itemprop="url">
-                  常见分布式概念和理论
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-05-12T20:51:03+08:00" content="2018-05-12">
-              2018-05-12
+            <time itemprop="dateCreated" datetime="2020-04-22T10:33:12+08:00" content="2020-04-22">
+              2020-04-22
             </time>
           </span>
 
@@ -1411,8 +609,8 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2018/05/12/distributed-theory/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/05/12/distributed-theory/" itemprop="commentsCount"></span>
+                <a href="/2020/04/22/redis/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/22/redis/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1422,7 +620,7 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
 
           
           
-             <span id="/2018/05/12/distributed-theory/" class="leancloud_visitors" data-flag-title="常见分布式概念和理论">
+             <span id="/2020/04/22/redis/" class="leancloud_visitors" data-flag-title="REDIS">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -1446,17 +644,17 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
       
         
           
-          写在前面在分布式的环境中，往往将一个服务器或者服务器上运行的进程称为一个节点，节点和节点之间通过网络互联。运行过程中可能遇到的异常有：
+          Redis是一个支持多种结构的、纯内存的KV存储系统。
+数据格式查看KEY的类型已经编码等信息的命令为：
 
-异常：服务器宕机、网络异常、磁盘故障等；
-超时：很典型也很难处理的点，不知道对方是真失败还是假失败；
-一致性
-
-现在各种分布式的服务、存储应用在各种应用的后台，作
+type key：类型；
+object refcount key：被引用次数；
+object encoding key：内部编码方式；
+object idletime key：空闲时间，从最后
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2018/05/12/distributed-theory/" rel="contents">
+            <a class="btn" href="/2020/04/22/redis/" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1507,8 +705,8 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
             
               
                 
-                <a class="post-title-link" href="/2018/04/11/cluster-management/" itemprop="url">
-                  集群管理
+                <a class="post-title-link" href="/2020/04/20/spring/" itemprop="url">
+                  SPRING
                 </a>
               
             
@@ -1521,8 +719,8 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-04-11T11:24:25+08:00" content="2018-04-11">
-              2018-04-11
+            <time itemprop="dateCreated" datetime="2020-04-20T08:20:06+08:00" content="2020-04-20">
+              2020-04-20
             </time>
           </span>
 
@@ -1551,8 +749,8 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2018/04/11/cluster-management/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/04/11/cluster-management/" itemprop="commentsCount"></span>
+                <a href="/2020/04/20/spring/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/20/spring/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1562,7 +760,7 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
 
           
           
-             <span id="/2018/04/11/cluster-management/" class="leancloud_visitors" data-flag-title="集群管理">
+             <span id="/2020/04/20/spring/" class="leancloud_visitors" data-flag-title="SPRING">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -1586,15 +784,872 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
       
         
           
-          写在前面不管是JStorm、Flink这样的计算集群，还是Dubbo这样的服务框架，或者类似ReabbitMQ的中间件，都需要将机器高效地管理起来，这里面有非常多的方(tào)法(lù)。学习之前首先要明白：
+          SPRING
+控制反转相比普通玩法的优势在于：
 
-没有万能的解决方案，必须根据你的诉求做取舍（人生何尝不总是这样😔）。
+减少重复代码；
+解耦；
 
-以前看源码，都
+Bean的管理是Spring的基石，通过工厂模式（BeanFactory）创建。
+BeanFactory创建的整体流程为：
+
+加载定义
+实例化
+设置属性
+初始化
+
+如下（在过程中暴露出扩展点，很多Spring的功能利用这些扩
           ...
 
           <div class="post-more-link text-center">
-            <a class="btn" href="/2018/04/11/cluster-management/" rel="contents">
+            <a class="btn" href="/2020/04/20/spring/" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2020/04/20/mysql/" itemprop="url">
+                  MYSQL
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-20T08:18:52+08:00" content="2020-04-20">
+              2020-04-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/20/mysql/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/20/mysql/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/20/mysql/" class="leancloud_visitors" data-flag-title="MYSQL">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          整体MySQL是单进程多线程、可插拔、分层的数据库系统，支持的存储引擎有InnoDB（默认）、MyISAM等等。有些概念容易混淆，比如：
+
+数据库：文件集合；
+实例：进程、内存等，一个实例可以操作多个数据库；
+
+再比如：
+
+连接：物理概念；
+会话：实例中的逻辑概念，类似一个上下文的东西；
+
+整体分层
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2020/04/20/mysql/" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2020/04/18/leetcode/" itemprop="url">
+                  算法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-18T21:49:00+08:00" content="2020-04-18">
+              2020-04-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/18/leetcode/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/18/leetcode/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/18/leetcode/" class="leancloud_visitors" data-flag-title="算法">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          代码模板树状数组每个数字管理的区间是其最低位的1的范围：
+
+计算idx管理的范围：
+1idx &amp; -idx;
+找到idx的更大的一个区间：
+1idx += idx &amp; -idx;
+分解区间：
+1idx -= idx &amp; -idx;
+求和：
+12345int sum = 0;w
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2020/04/18/leetcode/" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2020/04/16/jvm/" itemprop="url">
+                  虚拟机基础
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-16T11:39:57+08:00" content="2020-04-16">
+              2020-04-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/16/jvm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/16/jvm/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/16/jvm/" class="leancloud_visitors" data-flag-title="虚拟机基础">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          平时写的代码都跑在Java虚拟机上，了解运行机制能帮助我们写出更优质、健壮的代码，遇到问题也能解决（比如调参什么的）。
+内存布局不同版本的内存布局是有差异的，但更多的是相似点：
+
+堆堆是内存中最大的一个区域，被所有线程共享，存放绝大部分（比如经过逃逸分析后对象可以分配在栈上）的实例对象、数据。
+不同
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2020/04/16/jvm/" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2020/04/13/computer-system-base/" itemprop="url">
+                  计算机体系基础
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-13T21:10:10+08:00" content="2020-04-13">
+              2020-04-13
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/13/computer-system-base/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/13/computer-system-base/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/13/computer-system-base/" class="leancloud_visitors" data-flag-title="计算机体系基础">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          用户态和内核态是什么？
+
+操作系统中的概念，内核态和用户态分别对应CPU的两种运行模式（权限）。
+
+解决什么问题？
+
+早起系统运行在实模式，应用程序和操作系统的混在一起，可以随便改变内存数据、访问硬件设备。写的不严谨的代码很容易影响整体系统，也很容易写病毒。
+
+怎么解决？
+
+CPU至少支持两种状态（
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2020/04/13/computer-system-base/" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2020/04/09/juc/" itemprop="url">
+                  并发基础
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-09T21:19:44+08:00" content="2020-04-09">
+              2020-04-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/09/juc/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/09/juc/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/09/juc/" class="leancloud_visitors" data-flag-title="并发基础">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          背景在执行任务的过程中，有些时间是消耗CPU，而有些时间则是在等待IO等，通过多线程可以把等待时间用来做其他的任务。
+编程与原理线程最简单就是直接new Tread().start()来创建并开始执行，但通常会用ThreadFactory来创建线程，好处是可以设置名字，在排查的时候方便定位。
+状态
+
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2020/04/09/juc/" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2020/04/03/network/" itemprop="url">
+                  网络基础
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-03T10:37:53+08:00" content="2020-04-03">
+              2020-04-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/03/network/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/03/network/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/03/network/" class="leancloud_visitors" data-flag-title="网络基础">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          基础知识由于写应用层偏多，网络的底层的一些逻辑了解偏少，要理解上次的优化手段通常要对底层的实现有一定的了解。
+TCP/IP协议的分层如下：
+
+其中：
+
+ICMP：用于在主机和路由器之间传递控制信息，包括：报告错误、交还受限状态、状态信息等等，比如PING；
+IGMP：路由器；
+ARP：通过IP获取M
+          ...
+
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2020/04/03/network/" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1628,7 +1683,7 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1669,7 +1724,7 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-count">61</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1677,7 +1732,7 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1686,7 +1741,7 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">63</span>
+                <span class="site-state-item-count">68</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1723,7 +1778,7 @@ RUST尝试在编译时刻暴露所有可能的问题（如果搞不懂所有权�
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

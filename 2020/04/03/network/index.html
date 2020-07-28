@@ -1,0 +1,1127 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="linux," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="基础知识由于写应用层偏多，网络的底层的一些逻辑了解偏少，要理解上次的优化手段通常要对底层的实现有一定的了解。
+TCP/IP协议的分层如下：
+
+其中：
+
+ICMP：用于在主机和路由器之间传递控制信息，包括：报告错误、交还受限状态、状态信息等等，比如PING；
+IGMP：路由器；
+ARP：通过IP获取MAC，在执行的时候会广播；
+RARP：根据MAC获取IP；
+
+用ARP协议执行流程：
+
+另一个从域名">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络基础">
+<meta property="og:url" content="http://yoursite.com/2020/04/03/network/index.html">
+<meta property="og:site_name" content="wsztrush">
+<meta property="og:description" content="基础知识由于写应用层偏多，网络的底层的一些逻辑了解偏少，要理解上次的优化手段通常要对底层的实现有一定的了解。
+TCP/IP协议的分层如下：
+
+其中：
+
+ICMP：用于在主机和路由器之间传递控制信息，包括：报告错误、交还受限状态、状态信息等等，比如PING；
+IGMP：路由器；
+ARP：通过IP获取MAC，在执行的时候会广播；
+RARP：根据MAC获取IP；
+
+用ARP协议执行流程：
+
+另一个从域名">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/00.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/01.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/02.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/06.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/05.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/04.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/07.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/08.png">
+<meta property="og:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/09.png">
+<meta property="og:updated_time" content="2020-06-21T13:01:39.653Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网络基础">
+<meta name="twitter:description" content="基础知识由于写应用层偏多，网络的底层的一些逻辑了解偏少，要理解上次的优化手段通常要对底层的实现有一定的了解。
+TCP/IP协议的分层如下：
+
+其中：
+
+ICMP：用于在主机和路由器之间传递控制信息，包括：报告错误、交还受限状态、状态信息等等，比如PING；
+IGMP：路由器；
+ARP：通过IP获取MAC，在执行的时候会广播；
+RARP：根据MAC获取IP；
+
+用ARP协议执行流程：
+
+另一个从域名">
+<meta name="twitter:image" content="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/00.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'dc4364f27034e113a6c150023a648d49',
+      author: 'wsztRush'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/03/network/"/>
+
+
+  <title> 网络基础 | wsztrush </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?ab1b083818fdf7317d4a77e34fe07f4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wsztrush</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">now or never!!!</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                网络基础
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2020-04-03T10:37:53+08:00" content="2020-04-03">
+              2020-04-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/基础/" itemprop="url" rel="index">
+                    <span itemprop="name">基础</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/04/03/network/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/04/03/network/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2020/04/03/network/" class="leancloud_visitors" data-flag-title="网络基础">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><p>由于写应用层偏多，网络的底层的一些逻辑了解偏少，要理解上次的优化手段通常要对底层的实现有一定的了解。</p>
+<p>TCP/IP协议的分层如下：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/00.png" alt=""></p>
+<p>其中：</p>
+<ul>
+<li><code>ICMP</code>：用于在主机和路由器之间传递控制信息，包括：报告错误、交还受限状态、状态信息等等，比如PING；</li>
+<li><code>IGMP</code>：路由器；</li>
+<li><code>ARP</code>：通过IP获取MAC，在执行的时候会广播；</li>
+<li><code>RARP</code>：根据MAC获取IP；</li>
+</ul>
+<p>用ARP协议执行流程：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/01.png" alt=""></p>
+<p>另一个<font color="red">从域名到IP的映射是由DNS</font>来完成：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/02.png" alt=""></p>
+<p>通过<font color="red">路由表</font>可以找到到达目标的路径，在MAC上可以用<code>traceroute baidu.com</code>来查看路径。</p>
+<h2 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h2><h3 id="协议头"><a href="#协议头" class="headerlink" title="协议头"></a>协议头</h3><ul>
+<li><code>源端口&amp;目标端口</code>：分别用来找到发端和收端的应用进程；</li>
+<li><code>序号</code>：发送方将数据分成多段发送给接收方，在每次发送时需要告诉接收方这次发送的是<font color="red">哪一段</font>，在达到最大值后会继续从0开始；选择随机号防止被攻击；</li>
+<li><code>确认号</code>：接收方告诉发送方需要发送的<font color="red">下一段</font>数据的序号，也就告诉对方前面的数据我已经收到了；</li>
+<li><code>数据偏移</code>：标记可选项大小；</li>
+<li><code>保留</code>：略；</li>
+<li><code>状态控制码</code><ul>
+<li><code>URG</code>：配合紧急指针使用，通知系统有个数据是紧急的；</li>
+<li><code>ACK</code>：配合确认号使用；</li>
+<li><code>PSH</code>：控制读取或者发送数据的时机，其他的比如缓存区满了也会读写；</li>
+<li><code>RST</code>：出现严重错误需要释放连接并重新建立；</li>
+<li><code>SYN</code>：标记这是一个连接请求或者连接被接受的报文；</li>
+<li><code>FIN</code>：标记发送端数据传送已完毕，并要求释放连接；</li>
+</ul>
+</li>
+<li><code>滑动窗口</code>：告诉对方自己能接收数据的大小，避免发送的数据过大无法被接收，滑动窗口的大小是动态的；</li>
+<li><code>校验和</code>：用来发现数据是否损毁；</li>
+<li><code>紧急指针</code>：标记紧急字节的位置；</li>
+<li><code>MSS</code>：和IP层的分片大小有关；</li>
+</ul>
+<p>格式：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/06.png" alt=""></p>
+<p>状态流转为：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/05.png" alt=""></p>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><ul>
+<li><code>client-&gt;server</code>：SYN、seq=J；</li>
+<li><code>server-&gt;client</code>：SYN、ACK、seq=K、ack=J+1；</li>
+<li><code>client-&gt;server</code>：SYN、ACK、ack=K+1；</li>
+</ul>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><ul>
+<li><code>client-&gt;server</code>：FIN、seq=M；</li>
+<li><code>server-&gt;client</code>：ACK、ack=M+1，到这里是半关闭状态；</li>
+<li><code>server-&gt;client</code>：FIN、seq=N；</li>
+<li><code>client-&gt;server</code>：ACK、ack=N+1；</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/04.png" alt=""></p>
+<h3 id="慢启动"><a href="#慢启动" class="headerlink" title="慢启动"></a>慢启动</h3><p>目的：</p>
+<blockquote>
+<p>当TCP开始在网络中开始传输（或者重发）数据时，会慢慢地对网络容量进行试探，避免发送过量的数据导致阻塞。</p>
+</blockquote>
+<p>实现：</p>
+<blockquote>
+<p>发送方TCP增加拥塞窗口（CWND），在收到用ACK消息后增加窗口大小，当发生超时或者重复确认后减小窗口大小。</p>
+</blockquote>
+<h3 id="计时器"><a href="#计时器" class="headerlink" title="计时器"></a>计时器</h3><ul>
+<li><code>重传计时器</code>：发送消息开始一定时间，没有收到ACK则重传；</li>
+<li><code>持久计时器</code>：发送和接收窗口都为0时会死锁，所以发送方会定时发送探测报文；</li>
+<li><code>保活计时器</code>：客户端发送数据后保持沉默，服务端需要知道客户端的死活，于是发送探测报文，如果探测报文连续不回复则会强行中断；</li>
+<li><code>时间等待计时器</code>：四次挥手关闭连接是用来等待；</li>
+</ul>
+<h3 id="Nagle"><a href="#Nagle" class="headerlink" title="Nagle"></a>Nagle</h3><p>问题：</p>
+<blockquote>
+<p>如果发送的数据很小，数据中有用的信息占比很小，大部分是协议数据（TCP头部占20字节，IP头部再占20字节）。在广域网上会增加拥堵。</p>
+</blockquote>
+<p>思路：</p>
+<blockquote>
+<p>任意时刻最多只有一个未被确认的小段（小于MSS尺寸的数据）。</p>
+</blockquote>
+<p>判断具备发送的条件有：</p>
+<ul>
+<li>长度达到MSS；</li>
+<li>包含FIN；</li>
+<li>设置了TCP_NODELAY选项；</li>
+<li>未设置TCP_CORK选项，且数据包都已经被确认；</li>
+<li>超时，一般是200毫秒；</li>
+</ul>
+<p>可以发现Nagle算法带来的副作用也比较明显：<font color="red">增加了延迟</font>，所以框架基本上都会禁用掉。</p>
+<h3 id="延迟确认"><a href="#延迟确认" class="headerlink" title="延迟确认"></a>延迟确认</h3><p>与Nagle不同，Delay ACK试图从接收方来优化：</p>
+<blockquote>
+<p>接到报文后不会立即ACK，而是等一段时间看有没有一起发送的数据，目标也是减少数据包。</p>
+</blockquote>
+<p>和Nagle类似，开启后会增加延迟。</p>
+<p>如果同时开启可能的效果是：发送方在等ACK，而接收方在等新的数据，于是可能耗时就明显加长了。</p>
+<h3 id="保活机制"><a href="#保活机制" class="headerlink" title="保活机制"></a>保活机制</h3><p>客户端可能因为各种原因断开，如果服务端不知道会一直维护着连接，时间长了以后大量的这种连接会占用很多资源：</p>
+<blockquote>
+<p>在空闲、没有数据传输时，定时发送确认包来探测。</p>
+</blockquote>
+<p>通过套接字设置<code>SO_KEEPALIVE</code>生效，相关参数：</p>
+<ul>
+<li><code>tcp_keepalive_time</code>：最后一次数据传输到发送探测包的间隔，也就是空闲时间；</li>
+<li><code>tcp_keepalive_probes</code>：探测次数；</li>
+<li><code>tcp_keepalive_intvl</code>：连续探测的间隔时间；</li>
+</ul>
+<p><strong>Tips</strong>：</p>
+<blockquote>
+<p>相比较，HTTP的Keep-Alive的作用是和服务器交互完后不会直接关闭连接，避免每个请求都建连接。</p>
+<font color="red">大量CLOSE_WAIT</font>
+
+<ul>
+<li><code>原因</code>：<ul>
+<li>客户端关闭SOCKET发送FIN，服务端接收FIN发送ACK处于CLOSE_WAIT状态；</li>
+<li>理论上会马上发送FIN变为LAST_ACK状态；</li>
+<li>如果服务端SOCKET对应的线程夯住了，那么由于TCP是双工的，可能服务端还有东西给客户端，这时候系统不能自动关闭，要等线层醒了再关；</li>
+</ul>
+</li>
+<li>解法：<ul>
+<li>保活机制；</li>
+<li>在对方关闭连接时read返回0/-1，使用epoll也可以拿到，这时候可以关闭连接；但是如果自己的线程夯住就没办法了；</li>
+</ul>
+</li>
+</ul>
+<font color="red">大量TIME_WAIT</font>
+
+<font color="red">最大连接数</font>
+
+<ul>
+<li><code>客户端</code>：需要绑定自己一个空闲的端口，每个连接都不一样，所以限制来源于协议里的端口号长度$2^{16}$。</li>
+<li><code>服务端</code>：绑定端口后，在这个端口上可以不停地获取连接；</li>
+</ul>
+</blockquote>
+<h2 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h2><p>UDP协议要简单的多，更像是IP层的一个简单封装，用的时候需要注意这玩意非常的不可靠，协议头部的核心字段包括：</p>
+<ul>
+<li><code>源端口&amp;目标端口</code>：分别用来找到发端和收端的应用进程；</li>
+<li><code>长度</code>：略；</li>
+<li><code>校验和</code>：略；</li>
+</ul>
+<p>常见的使用场景打洞实现P2P。</p>
+<h1 id="LVS"><a href="#LVS" class="headerlink" title="LVS"></a>LVS</h1><p>章文嵩博士主导的开源项目，用来做负载均衡，后被集成到Linux内核中。服务器角色有：</p>
+<ul>
+<li><code>Director</code>：调度器、网关；</li>
+<li><code>Real Server</code>：服务器、真正提供服务的机器；</li>
+</ul>
+<p>具体实现在IP、TCP层搞。</p>
+<h2 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h2><h3 id="LVS-NAT"><a href="#LVS-NAT" class="headerlink" title="LVS-NAT"></a>LVS-NAT</h3><p>流程：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/07.png" alt=""></p>
+<p>优点：</p>
+<ul>
+<li>支持端口映射；</li>
+<li>RS可以使用任意的操作系统；</li>
+<li>节省公网IP，后端的主机较安全：RIP和DIP使用同一网段私有地址，RS的网关要指向DIP；</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>请求和响应都需要经过Director，这样单点的压力会比较大；</li>
+</ul>
+<h3 id="LVS-TUN"><a href="#LVS-TUN" class="headerlink" title="LVS-TUN"></a>LVS-TUN</h3><p>流程：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/08.png" alt=""></p>
+<p>优点：</p>
+<ul>
+<li>RIP、VIP、DIP都是公网地址，RS网关不指向DIP；</li>
+<li>Director只处理进站请求，不处理响应；</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>不支持端口映射；</li>
+<li>需要支持隧道功能，同时隧道功能会消耗性能；</li>
+</ul>
+<h3 id="LVS-DR"><a href="#LVS-DR" class="headerlink" title="LVS-DR"></a>LVS-DR</h3><p>流程：</p>
+<p><img src="https://tianchi.oss-cn-hangzhou.aliyuncs.com/blog/network/09.png" alt=""></p>
+<p>优点：</p>
+<ul>
+<li>Director仅处理请求，不处理响应；</li>
+<li>RS可以使用大多数OS；</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>不支持端口映射；</li>
+<li>不支持跨局域网；</li>
+</ul>
+<h2 id="均衡算法"><a href="#均衡算法" class="headerlink" title="均衡算法"></a>均衡算法</h2><ul>
+<li><code>RR</code></li>
+<li><code>WRR</code></li>
+<li><code>SH</code></li>
+<li><code>DH</code></li>
+<li><code>LC</code></li>
+<li><code>WLC</code></li>
+<li><code>SED</code></li>
+<li><code>NQ</code></li>
+<li><code>LBLC</code></li>
+</ul>
+<h1 id="编程"><a href="#编程" class="headerlink" title="编程"></a>编程</h1><p>了解一些协议后，可以开始继续看编程的使用需要注意些什么，到应用层了。在UNIX中定义了五种I/O模型：</p>
+<ul>
+<li>阻塞I/O</li>
+<li>非阻塞I/O</li>
+<li>I/O复用</li>
+<li>信号驱动I/O</li>
+<li>异步I/O</li>
+</ul>
+<p><strong>tips</strong>：</p>
+<blockquote>
+<p>同步和异步的区别在于：<font color="red">调用者是否主动等待结果</font>；阻塞和非阻塞的区别是：<font color="red">程序在等待结果时的状态</font>。</p>
+</blockquote>
+<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><p>方法：</p>
+<ul>
+<li><code>socket</code>：创建网络通信使用的套接字；</li>
+<li><code>bind</code>：绑定；</li>
+<li><code>listen</code>：套接字由主动改为被动，监听连接；</li>
+<li><code>accept</code>：取出一个已经建立的链接，如果没有连接可用则阻塞；</li>
+<li><code>connect</code>：与服务端建立连接；</li>
+<li><code>read&amp;write&amp;recv&amp;send</code>：读写；</li>
+</ul>
+<p>在建立连接后，可以在主线程里面操作进行读写，但是这样会导致其他的连接无法响应。通常的做法是：</p>
+<blockquote>
+<p>用线程池来处理连接。</p>
+</blockquote>
+<p>在存活的连接数大于线程数时，同样会阻塞主线程。而且从服务器来看单个连接很多时间是不活跃的，这样就有了更高级的多路复用玩法：</p>
+<ul>
+<li><code>select</code></li>
+<li><code>poll</code></li>
+<li><code>epoll</code>：事件通知方式，在fd就绪时，系统注册的回调函数就会被调用；不需要把数据频繁在用户态和内核态间互相拷贝；</li>
+</ul>
+<p>这样的话线程数只与活跃的连接数有关系，大大减少了线程的数量。</p>
+<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><p>工具：</p>
+<ul>
+<li><code>Socket</code></li>
+<li><code>ServerSocket</code></li>
+</ul>
+<p>面临的问题跟上面Linux编程时遇到的问题类似，在Java中使用NIO来解：</p>
+<ul>
+<li><code>Channel</code></li>
+<li><code>Selector</code></li>
+</ul>
+<p>更进一步的可以用AIO来优化，也就是<font color="blue">Reactor和Proactor</font>的区别：</p>
+<ul>
+<li><code>AsynchronousFileChannel</code></li>
+<li><code>AsynchronousSocketChannel</code></li>
+<li><code>AsynchronousServerSocketChannel</code></li>
+</ul>
+<h2 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h2><p>封装了NIO的框架，提供更高层的抽象，避免直接撸比较难用的API和一些BUG，也不必花精力重复解决粘包、拆包等问题。</p>
+<p>服务端的流程为：</p>
+<ul>
+<li>创建ServerBootStrap实例；</li>
+<li>设置Reactor线程池EventLoopGroup；</li>
+<li>设备并绑定Channel；</li>
+<li>创建ChannelPipeline，添加需要的处理器Handler；</li>
+<li>绑定并启动监听端口；</li>
+</ul>
+<p>比如在Dubbo中的启动流程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doOpen</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">    bootstrap = <span class="keyword">new</span> ServerBootstrap();</div><div class="line">    bossGroup = <span class="keyword">new</span> NioEventLoopGroup(<span class="number">1</span>, <span class="keyword">new</span> DefaultThreadFactory(<span class="string">"NettyServerBoss"</span>, <span class="keyword">true</span>));</div><div class="line">    workerGroup = <span class="keyword">new</span> NioEventLoopGroup(getUrl().getPositiveParameter(Constants.IO_THREADS_KEY, Constants.DEFAULT_IO_THREADS), <span class="keyword">new</span> DefaultThreadFactory(<span class="string">"NettyServerWorker"</span>, <span class="keyword">true</span>));</div><div class="line">    <span class="keyword">final</span> NettyServerHandler nettyServerHandler = <span class="keyword">new</span> NettyServerHandler(getUrl(), <span class="keyword">this</span>);</div><div class="line">    channels = nettyServerHandler.getChannels();</div><div class="line"></div><div class="line">    bootstrap.group(bossGroup, workerGroup)</div><div class="line">        .channel(NioServerSocketChannel.class)</div><div class="line">        .childOption(ChannelOption.TCP_NODELAY, Boolean.TRUE)</div><div class="line">        .childOption(ChannelOption.SO_REUSEADDR, Boolean.TRUE)</div><div class="line">        .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)</div><div class="line">        .childHandler(<span class="keyword">new</span> ChannelInitializer&lt;NioSocketChannel&gt;() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(NioSocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                NettyCodecAdapter adapter = <span class="keyword">new</span> NettyCodecAdapter(getCodec(), getUrl(), NettyServer.<span class="keyword">this</span>);</div><div class="line">                ch.pipeline()<span class="comment">//.addLast("logging",new LoggingHandler(LogLevel.INFO))//for debug</span></div><div class="line">                    .addLast(<span class="string">"decoder"</span>, adapter.getDecoder())</div><div class="line">                    .addLast(<span class="string">"encoder"</span>, adapter.getEncoder())</div><div class="line">                    .addLast(<span class="string">"handler"</span>, nettyServerHandler);</div><div class="line">                &#125;</div><div class="line">            &#125;);</div><div class="line">    <span class="comment">// bind</span></div><div class="line">    ChannelFuture channelFuture = bootstrap.bind(getBindAddress());</div><div class="line">    channelFuture.syncUninterruptibly();</div><div class="line">    channel = channelFuture.channel();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h1><h2 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a>netstat</h2><p>用来显示各种网络相关的信息，比如连接、路由、状态等：</p>
+<ul>
+<li><code>netstat -a</code>：所有连接；</li>
+<li><code>netstat -at</code>：TCP连接；</li>
+<li><code>netstat -l</code>：处于监听状态的连接；</li>
+<li><code>netstat -p</code>：显示进程ID和名称；</li>
+<li><code>netstat -s</code>：统计；</li>
+</ul>
+<h2 id="dstat"><a href="#dstat" class="headerlink" title="dstat"></a>dstat</h2><p>动态监控各种指标，还是彩色的哦：</p>
+<ul>
+<li><code>dstat --socket 5 5</code>：tcp和udp端口状态；</li>
+<li><code>dstat -n 5 5</code>：网络流量；</li>
+</ul>
+<h2 id="ping"><a href="#ping" class="headerlink" title="ping"></a>ping</h2><p>用<code>ping 127.0.0.1</code>来检查到目标地址的网络是否是通的。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://blog.csdn.net/q1007729991/article/details/69261780" target="_blank" rel="external">序号和确认号</a></li>
+<li><a href="https://blog.csdn.net/q1007729991/article/details/70154359" target="_blank" rel="external">PSH</a></li>
+<li><a href="https://www.cnblogs.com/hongdada/p/11171068.html" target="_blank" rel="external">TCP窗口机制</a></li>
+<li><a href="https://blog.csdn.net/q1007729991/article/details/69289230" target="_blank" rel="external">三次握手</a></li>
+<li><a href="https://blog.csdn.net/q1007729991/article/details/69388961" target="_blank" rel="external">四次挥手</a></li>
+<li><a href="https://blog.csdn.net/lyztyycode/article/details/80818638" target="_blank" rel="external">NAT穿透</a></li>
+<li><a href="https://blog.csdn.net/pange1991/article/details/86310926" target="_blank" rel="external">Linux下I/O多路复用系统调用(select, poll, epoll)介绍</a></li>
+<li><a href="https://tech.meituan.com/2016/11/04/nio.html" target="_blank" rel="external">Java NIO浅析</a></li>
+<li><a href="https://juejin.im/post/5bdaf8ea6fb9a0227b02275a" target="_blank" rel="external">彻底理解Netty，这一篇文章就够了</a></li>
+<li><a href="https://man.linuxde.net/dstat" target="_blank" rel="external">dstat 命令</a></li>
+<li><a href="https://baijiahao.baidu.com/s?id=1614404084382122793&amp;wfr=spider&amp;for=pc" target="_blank" rel="external">关于TCP三次握手，这是我见过最好的解读了，通俗易懂</a></li>
+<li><a href="https://blog.csdn.net/baidu_37964071/article/details/80514340" target="_blank" rel="external">ICMP协议详解</a></li>
+<li><a href="https://www.cnblogs.com/duan2/p/9180861.html" target="_blank" rel="external">TCP超时与重传机制</a></li>
+<li><a href="https://coolshell.cn/articles/11564.html?f=http://blogread.cn/" target="_blank" rel="external">TCP 的那些事儿（上）</a></li>
+<li><a href="https://coolshell.cn/articles/11609.html" target="_blank" rel="external">TCP 的那些事儿（下）</a></li>
+<li><a href="https://www.jianshu.com/p/8a61de3f8be9" target="_blank" rel="external">LVS原理介绍</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag">#linux</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/13/redis-life-cycle/" rel="next" title="Redis 生命周期">
+                <i class="fa fa-chevron-left"></i> Redis 生命周期
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/09/juc/" rel="prev" title="并发基础">
+                并发基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="wsztrush" />
+          <p class="site-author-name" itemprop="name">wsztrush</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础知识"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP"><span class="nav-number">1.1.</span> <span class="nav-text">TCP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#协议头"><span class="nav-number">1.1.1.</span> <span class="nav-text">协议头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三次握手"><span class="nav-number">1.1.2.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四次挥手"><span class="nav-number">1.1.3.</span> <span class="nav-text">四次挥手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#慢启动"><span class="nav-number">1.1.4.</span> <span class="nav-text">慢启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计时器"><span class="nav-number">1.1.5.</span> <span class="nav-text">计时器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nagle"><span class="nav-number">1.1.6.</span> <span class="nav-text">Nagle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#延迟确认"><span class="nav-number">1.1.7.</span> <span class="nav-text">延迟确认</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保活机制"><span class="nav-number">1.1.8.</span> <span class="nav-text">保活机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP"><span class="nav-number">1.2.</span> <span class="nav-text">UDP</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LVS"><span class="nav-number">2.</span> <span class="nav-text">LVS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#模式"><span class="nav-number">2.1.</span> <span class="nav-text">模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LVS-NAT"><span class="nav-number">2.1.1.</span> <span class="nav-text">LVS-NAT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LVS-TUN"><span class="nav-number">2.1.2.</span> <span class="nav-text">LVS-TUN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LVS-DR"><span class="nav-number">2.1.3.</span> <span class="nav-text">LVS-DR</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#均衡算法"><span class="nav-number">2.2.</span> <span class="nav-text">均衡算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编程"><span class="nav-number">3.</span> <span class="nav-text">编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux"><span class="nav-number">3.1.</span> <span class="nav-text">Linux</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java"><span class="nav-number">3.2.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Netty"><span class="nav-number">3.3.</span> <span class="nav-text">Netty</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命令"><span class="nav-number">4.</span> <span class="nav-text">命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#netstat"><span class="nav-number">4.1.</span> <span class="nav-text">netstat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dstat"><span class="nav-number">4.2.</span> <span class="nav-text">dstat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ping"><span class="nav-number">4.3.</span> <span class="nav-text">ping</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wsztrush</span>
+</div>
+
+<!--
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+-->
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'wsztrush';
+      var disqus_identifier = '2020/04/03/network/';
+      var disqus_title = "网络基础";
+      var disqus_url = 'http://yoursite.com/2020/04/03/network/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        // TODO dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        dsq.src = '//a.disquscdn.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("5q464kOnKNtBvidNUffEyLtK-gzGzoHsz", "OalJXPjfxbJuxfazVb8SjkuH");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
